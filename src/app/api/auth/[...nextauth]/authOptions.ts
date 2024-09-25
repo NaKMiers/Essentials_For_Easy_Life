@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { connectDatabase } from '@/config/database'
 import UserModel from '@/models/UserModel'
 import bcrypt from 'bcrypt'
@@ -53,7 +54,7 @@ const authOptions = {
         const { usernameOrEmail, password } = credentials
 
         // find user from database
-        const user: IUser | null = await UserModel.findOne({
+        const user: any = await UserModel.findOne({
           $or: [{ email: usernameOrEmail.toLowerCase() }, { username: usernameOrEmail }],
         }).lean()
 
