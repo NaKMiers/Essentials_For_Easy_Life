@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { connectDatabase } from '@/config/database'
 import UserModel from '@/models/UserModel'
@@ -89,12 +90,12 @@ const authOptions = {
     // ...add providers here
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }: unknown) {
-      console.log('- JWT -', session)
+    async jwt({ token, user, trigger, session }: any) {
+      console.log('- JWT -')
 
       // New Login
       if (user) {
-        const userDB: unknown = await UserModel.findOne({
+        const userDB: any = await UserModel.findOne({
           email: user.email,
         }).lean()
 
@@ -105,7 +106,7 @@ const authOptions = {
 
       if (trigger === 'update' && token._id) {
         console.log('- Update Token -')
-        const userDB: unknown = await UserModel.findById(token._id).lean()
+        const userDB: any = await UserModel.findById(token._id).lean()
         if (userDB) {
           return { ...token, ...userDB }
         }
@@ -114,14 +115,14 @@ const authOptions = {
       return token
     },
 
-    async session({ session, token }: unknown) {
+    async session({ session, token }: any) {
       console.log('- Session -')
 
       session.user = token
       return session
     },
 
-    async signIn({ user, account, profile }: unknown) {
+    async signIn({ user, account, profile }: any) {
       console.log('- Sign In -')
 
       try {
@@ -148,7 +149,7 @@ const authOptions = {
           }
 
           // get user from database to check exist
-          const existingUser: unknown = await UserModel.findOne({ email }).lean()
+          const existingUser: any = await UserModel.findOne({ email }).lean()
 
           // check whether user exists
           if (existingUser) {
@@ -166,7 +167,7 @@ const authOptions = {
         }
 
         return true
-      } catch (err: unknown) {
+      } catch (err: any) {
         console.log(err)
         return false
       }
