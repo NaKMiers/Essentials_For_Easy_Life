@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useSession } from 'next-auth/react'
@@ -18,7 +19,7 @@ function UseDetectDevTools() {
     }
 
     const threshold = 160
-    let devtools = { open: false }
+    const devtools = { open: false }
 
     const detectDevTools = (isOpen: boolean) => {
       if (isOpen) {
