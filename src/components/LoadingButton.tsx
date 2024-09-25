@@ -4,7 +4,7 @@ import { RiDonutChartFill } from 'react-icons/ri'
 interface LoadingButtonProps {
   text: string
   isLoading: boolean
-  onClick?: (e?: any) => void
+  onClick?: (e?: unknown) => void
   className?: string
 }
 

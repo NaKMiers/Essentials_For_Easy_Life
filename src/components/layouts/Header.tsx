@@ -2,11 +2,7 @@
 
 import { memo } from 'react'
 
-interface HeaderProps {
-  className?: string
-}
-
-function Header({ className = '' }: HeaderProps) {
+function Header() {
   return <header>Header</header>
 }
 

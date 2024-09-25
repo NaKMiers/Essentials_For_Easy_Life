@@ -9,11 +9,15 @@ cloudinary.config({
 })
 
 async function uploadFile(
-  file: any,
+  file: File,
   ratio: string = '16:9',
   type: 'image' | 'video' | 'raw' | 'auto' | undefined = 'image'
 ) {
-  let size: any = { width: 1920, height: 1080, fit: 'cover' }
+  const size: { width: number; height: number; fit: keyof sharp.FitEnum } = {
+    width: 1920,
+    height: 1080,
+    fit: 'cover',
+  }
   if (ratio === '1:1') {
     size.width = 480
     size.height = 480
@@ -30,18 +34,25 @@ async function uploadFile(
 
   try {
     // Resize
-    let buffer: any = Buffer.from(await file.arrayBuffer())
+    let buffer: Buffer = Buffer.from(await file.arrayBuffer())
     if (type === 'image') {
       buffer = await sharp(buffer).resize(size).toBuffer()
     }
 
-    const fileUploaded: any = await new Promise((resolve, reject) => {
+    interface CloudinaryUploadResult {
+      url: string
+      // Add other properties if needed
+    }
+
+    const fileUploaded: CloudinaryUploadResult = await new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream({ resource_type: type }, (error, result) => {
           if (error) {
             reject(error)
-          } else {
+          } else if (result) {
             resolve(result)
+          } else {
+            reject(new Error('Upload result is undefined'))
           }
         })
         .end(buffer)

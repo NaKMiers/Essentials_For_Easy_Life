@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { cn } from '@/utils/cn'
@@ -6,7 +9,7 @@ import { useEffect, useRef } from 'react'
 import { createNoise3D } from 'simplex-noise'
 
 interface VortexBackgroundProps {
-  children?: any
+  children?: React.ReactNode
   className?: string
   containerClassName?: string
   particleCount?: number
@@ -42,15 +45,13 @@ function VortexBackground(props: VortexBackgroundProps) {
   let tick = 0
   const noise3D = createNoise3D()
   let particleProps = new Float32Array(particlePropsLength)
-  let center: [number, number] = [0, 0]
+  const center: [number, number] = [0, 0]
 
-  const HALF_PI: number = 0.5 * Math.PI
   const TAU: number = 2 * Math.PI
-  const TO_RAD: number = Math.PI / 180
   const rand = (n: number): number => n * Math.random()
   const randRange = (n: number): number => n - rand(2 * n)
   const fadeInOut = (t: number, m: number): number => {
-    let hm = 0.5 * m
+    const hm = 0.5 * m
     return Math.abs(((t + hm) % m) - hm) / hm
   }
   const lerp = (n1: number, n2: number, speed: number): number => (1 - speed) * n1 + speed * n2
@@ -62,7 +63,7 @@ function VortexBackground(props: VortexBackgroundProps) {
       const ctx = canvas.getContext('2d')
 
       if (ctx) {
-        resize(canvas, ctx)
+        resize(canvas)
         initParticles()
         draw(canvas, ctx)
       }
@@ -185,7 +186,7 @@ function VortexBackground(props: VortexBackgroundProps) {
     return x > canvas.width || x < 0 || y > canvas.height || y < 0
   }
 
-  const resize = (canvas: HTMLCanvasElement, ctx?: CanvasRenderingContext2D) => {
+  const resize = (canvas: HTMLCanvasElement) => {
     const { innerWidth, innerHeight } = window
 
     canvas.width = innerWidth
@@ -222,9 +223,10 @@ function VortexBackground(props: VortexBackgroundProps) {
       const canvas = canvasRef.current
       const ctx = canvas?.getContext('2d')
       if (canvas && ctx) {
-        resize(canvas, ctx)
+        resize(canvas)
       }
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

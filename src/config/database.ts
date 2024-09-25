@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
 
-let cachedConnection: any = null
+import { Connection } from 'mongoose'
+
+let cachedConnection: Connection | null = null
 
 export async function connectDatabase() {
   if (cachedConnection) {
@@ -16,7 +18,7 @@ export async function connectDatabase() {
       console.log('MongoDB connected successfully')
     })
 
-    connection.on('error', (error: any) => {
+    connection.on('error', (error: Error) => {
       console.log('MongoDB connection error. Please make sure MongoDB is running. ' + error)
     })
 

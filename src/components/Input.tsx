@@ -12,17 +12,17 @@ interface InputProps {
   type?: string
   disabled?: boolean
   required?: boolean
-  onChange?: any
+  onChange?: unknown
   register: UseFormRegister<FieldValues>
   errors: FieldErrors
-  options?: any[]
+  options?: unknown[]
   rows?: number
   labelBg?: string
-  onClick?: (e?: any) => void
-  onFocus?: (e?: any) => void
+  onClick?: (e?: unknown) => void
+  onFocus?: (e?: unknown) => void
 
   // rest
-  [key: string]: any
+  [key: string]: unknown
 }
 
 function Input({

@@ -5,7 +5,9 @@ import { useRef } from 'react'
 import { Provider } from 'react-redux'
 import { AppStore, makeStore } from './store'
 
-function StoreProvider({ children, session }: { children: React.ReactNode; session: any }) {
+import { Session } from 'next-auth'
+
+function StoreProvider({ children, session }: { children: React.ReactNode; session: Session | null }) {
   const storeRef = useRef<AppStore>()
 
   if (!storeRef.current) {

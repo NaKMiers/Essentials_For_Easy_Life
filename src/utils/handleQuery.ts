@@ -5,12 +5,12 @@ export const handleQuery = (
   let query = prefix + '?'
 
   // remove empty value
-  for (let key in searchParams) {
+  for (const key in searchParams) {
     if (!searchParams[key]) delete searchParams[key]
   }
 
   // validate search params
-  for (let key in searchParams) {
+  for (const key in searchParams) {
     // the params that allow only 1 value
     if (
       [
@@ -43,10 +43,10 @@ export const handleQuery = (
   }
 
   // build query
-  for (let key in searchParams) {
+  for (const key in searchParams) {
     // check if key is an array
     if (Array.isArray(searchParams[key])) {
-      for (let value of searchParams[key]) {
+      for (const value of searchParams[key]) {
         query += `${key}=${value}&`
       }
     } else {
@@ -65,7 +65,7 @@ export const handleQuery = (
 
 export const searchParamsToObject = (searchParams: URLSearchParams): { [key: string]: string[] } => {
   const params: { [key: string]: string[] } = {}
-  for (let key of Array.from(searchParams.keys())) {
+  for (const key of Array.from(searchParams.keys())) {
     params[key] = searchParams.getAll(key)
   }
 

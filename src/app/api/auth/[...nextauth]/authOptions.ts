@@ -53,7 +53,7 @@ const authOptions = {
         const { usernameOrEmail, password } = credentials
 
         // find user from database
-        const user: any = await UserModel.findOne({
+        const user: IUser | null = await UserModel.findOne({
           $or: [{ email: usernameOrEmail.toLowerCase() }, { username: usernameOrEmail }],
         }).lean()
 
@@ -88,12 +88,12 @@ const authOptions = {
     // ...add providers here
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }: any) {
-      console.log('- JWT -')
+    async jwt({ token, user, trigger, session }: unknown) {
+      console.log('- JWT -', session)
 
       // New Login
       if (user) {
-        const userDB: any = await UserModel.findOne({
+        const userDB: unknown = await UserModel.findOne({
           email: user.email,
         }).lean()
 
@@ -104,7 +104,7 @@ const authOptions = {
 
       if (trigger === 'update' && token._id) {
         console.log('- Update Token -')
-        const userDB: any = await UserModel.findById(token._id).lean()
+        const userDB: unknown = await UserModel.findById(token._id).lean()
         if (userDB) {
           return { ...token, ...userDB }
         }
@@ -113,14 +113,14 @@ const authOptions = {
       return token
     },
 
-    async session({ session, token }: any) {
+    async session({ session, token }: unknown) {
       console.log('- Session -')
 
       session.user = token
       return session
     },
 
-    async signIn({ user, account, profile }: any) {
+    async signIn({ user, account, profile }: unknown) {
       console.log('- Sign In -')
 
       try {
@@ -147,7 +147,7 @@ const authOptions = {
           }
 
           // get user from database to check exist
-          const existingUser: any = await UserModel.findOne({ email }).lean()
+          const existingUser: unknown = await UserModel.findOne({ email }).lean()
 
           // check whether user exists
           if (existingUser) {
@@ -165,7 +165,7 @@ const authOptions = {
         }
 
         return true
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.log(err)
         return false
       }
