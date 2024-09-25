@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { memo, useCallback, useState } from 'react'
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 import { FaEye } from 'react-icons/fa'
@@ -12,17 +13,17 @@ interface InputProps {
   type?: string
   disabled?: boolean
   required?: boolean
-  onChange?: unknown
+  onChange?: any
   register: UseFormRegister<FieldValues>
   errors: FieldErrors
-  options?: unknown[]
+  options?: any[]
   rows?: number
   labelBg?: string
-  onClick?: (e?: unknown) => void
-  onFocus?: (e?: unknown) => void
+  onClick?: (e?: any) => void
+  onFocus?: (e?: any) => void
 
   // rest
-  [key: string]: unknown
+  [key: string]: any
 }
 
 function Input({
