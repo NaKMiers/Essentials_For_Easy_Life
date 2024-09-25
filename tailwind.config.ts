@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Config } from 'tailwindcss'
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
 import svgToDataUri from 'mini-svg-data-uri'
-import colors from 'tailwindcss/colors'
 
 export const theme = {
   extend: {
@@ -124,8 +124,8 @@ const config: Config = {
 export default config
 
 function addVariablesForColors({ addBase, theme }: any) {
-  let allColors = flattenColorPalette(theme('colors'))
-  let newVars = Object.fromEntries(Object.entries(allColors).map(([key, val]) => [`--${key}`, val]))
+  const allColors = flattenColorPalette(theme('colors'))
+  const newVars = Object.fromEntries(Object.entries(allColors).map(([key, val]) => [`--${key}`, val]))
 
   addBase({
     ':root': newVars,
