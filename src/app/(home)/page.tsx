@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Divider from '@/components/Divider'
 
 export const metadata: Metadata = {
   title: 'Essentials For Easy Life',
@@ -7,8 +8,25 @@ export const metadata: Metadata = {
 
 async function Home() {
   return (
-    <div className='min-h-screen flex items-center justify-center w-full h-full'>
-      <h1 className='text-4xl'>Essentials For Easy Life</h1>
+    <div className='max-w-1200 mx-auto min-h-screen w-full h-full'>
+      <Divider size={10} />
+
+      <h1 className='text-4xl text-center '>Essentials For Easy Life</h1>
+
+      <Divider size={10} />
+
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-21'>
+        <div className='rounded-lg shadow-lg p-21 border-2 border-light aspect-square w-full bg-gradient-to-b from-slate-200 via-green-200 to-sky-400' />
+        <div className='rounded-lg shadow-lg p-21 border-2 border-light aspect-square w-full bg-gradient-to-b from-slate-200 via-green-200 to-sky-400' />
+        <div className='rounded-lg shadow-lg p-21 border-2 border-light aspect-square w-full bg-gradient-to-b from-slate-200 via-green-200 to-sky-400' />
+        <div className='rounded-lg shadow-lg p-21 border-2 border-light aspect-square w-full bg-gradient-to-b from-slate-200 via-green-200 to-sky-400' />
+        <div className='rounded-lg shadow-lg p-21 border-2 border-light aspect-square w-full bg-gradient-to-b from-slate-200 via-green-200 to-sky-400' />
+        <div className='rounded-lg shadow-lg p-21 border-2 border-light aspect-square w-full bg-gradient-to-b from-slate-200 via-green-200 to-sky-400' />
+        <div className='rounded-lg shadow-lg p-21 border-2 border-light aspect-square w-full bg-gradient-to-b from-slate-200 via-green-200 to-sky-400' />
+        <div className='rounded-lg shadow-lg p-21 border-2 border-light aspect-square w-full bg-gradient-to-b from-slate-200 via-green-200 to-sky-400' />
+      </div>
+
+      <Divider size={10} />
     </div>
   )
 }
