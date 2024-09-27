@@ -22,8 +22,8 @@ async function uploadFile(
     size.width = 480
     size.height = 480
   } else if (ratio === '9:16') {
-    size.width = 1920
-    size.height = 1080
+    size.width = 1080
+    size.height = 1920
   } else if (ratio === '4:3') {
     size.width = 480
     size.height = 640
