@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { memo, useCallback, useState } from 'react'
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 import { FaEye } from 'react-icons/fa'

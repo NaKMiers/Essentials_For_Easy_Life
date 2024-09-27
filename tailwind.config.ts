@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Config } from 'tailwindcss'
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
 import svgToDataUri from 'mini-svg-data-uri'

@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable prefer-const */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { cn } from '@/utils/cn'
