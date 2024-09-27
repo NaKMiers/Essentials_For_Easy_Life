@@ -1,9 +1,6 @@
 import { deleteFile, uploadFile } from '@/utils/uploadFile'
 import { NextRequest, NextResponse } from 'next/server'
 
-const targetUrl = 'http://res.cloudinary.com/djpg3r44p/image/upload/v1727413972/ndd8dd8fefizp9cdxyvh.png'
-const swapUrl = 'http://res.cloudinary.com/djpg3r44p/image/upload/v1727413971/fkhlndb6b0jgbjzza4lv.jpg'
-
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
