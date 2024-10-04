@@ -17,7 +17,7 @@ export default async function RootLayout({
       <Header />
 
       {/* Main */}
-      <main className='bg-neutral-800 text-light'>{children}</main>
+      <main className="bg-neutral-800 text-light">{children}</main>
 
       {/* Footer */}
       <Footer />

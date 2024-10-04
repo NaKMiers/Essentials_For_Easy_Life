@@ -2,11 +2,9 @@
 
 import { getUserName } from '@/utils/string'
 import { signIn, signOut, useSession } from 'next-auth/react'
-import { memo, useState } from 'react'
+import { memo } from 'react'
 
 interface HeaderProps {
-  onPlaceChanged: any
-  onLoad: any
   className?: string
 }
 
