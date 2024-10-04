@@ -2,60 +2,109 @@
 
 import List from '@/components/List'
 import Map from '@/components/Map'
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 function LocationPage() {
-  const [places, setPlaces] = useState<any[]>([])
-  const [coordinates, setCoordinates] = useState<any>({ lat: 10.8068864, lng: 106.6860544 })
+  // states
+  const [type, setType] = useState<string>('restaurants')
+  const [rating, setRating] = useState<string>('')
+
+  const [coords, setCoords] = useState<any>({})
   const [bounds, setBounds] = useState<any>({})
+
+  const [filteredPlaces, setFilteredPlaces] = useState<any[]>([])
+  const [places, setPlaces] = useState<any[]>([])
+
+  const [autocomplete, setAutocomplete] = useState<any>(null)
+  const [childClicked, setChildClicked] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const [openList, setOpenList] = useState<boolean>(true)
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }) => {
-      console.log('latitude: ', latitude)
-      console.log('longitude: ', longitude)
-      setCoordinates({ lat: latitude, lng: longitude })
+      console.log(latitude, longitude)
+      setCoords({ lat: latitude, lng: longitude })
     })
   }, [])
 
   useEffect(() => {
-    const getPlaces = async () => {
-      console.log('getPlaces')
+    const filtered = places.filter(place => Number(place.rating) > Number(rating))
 
+    setFilteredPlaces(filtered)
+  }, [places, rating])
+
+  useEffect(() => {
+    if (!bounds.sw || !bounds.ne) return
+
+    // start loading
+    setIsLoading(true)
+
+    const getPlacesData = async (type: string, sw: any, ne: any) => {
       try {
-        const response = await fetch(
-          `https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary?bl_latitude=${bounds.sw.lat}&tr_latitude=${bounds.ne.lat}&bl_longitude=${bounds.sw.lng}&tr_longitude=${bounds.ne.lng}&restaurant_tagcategory_standalone=10591&restaurant_tagcategory=10591&limit=30&currency=USD&open_now=false&lunit=km&lang=en_US`,
+        const res = await fetch(
+          `https://travel-advisor.p.rapidapi.com/${type}/list-in-boundary?bl_latitude=${sw.lat}&tr_latitude=${ne.lat}&bl_longitude=${sw.lng}&tr_longitude=${ne.lng}`,
           {
             method: 'GET',
             headers: {
-              'x-rapidapi-key': '6e63c42db5msh604da1c19d807b8p1dbb33jsndd4612937df2',
+              'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY!,
               'x-rapidapi-host': 'travel-advisor.p.rapidapi.com',
             },
           }
         )
-        const result = await response.json()
-        console.log(result.data)
+        let data: any = await res.json()
+        data = data.data || []
 
-        setPlaces(result.data)
+        // set places data
+        setPlaces(data.filter((place: any) => place.name && place.num_reviews > 0))
+        setFilteredPlaces([])
+        setRating('')
       } catch (error) {
-        console.error(error)
+        console.log(error)
+      } finally {
+        // stop loading
+        setIsLoading(false)
       }
     }
 
-    if (coordinates.lat && coordinates.lng && bounds) {
-      getPlaces()
-    }
-  }, [coordinates, bounds])
+    // get places data
+    getPlacesData(type, bounds.sw, bounds.ne)
+  }, [bounds, coords.lat, coords.lng, type])
+
+  const onLoad = useCallback((autoComplete: any) => {
+    console.log('autoComplete:', autoComplete)
+    setAutocomplete(autoComplete)
+  }, [])
+
+  const onPlaceChanged = useCallback(() => {
+    const lat = autocomplete.getPlace().geometry.location.lat()
+    const lng = autocomplete.getPlace().geometry.location.lng()
+    setCoords({ lat, lng })
+  }, [autocomplete])
 
   return (
-    <div className="grid min-h-screen grid-cols-12">
-      <div className="col-span-3">
-        <List places={places} />
-      </div>
-      <div className="col-span-9">
+    <div className="flex h-screen overflow-hidden">
+      <div className="flex flex-1 items-center justify-center">
         <Map
-          coordinates={coordinates}
-          setCoordinates={setCoordinates}
+          setChildClicked={setChildClicked}
           setBounds={setBounds}
+          setCoords={setCoords}
+          coords={coords}
+          places={filteredPlaces.length ? filteredPlaces : places}
+        />
+      </div>
+
+      <div className={`${openList ? '' : '-mr-[300px]'} trans-300 h-full w-[300px] p-2 md:mr-0`}>
+        <List
+          open={openList}
+          setOpen={setOpenList}
+          isLoading={isLoading}
+          childClicked={childClicked}
+          places={filteredPlaces.length ? filteredPlaces : places}
+          type={type}
+          setType={setType}
+          rating={rating}
+          setRating={setRating}
         />
       </div>
     </div>
