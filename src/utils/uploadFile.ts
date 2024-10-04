@@ -8,11 +8,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_KEY,
 })
 
-async function uploadFile(
-  file: File,
-  ratio: string = '16:9',
-  type: 'image' | 'video' | 'raw' | 'auto' | undefined = 'image'
-) {
+async function uploadFile(file: File, ratio: string = '16:9') {
   const size: { width: number; height: number; fit: keyof sharp.FitEnum } = {
     width: 1920,
     height: 1080,
@@ -33,15 +29,21 @@ async function uploadFile(
   }
 
   try {
+    let type: 'image' | 'video' | 'raw' | 'auto' = 'auto'
+    if (file.type.startsWith('image')) {
+      type = 'image'
+    } else if (file.type.startsWith('video')) {
+      type = 'video'
+    }
+
     // Resize
     let buffer: Buffer = Buffer.from(await file.arrayBuffer())
-    if (type === 'image') {
-      buffer = await sharp(buffer).resize(size).toBuffer()
-    }
+    // if (file.type.startsWith('image')) {
+    //   buffer = await sharp(buffer).resize(size).toBuffer()
+    // }
 
     interface CloudinaryUploadResult {
       url: string
-      // Add other properties if needed
     }
 
     const fileUploaded: CloudinaryUploadResult = await new Promise((resolve, reject) => {
@@ -58,7 +60,7 @@ async function uploadFile(
         .end(buffer)
     })
 
-    return fileUploaded.url
+    return fileUploaded
   } catch (error) {
     console.error(error)
     throw error

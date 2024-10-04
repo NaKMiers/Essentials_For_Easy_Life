@@ -57,6 +57,7 @@ export default UserModel
 
 export interface IUser {
   _id: string
+
   username: string
   email: string
   authType: string
@@ -65,4 +66,7 @@ export interface IUser {
   firstName: string
   lastName: string
   bio: string
+
+  createdAt: string
+  updatedAt: string
 }

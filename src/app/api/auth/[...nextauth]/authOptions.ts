@@ -1,13 +1,11 @@
 import { connectDatabase } from '@/config/database'
 import UserModel from '@/models/UserModel'
-import bcrypt from 'bcrypt'
 
 // Models: User
 import '@/models/UserModel'
 
 // Providers
 import { SessionStrategy } from 'next-auth'
-import CredentialsProvider from 'next-auth/providers/credentials'
 import GitHubProvider from 'next-auth/providers/github'
 import GoogleProvider from 'next-auth/providers/google'
 
@@ -30,62 +28,6 @@ const authOptions = {
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
-
-    // CREDENTIALS
-    CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        usernameOrEmail: { label: 'Tên người dùng hoặc Email', type: 'text' },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials: Record<'usernameOrEmail' | 'password', string> | undefined) {
-        console.log('- Credentials -')
-
-        // connect to database
-        await connectDatabase()
-
-        // check if credentials is empty
-        if (!credentials?.usernameOrEmail || !credentials?.password) {
-          return null
-        }
-
-        // get data from credentials
-        const { usernameOrEmail, password } = credentials
-
-        // find user from database
-        const user: any = await UserModel.findOne({
-          $or: [{ email: usernameOrEmail.toLowerCase() }, { username: usernameOrEmail }],
-        }).lean()
-
-        // check user exists or not in database
-        if (!user) {
-          throw new Error('Email hoặc mật khẩu không chính xác!')
-        }
-
-        // check if user is not local
-        if (user.authType !== 'local') {
-          throw new Error('Tài khoản này được xác thực bởi ' + user.authType)
-        }
-
-        // check password
-        const isValidPassword = await bcrypt.compare(password, user.password)
-        if (!isValidPassword) {
-          // push error to call back
-          throw new Error('Email hoặc mật khẩu không chính xác!')
-        }
-
-        const { avatar: image, ...otherDetails } = user
-
-        // return to session callback
-        return {
-          ...otherDetails,
-          image,
-          name: user.firstName + ' ' + user.lastName,
-        }
-      },
-    }),
-
-    // ...add providers here
   ],
   callbacks: {
     async jwt({ token, user, trigger, session }: any) {
@@ -93,7 +35,7 @@ const authOptions = {
 
       // New Login
       if (user) {
-        const userDB: any = await UserModel.findOne({
+        const userDB = await UserModel.findOne({
           email: user.email,
         }).lean()
 
@@ -104,8 +46,9 @@ const authOptions = {
 
       if (trigger === 'update' && token._id) {
         console.log('- Update Token -')
-        const userDB: any = await UserModel.findById(token._id).lean()
+        const userDB = await UserModel.findById(token._id).lean()
         if (userDB) {
+          // exclude password
           return { ...token, ...userDB }
         }
       }
@@ -161,6 +104,7 @@ const authOptions = {
             firstName,
             lastName,
             authType: account.provider,
+            verifiedEmail: true,
           })
         }
 
