@@ -1,13 +1,16 @@
+const handleResponse = async (response: Response) => {
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message)
+  }
+  return response.json()
+}
+
 // [GET]: /file/get-user-files
 export const getUserFilesApi = async () => {
   const res = await fetch(`/api/file/get-user-files`)
 
-  // check status
-  if (!res.ok) {
-    throw new Error((await res.json()).message)
-  }
-
-  return await res.json()
+  return handleResponse(res)
 }
 
 // [POST]: /file/upload
@@ -17,12 +20,7 @@ export const uploadFilesApi = async (data: FormData) => {
     body: data,
   })
 
-  // check status
-  if (!res.ok) {
-    throw new Error((await res.json()).message)
-  }
-
-  return await res.json()
+  return handleResponse(res)
 }
 
 // [DELETE]: /file/delete
@@ -32,10 +30,5 @@ export const deleteFilesApi = async (ids: string[]) => {
     body: JSON.stringify({ ids }),
   })
 
-  // check status
-  if (!res.ok) {
-    throw new Error((await res.json()).message)
-  }
-
-  return await res.json()
+  return handleResponse(res)
 }

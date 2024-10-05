@@ -6,3 +6,6 @@ export * from './fileRequests'
 
 // user
 export * from './userRequests'
+
+// movie
+export * from './movieRequests'

@@ -9,59 +9,59 @@ export const metadata: Metadata = {
 
 async function Home() {
   return (
-    <div className='mx-auto h-full min-h-screen w-full max-w-1200'>
+    <div className="mx-auto h-full min-h-screen w-full max-w-1200">
       <Divider size={10} />
 
-      <h1 className='text-center text-4xl'>Essentials For Easy Life</h1>
+      <h1 className="text-center text-4xl">Essentials For Easy Life</h1>
 
       <Divider size={10} />
 
-      <div className='grid grid-cols-1 gap-21 text-xl font-semibold text-dark sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+      <div className="grid grid-cols-1 gap-21 text-xl font-semibold text-dark sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <Link
-          href='/ai'
-          className='flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg'
+          href="/ai"
+          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
         >
           AI IMAGE
         </Link>
         <Link
-          href='/news'
-          className='flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg'
+          href="/news"
+          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
         >
           NEWS
         </Link>
         <Link
-          href='/location'
-          className='flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg'
+          href="/location"
+          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
         >
           LOCATION
         </Link>
         <Link
-          href='/spotify'
-          className='flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg'
+          href="/music"
+          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
         >
-          SPOTIFY
+          MUSIC
         </Link>
         <Link
-          href='/netflix'
-          className='flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg'
+          href="/movie"
+          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
         >
-          NETFLIX
+          MOVIE
         </Link>
         <Link
-          href='/recipe'
-          className='flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg'
+          href="/recipe"
+          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
         >
           RECIPE
         </Link>
         <Link
-          href='/temp-mail'
-          className='flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg'
+          href="/temp-mail"
+          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
         >
           TEMP MAIL
         </Link>
         <Link
-          href='/'
-          className='flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg'
+          href="/"
+          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
         >
           ...
         </Link>
