@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable prefer-const */
 'use client'
 
@@ -234,7 +233,7 @@ function VortexBackground(props: VortexBackgroundProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         ref={containerRef}
-        className='absolute h-full w-full inset-0 z-0 bg-transparent flex items-center justify-center'
+        className="absolute inset-0 z-0 flex h-full w-full items-center justify-center bg-transparent"
       >
         <canvas ref={canvasRef}></canvas>
       </motion.div>
