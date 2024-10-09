@@ -1,5 +1,4 @@
 'use client'
-import Divider from '@/components/Divider'
 import Group from '@/components/Group'
 import Playlist from '@/components/music/Playlist'
 import TrackItem from '@/components/music/TrackItem'

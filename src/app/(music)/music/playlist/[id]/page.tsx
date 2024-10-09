@@ -2,7 +2,6 @@
 
 import Divider from '@/components/Divider'
 import Track from '@/components/music/Track'
-import { shuffleBGs } from '@/constants/music'
 import useSpotify from '@/libs/hooks/useSpotify'
 import { duration } from '@/utils/time'
 import { useSession } from 'next-auth/react'

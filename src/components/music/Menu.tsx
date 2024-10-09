@@ -2,14 +2,14 @@
 
 import { FaChevronDown } from 'react-icons/fa'
 
+import { useAppDispatch } from '@/libs/hooks'
 import useSpotify from '@/libs/hooks/useSpotify'
+import { setSpotifyUser } from '@/libs/reducers/musicReducer'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { setSpotifyUser } from '@/libs/reducers/musicReducer'
-import { useAppDispatch } from '@/libs/hooks'
 
 function Menu() {
   // hooks

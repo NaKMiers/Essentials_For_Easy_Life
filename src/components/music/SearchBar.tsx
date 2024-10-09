@@ -48,7 +48,7 @@ function SearchBar({ setResult, className = '' }: SearchBarProps) {
       // stop loading
       setSearchLoading(false)
     }
-  }, [searchValue])
+  }, [searchValue, setResult, spotifyApi])
 
   // auto search after 0.5s when search value changes
   useEffect(() => {

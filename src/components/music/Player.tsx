@@ -84,7 +84,7 @@ function Player() {
 
             // update current track
             const currentTrack = state.track_window.current_track
-            if (lastTrack?.id !== currentTrack.id || lastPausedState !== isPaused) {
+            if (lastTrack?.id !== currentTrack?.id || lastPausedState !== isPaused) {
               dispatch(setCurTrack({ ...currentTrack, noRePlay: true }))
 
               lastTrack = currentTrack
@@ -163,21 +163,21 @@ function Player() {
     if (!player) return
 
     spotifyApi.skipToPrevious().catch(error => console.error('Previous track error:', error))
-  }, [player])
+  }, [spotifyApi, player])
 
   // next track
   const nextTrack = useCallback(async () => {
     if (!player) return
 
     spotifyApi.skipToNext().catch(error => console.error('Next track error:', error))
-  }, [player])
+  }, [spotifyApi, player])
 
   // set shuffle
   const changeShuffle = useCallback(async () => {
     if (!player) return
 
     spotifyApi.setShuffle(!isShuffle).catch(error => console.error('Shuffle error:', error))
-  }, [player, isShuffle])
+  }, [spotifyApi, player, isShuffle])
 
   // set repeat mode
   const changeRepeatMode = useCallback(async () => {
@@ -187,7 +187,7 @@ function Player() {
     spotifyApi
       .setRepeat(repeatModes[repeatMode === 2 ? 0 : repeatMode + 1] as any)
       .catch(error => console.error('Repeat mode error:', error))
-  }, [player, repeatMode])
+  }, [spotifyApi, player, repeatMode])
 
   // auto seek track position
   useEffect(() => {

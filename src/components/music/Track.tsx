@@ -5,8 +5,8 @@ import {
   setCurTrack,
   setIsPlaying,
   setLikedTracks,
-  setPrevTracks,
   setNextTracks,
+  setPrevTracks,
 } from '@/libs/reducers/musicReducer'
 import { duration } from '@/utils/time'
 import Image from 'next/image'
@@ -55,8 +55,6 @@ function Track({ track, order, prevTracks, nextTracks, className }: TrackProps) 
   // play track
   const handlePlayTrack = useCallback(async () => {
     try {
-      const res = await spotifyApi.getMyDevices()
-
       dispatch(setPrevTracks(prevTracks))
       dispatch(setCurTrack(track))
       dispatch(setNextTracks(nextTracks))
@@ -65,7 +63,7 @@ function Track({ track, order, prevTracks, nextTracks, className }: TrackProps) 
       console.log(err)
       toast.error(err.message)
     }
-  }, [dispatch, track, spotifyApi])
+  }, [dispatch, track, nextTracks, prevTracks])
 
   // remove track from liked
   const handleRemoveFromLiked = useCallback(async () => {

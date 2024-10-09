@@ -2,7 +2,6 @@
 
 import Divider from '@/components/Divider'
 import Track from '@/components/music/Track'
-import { shuffleBGs } from '@/constants/music'
 import { useAppSelector } from '@/libs/hooks'
 import { getUserName } from '@/utils/string'
 import { duration } from '@/utils/time'
