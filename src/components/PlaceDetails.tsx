@@ -11,7 +11,6 @@ interface PlaceDetailsProps {
 }
 
 function PlaceDetails({ place, selected, refProp, className = '' }: PlaceDetailsProps) {
-  console.log('refProp:', refProp)
   if (selected) refProp?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   return (

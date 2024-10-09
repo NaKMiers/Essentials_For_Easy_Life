@@ -68,8 +68,6 @@ function AIPage() {
     try {
       const { files } = await getUserFilesApi()
 
-      console.log('files', files)
-
       setUserFiles(files)
     } catch (err: any) {
       console.log(err)
@@ -86,7 +84,6 @@ function AIPage() {
     try {
       const { requestId } = await swapFaceApi(selectedImages[0], selectedImages[1])
 
-      console.log(requestId)
       toast.success('Faces swapped successfully')
 
       setRequestId(requestId)
@@ -99,8 +96,6 @@ function AIPage() {
   const handleGetResult = useCallback(async () => {
     try {
       const { resultImage } = await getSwapFaceResultApi(requestId)
-
-      console.log(resultImage)
 
       setSwapFaceResults(prev => [resultImage, ...prev])
     } catch (err: any) {
@@ -143,7 +138,6 @@ function AIPage() {
   const handleDetectAIContent = useCallback(async () => {
     try {
       const data = await detectAIContentApi(content)
-      console.log(data)
 
       setDetectResult(data.data)
     } catch (err: any) {
@@ -176,7 +170,6 @@ function AIPage() {
   const handleTextToSpeech = useCallback(async () => {
     try {
       const { audio } = await textToSpeechApi(audioPrompt, selectedVoice)
-      console.log('audio', audio)
 
       setAudioResult(audio)
     } catch (err: any) {

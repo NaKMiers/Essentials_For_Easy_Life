@@ -1,6 +1,6 @@
 import Divider from '@/components/Divider'
 import MovieCard from '@/components/MovieCard'
-import MovieGroup from '@/components/MovieGroup'
+import Group from '@/components/Group'
 import { credits, detail, getVideos, similar } from '@/requests'
 import Image from 'next/image'
 
@@ -18,8 +18,6 @@ async function MovieDetailPage({
   try {
     const res = await detail(category, id, { params: {} })
     movie = res
-
-    // console.log(movie)
   } catch (err: any) {
     console.log(err)
   }
@@ -44,8 +42,6 @@ async function MovieDetailPage({
   try {
     const res = await similar(category, id)
     similarMovies = res.results
-
-    console.log(similarMovies)
   } catch (err: any) {
     console.log(err)
   }
@@ -139,7 +135,7 @@ async function MovieDetailPage({
       {/* Similar */}
       <div className="mx-auto max-w-1200 px-21">
         <h2 className="text-center text-2xl font-semibold">Similar</h2>
-        <MovieGroup
+        <Group
           className="mx-4"
           classChild="w-1/2 md:w-1/5"
         >
@@ -151,7 +147,7 @@ async function MovieDetailPage({
               key={movie.id}
             />
           ))}
-        </MovieGroup>
+        </Group>
       </div>
     </div>
   )

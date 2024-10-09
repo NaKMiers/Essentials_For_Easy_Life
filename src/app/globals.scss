@@ -25,7 +25,7 @@
 
 /* custom scrollbar */
 ::-webkit-scrollbar {
-  width: 20px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -35,7 +35,7 @@
 ::-webkit-scrollbar-thumb {
   background: #003e70;
   border-radius: 20px;
-  border: 6px solid transparent;
+  border: 2px solid transparent;
   background-clip: content-box;
 }
 
@@ -45,7 +45,6 @@
 
 button:focus {
   outline: none;
-
 }
 
 .trans-200 {
@@ -61,19 +60,19 @@ button:focus {
 }
 
 .wiggle {
-  @apply group-hover:animate-scale-wiggle trans-200 group-hover:scale-[1.2];
-  @apply hover:animate-scale-wiggle trans-200 hover:scale-[1.2];
+  @apply trans-200 group-hover:scale-[1.2] group-hover:animate-scale-wiggle;
+  @apply trans-200 hover:scale-[1.2] hover:animate-scale-wiggle;
   transform-origin: center;
 }
 
 .wiggle-0 {
-  @apply group-hover:animate-wiggle trans-200;
-  @apply hover:animate-wiggle trans-200;
+  @apply trans-200 group-hover:animate-wiggle;
+  @apply trans-200 hover:animate-wiggle;
   transform-origin: center;
 }
 
 .wiggle-1 {
-  @apply hover:animate-scale-wiggle trans-200 hover:scale-[1.2];
+  @apply trans-200 hover:scale-[1.2] hover:animate-scale-wiggle;
   transform-origin: center;
 }
 
@@ -88,7 +87,7 @@ button:focus {
 }
 
 .loading {
-  @apply bg-loading animate-pulse;
+  @apply animate-pulse bg-loading;
 }
 
 .number-input::-webkit-inner-spin-button,
@@ -174,7 +173,7 @@ button:focus {
         & .topic,
         & .desc,
         & .buttons {
-          @apply translate-y-[50px] blur-xl opacity-0;
+          @apply translate-y-[50px] opacity-0 blur-xl;
           animation: showContent 0.5s 1s linear 1 forwards;
         }
 
@@ -229,7 +228,7 @@ button:focus {
 /* Effect Next */
 .carousel.next {
   & .list .item:nth-child(1) .img {
-    @apply w-[150px] h-[220px] absolute left-1/2 bottom-[50px] rounded-medium;
+    @apply absolute bottom-[50px] left-1/2 h-[220px] w-[150px] rounded-medium;
     animation: showImage 0.5s linear 1 forwards;
   }
 
@@ -329,7 +328,6 @@ p {
     margin-top: 0;
   }
 
-
   /* Youtube embed */
   div[data-youtube-video] {
     cursor: move;
@@ -379,8 +377,11 @@ p {
 
     .selectedCell:after {
       background: #ddd;
-      content: "";
-      left: 0; right: 0; top: 0; bottom: 0;
+      content: '';
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
       pointer-events: none;
       position: absolute;
       z-index: 2;

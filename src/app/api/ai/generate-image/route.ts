@@ -12,8 +12,6 @@ export async function POST(req: NextRequest) {
     // get content from request
     const { prompt, size, styles } = await req.json()
 
-    console.log({ prompt, size, styles })
-
     if (!prompt || !size || !styles) {
       return NextResponse.json({ message: 'Prompt, size, and styles are required' }, { status: 400 })
     }

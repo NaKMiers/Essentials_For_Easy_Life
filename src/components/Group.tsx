@@ -9,7 +9,7 @@ interface GroupCoursesProps {
   children: ReactNode
 }
 
-function MovieGroup({ className = '', classChild = '', children }: GroupCoursesProps) {
+function Group({ className = '', classChild = '', children }: GroupCoursesProps) {
   // states
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
   const [isMedium, setIsMedium] = useState<boolean>(false)
@@ -115,4 +115,4 @@ function MovieGroup({ className = '', classChild = '', children }: GroupCoursesP
   )
 }
 
-export default memo(MovieGroup)
+export default memo(Group)

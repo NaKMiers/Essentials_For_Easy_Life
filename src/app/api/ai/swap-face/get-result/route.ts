@@ -22,7 +22,6 @@ export async function POST(req: NextRequest) {
     // get request id to get swap face result
     const { requestId } = await req.json()
 
-    console.log(requestId)
     if (!requestId) {
       return NextResponse.json({ message: 'Result not found' }, { status: 500 })
     }

@@ -52,7 +52,6 @@ function Map({ coords, places, setCoords, setBounds, setChildClicked }: MapProps
           setBounds({ ne: e.marginBounds.ne, sw: e.marginBounds.sw })
         }}
         onChildClick={child => {
-          console.log('child:', child)
           setChildClicked(child)
         }}
       >

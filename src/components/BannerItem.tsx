@@ -24,8 +24,6 @@ function MovieHeroSlideItem({ movie, className }: BannerItemProps) {
     try {
       const videos = await getVideos('movie', movie.id)
 
-      console.log(videos)
-
       if (videos.results.length < 0 || !videos.results[0].key) {
         toast.error('No trailer found')
         return

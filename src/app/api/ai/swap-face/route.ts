@@ -14,9 +14,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Failed to upload images' }, { status: 500 })
     }
 
-    console.log('target:', target)
-    console.log('swap:', swap)
-
     // swap faces
     const swapFormData = new FormData()
     swapFormData.append('target_url', target)
@@ -32,7 +29,6 @@ export async function POST(req: NextRequest) {
       body: swapFormData,
     })
     const swapData = await swapResponse.json()
-    console.log('swapData:', swapData)
 
     const requestId = swapData.image_process_response.request_id
 

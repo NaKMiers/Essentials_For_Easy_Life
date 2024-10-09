@@ -23,7 +23,6 @@ function LocationPage() {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }) => {
-      console.log(latitude, longitude)
       setCoords({ lat: latitude, lng: longitude })
     })
   }, [])
@@ -72,7 +71,6 @@ function LocationPage() {
   }, [bounds, coords.lat, coords.lng, type])
 
   const onLoad = useCallback((autoComplete: any) => {
-    console.log('autoComplete:', autoComplete)
     setAutocomplete(autoComplete)
   }, [])
 

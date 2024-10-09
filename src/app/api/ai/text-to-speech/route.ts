@@ -31,8 +31,6 @@ export async function POST(req: NextRequest) {
     })
     const result = await response.json()
 
-    console.log(result)
-
     return NextResponse.json({ audio: result.fileDownloadUrl, message: 'Success' }, { status: 200 })
   } catch (err: any) {
     return NextResponse.json({ message: err.message }, { status: 500 })

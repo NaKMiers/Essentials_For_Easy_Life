@@ -43,8 +43,6 @@ function List({
     })
   }, [places])
 
-  console.log('elRefs:', elRefs)
-
   return (
     <div className="relative h-full">
       <button

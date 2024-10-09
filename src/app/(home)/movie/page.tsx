@@ -1,6 +1,6 @@
 import Divider from '@/components/Divider'
 import MovieCard from '@/components/MovieCard'
-import MovieGroup from '@/components/MovieGroup'
+import Group from '@/components/Group'
 import MovieHeroSlide from '@/components/MovieHeroSlide'
 import { getMoviesList, getTvList } from '@/requests'
 import Link from 'next/link'
@@ -50,8 +50,6 @@ async function MoviePage() {
   try {
     const res = await getTvList('popular', {})
     trendingTvShows = res.results
-
-    console.log(trendingTvShows)
   } catch (err: any) {
     console.log('')
   }
@@ -91,7 +89,7 @@ async function MoviePage() {
         </Link>
       </div>
 
-      <MovieGroup
+      <Group
         className="mx-8 mt-4"
         classChild="w-1/2 md:w-1/5"
       >
@@ -103,7 +101,7 @@ async function MoviePage() {
             key={movie.id}
           />
         ))}
-      </MovieGroup>
+      </Group>
 
       <Divider size={20} />
 
@@ -119,7 +117,7 @@ async function MoviePage() {
         </Link>
       </div>
 
-      <MovieGroup
+      <Group
         className="mx-8 mt-4"
         classChild="w-1/2 md:w-1/5"
       >
@@ -131,7 +129,7 @@ async function MoviePage() {
             key={movie.id}
           />
         ))}
-      </MovieGroup>
+      </Group>
 
       <Divider size={20} />
 
@@ -147,7 +145,7 @@ async function MoviePage() {
         </Link>
       </div>
 
-      <MovieGroup
+      <Group
         className="mx-8 mt-4"
         classChild="w-1/2 md:w-1/5"
       >
@@ -159,7 +157,7 @@ async function MoviePage() {
             key={movie.id}
           />
         ))}
-      </MovieGroup>
+      </Group>
 
       <Divider size={20} />
 
@@ -175,7 +173,7 @@ async function MoviePage() {
         </Link>
       </div>
 
-      <MovieGroup
+      <Group
         className="mx-8 mt-4"
         classChild="w-1/2 md:w-1/5"
       >
@@ -187,7 +185,7 @@ async function MoviePage() {
             key={movie.id}
           />
         ))}
-      </MovieGroup>
+      </Group>
 
       <Divider size={20} />
 
@@ -203,7 +201,7 @@ async function MoviePage() {
         </Link>
       </div>
 
-      <MovieGroup
+      <Group
         className="mx-8 mt-4"
         classChild="w-1/2 md:w-1/5"
       >
@@ -215,7 +213,7 @@ async function MoviePage() {
             key={movie.id}
           />
         ))}
-      </MovieGroup>
+      </Group>
 
       <Divider size={20} />
 
@@ -231,7 +229,7 @@ async function MoviePage() {
         </Link>
       </div>
 
-      <MovieGroup
+      <Group
         className="mx-8 mt-4"
         classChild="w-1/2 md:w-1/5"
       >
@@ -243,7 +241,7 @@ async function MoviePage() {
             key={movie.id}
           />
         ))}
-      </MovieGroup>
+      </Group>
 
       <Divider size={50} />
     </div>

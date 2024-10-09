@@ -3,22 +3,29 @@
 import { useAppDispatch, useAppSelector } from '@/libs/hooks'
 import useSpotify from '@/libs/hooks/useSpotify'
 import { setCurTrack, setIsPlaying } from '@/libs/reducers/musicReducer'
+import { duration } from '@/utils/time'
 import { Slider } from '@mui/material'
+import { debounce } from 'lodash'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
+import { BiSolidSkipNextCircle, BiSolidSkipPreviousCircle } from 'react-icons/bi'
 import { FaCirclePause, FaCirclePlay } from 'react-icons/fa6'
 import { HiSpeakerWave, HiSpeakerXMark } from 'react-icons/hi2'
-import toast from 'react-hot-toast'
-import { debounce } from 'lodash'
-import { duration } from '@/utils/time'
+import { RiLoopLeftFill } from 'react-icons/ri'
+import { TiArrowShuffle } from 'react-icons/ti'
 
 function Player() {
   // hooks
   const dispatch = useAppDispatch()
   const spotifyApi = useSpotify()
   const { data: session } = useSession()
+
+  // stores
   const curTrack: any = useAppSelector(state => state.music.curTrack)
+  const prevTracks: any[] = useAppSelector(state => state.music.prevTracks)
+  const nextTracks: any[] = useAppSelector(state => state.music.nextTracks)
   const isPlaying: boolean = useAppSelector(state => state.music.isPlaying)
 
   // states
@@ -26,8 +33,10 @@ function Player() {
   const [isMuted, setIsMuted] = useState(false)
   const [deviceId, setDeviceId] = useState<string>('')
   const [player, setPlayer] = useState<any>(null)
-  const [trackPosition, setTrackPosition] = useState<number>(0)
-  const [isChangingTrack, setIsChangingTrack] = useState<boolean>(false)
+  const [trackPosition, setTrackPosition] = useState<number>(0) // ms
+  const [trackDuration, setTrackDuration] = useState<number>(0) // ms
+  const [isShuffle, setIsShuffle] = useState<boolean>(false)
+  const [repeatMode, setRepeatMode] = useState<number>(0)
 
   // Initialize Spotify Player
   useEffect(() => {
@@ -35,8 +44,6 @@ function Player() {
 
     // Function to initialize the Spotify player once the SDK is ready
     const initializeSpotifyPlayer = () => {
-      console.log('wd.Spotify', wd.Spotify)
-
       if (wd.Spotify && session && spotifyApi.getAccessToken()) {
         const token = spotifyApi.getAccessToken()
 
@@ -47,8 +54,14 @@ function Player() {
         })
 
         spotifyPlayer.addListener('ready', ({ device_id }: any) => {
-          console.log('Ready with Device ID', device_id)
           setDeviceId(device_id)
+
+          spotifyApi
+            .transferMyPlayback([device_id], { play: true })
+            .then(() => {
+              console.log('Transferred playback to localhost')
+            })
+            .catch(err => console.error('Error transferring playback', err))
         })
 
         spotifyPlayer.addListener('not_ready', ({ device_id }: any) => {
@@ -69,20 +82,24 @@ function Player() {
             const isPaused = state.paused
             dispatch(setIsPlaying(!isPaused))
 
+            // update current track
             const currentTrack = state.track_window.current_track
-
             if (lastTrack?.id !== currentTrack.id || lastPausedState !== isPaused) {
-              console.log('re-dispatching track')
               dispatch(setCurTrack({ ...currentTrack, noRePlay: true }))
 
               lastTrack = currentTrack
               lastPausedState = isPaused
             }
 
+            // update shuffle state
+            setIsShuffle(state.shuffle)
+
+            // update loop state
+            setRepeatMode(state.repeat_mode)
+
             // update track position
-            const currentPosition = state.position
-            const duration = state.duration
-            setTrackPosition(currentPosition)
+            setTrackDuration(state.duration)
+            setTrackPosition(state.position)
           }, 1000)
         )
 
@@ -106,8 +123,6 @@ function Player() {
 
   // Play/Pause track
   const handlePlayPause = useCallback(async () => {
-    console.log('isPlaying', isPlaying)
-
     if (!player) return
 
     if (!isPlaying) {
@@ -119,22 +134,60 @@ function Player() {
     }
 
     dispatch(setIsPlaying(!isPlaying))
-  }, [dispatch, player, isPlaying])
+  }, [dispatch, player, isPlaying, spotifyApi])
 
-  // Play track on device
+  // play track on device
   const playTrack = useCallback(async () => {
     if (!deviceId || !curTrack) return
+
+    const uris = [
+      ...prevTracks?.map(track => track.uri),
+      curTrack.uri,
+      ...nextTracks?.map(track => track.uri),
+    ]
 
     await spotifyApi
       .play({
         device_id: deviceId,
-        uris: [curTrack.uri],
+        uris,
+        offset: { uri: curTrack.uri },
       })
       .catch(err => {
         console.error(err)
         toast.error('Error playing track')
       })
-  }, [curTrack, deviceId, spotifyApi])
+  }, [curTrack, deviceId, spotifyApi, prevTracks, nextTracks])
+
+  // previous track
+  const previousTrack = useCallback(async () => {
+    if (!player) return
+
+    spotifyApi.skipToPrevious().catch(error => console.error('Previous track error:', error))
+  }, [player])
+
+  // next track
+  const nextTrack = useCallback(async () => {
+    if (!player) return
+
+    spotifyApi.skipToNext().catch(error => console.error('Next track error:', error))
+  }, [player])
+
+  // set shuffle
+  const changeShuffle = useCallback(async () => {
+    if (!player) return
+
+    spotifyApi.setShuffle(!isShuffle).catch(error => console.error('Shuffle error:', error))
+  }, [player, isShuffle])
+
+  // set repeat mode
+  const changeRepeatMode = useCallback(async () => {
+    if (!player) return
+
+    const repeatModes = ['off', 'context', 'track']
+    spotifyApi
+      .setRepeat(repeatModes[repeatMode === 2 ? 0 : repeatMode + 1] as any)
+      .catch(error => console.error('Repeat mode error:', error))
+  }, [player, repeatMode])
 
   // auto seek track position
   useEffect(() => {
@@ -153,7 +206,7 @@ function Player() {
 
   // Handle volume change
   const handleVolumeChange = useCallback(
-    (event: any, newValue: number | number[]) => {
+    (_: any, newValue: number | number[]) => {
       if (Array.isArray(newValue)) return
       setVolume(newValue)
       player?.setVolume(newValue / 100).catch((err: any) => console.error(err))
@@ -166,7 +219,7 @@ function Player() {
     setIsMuted(!isMuted)
     setVolume(isMuted ? 50 : 0)
     player?.setVolume(isMuted ? 0.5 : 0).catch((err: any) => console.error(err))
-  }, [player])
+  }, [player, isMuted])
 
   useEffect(() => {
     if (curTrack && deviceId && !curTrack.noRePlay) {
@@ -175,89 +228,147 @@ function Player() {
   }, [curTrack, deviceId, playTrack])
 
   return (
-    <div className="grid min-h-[74px] grid-cols-3 px-4 py-3">
-      {/* Track Info */}
-      <div className="flex items-center gap-2">
-        {curTrack && (
-          <>
-            <div className="aspect-square max-h-[50px] max-w-[50px] overflow-hidden rounded-md shadow-lg">
-              <Image
-                src={curTrack.album?.images[0].url}
-                width={50}
-                height={50}
-                alt={curTrack.name}
-              />
-            </div>
-            <div className="flex flex-col">
-              <p>{curTrack.name}</p>
-              <p className="font-body text-sm tracking-wider text-slate-300">
-                {curTrack.artists.map((artist: any) => artist.name).join(', ')}
-              </p>
-            </div>
-          </>
-        )}
-      </div>
-
-      <div className="flex flex-col items-center justify-center gap-3">
-        {/* Play/Pause Control */}
-        <button onClick={handlePlayPause}>
-          {isPlaying ? (
-            <FaCirclePause
-              size={30}
-              className="text-light"
-            />
-          ) : (
-            <FaCirclePlay
-              size={30}
-              className="text-light"
-            />
+    <div className="h-[158px] w-full p-3 md:h-[100px]">
+      <div className="grid h-full w-full grid-cols-3 gap-2 rounded-xl bg-neutral-200 px-4 py-2 text-dark md:py-0 md:pt-0">
+        {/* Track Info */}
+        <div className="col-span-2 flex items-center gap-2 max-md:order-1 md:col-span-1">
+          {curTrack && (
+            <>
+              <div className="aspect-square max-h-[50px] max-w-[50px] flex-shrink-0 overflow-hidden rounded-md shadow-lg">
+                <Image
+                  src={curTrack.album?.images[0].url}
+                  width={45}
+                  height={45}
+                  alt={curTrack.name}
+                />
+              </div>
+              <div className="flex flex-col">
+                <p
+                  className="line-clamp-1 text-ellipsis"
+                  title={curTrack.name}
+                >
+                  {curTrack.name}
+                </p>
+                <p
+                  className="line-clamp-1 text-ellipsis font-body text-sm tracking-wider text-slate-500"
+                  title={curTrack.artists.map((artist: any) => artist.name).join(', ')}
+                >
+                  {curTrack.artists.map((artist: any) => artist.name).join(', ')}
+                </p>
+              </div>
+            </>
           )}
-        </button>
-
-        {/* Seek Control */}
-        <div className="w-full">
-          <Slider
-            value={trackPosition}
-            onChange={(event, newValue) => {
-              setTrackPosition(newValue as number)
-              player?.seek(newValue).catch((err: any) => console.error(err))
-            }}
-            color="warning"
-            min={0}
-            max={curTrack?.duration_ms || 0}
-            valueLabelFormat={value => duration(value as number)}
-            valueLabelDisplay="auto"
-          />
         </div>
-      </div>
 
-      {/* Volume Control */}
-      <div className="flex items-center justify-end gap-3">
-        <button
-          className="group peer flex items-center justify-center"
-          onClick={toggleMute}
-        >
-          {volume > 0 ? (
-            <HiSpeakerWave
-              size={23}
-              className="flex-shrink-0 text-light"
+        <div className="col-span-3 flex flex-col items-center justify-center gap-1 max-md:order-3 md:col-span-1">
+          {/* Play/Pause Control */}
+          <div className="flex items-center gap-4 sm:gap-7">
+            <button
+              className="group"
+              onClick={changeShuffle}
+            >
+              <TiArrowShuffle
+                size={22}
+                className={`wiggle ${isShuffle ? 'text-sky-500' : ''}`}
+              />
+            </button>
+            <button
+              className="group"
+              onClick={previousTrack}
+            >
+              <BiSolidSkipPreviousCircle
+                size={26}
+                className="wiggle"
+              />
+            </button>
+            <button
+              className="group"
+              onClick={handlePlayPause}
+            >
+              {isPlaying ? (
+                <FaCirclePause
+                  size={30}
+                  className="wiggle"
+                />
+              ) : (
+                <FaCirclePlay
+                  size={30}
+                  className="wiggle"
+                />
+              )}
+            </button>
+            <button
+              className="group"
+              onClick={nextTrack}
+            >
+              <BiSolidSkipNextCircle
+                size={26}
+                className="wiggle"
+              />
+            </button>
+            <button
+              className="group relative"
+              onClick={changeRepeatMode}
+            >
+              {repeatMode > 0 && (
+                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] font-semibold text-green-500">
+                  {repeatMode}
+                </span>
+              )}
+              <RiLoopLeftFill
+                size={20}
+                className={`wiggle ${repeatMode ? 'text-sky-500' : ''}`}
+              />
+            </button>
+          </div>
+
+          {/* Seek Control */}
+          <div className="flex w-full items-center gap-3">
+            <span className="text-sm">{trackPosition ? duration(trackPosition) : '00:00'}</span>
+            <Slider
+              value={trackPosition}
+              onChange={(event, newValue) => {
+                setTrackPosition(newValue as number)
+                player?.seek(newValue).catch((err: any) => console.error(err))
+              }}
+              color="warning"
+              min={0}
+              max={curTrack?.duration_ms || 0}
+              valueLabelFormat={value => duration(value as number)}
+              valueLabelDisplay="auto"
             />
-          ) : (
-            <HiSpeakerXMark
-              size={23}
-              className="flex-shrink-0 text-light"
+            <span className="text-sm">{trackDuration ? duration(trackDuration) : '00:00'}</span>
+          </div>
+        </div>
+
+        {/* Volume Control */}
+        <div className="col-span-1 flex items-center justify-end gap-3 max-md:order-2">
+          <button
+            className="group peer flex items-center justify-center"
+            onClick={toggleMute}
+          >
+            {volume > 0 ? (
+              <HiSpeakerWave
+                size={23}
+                className="flex-shrink-0"
+              />
+            ) : (
+              <HiSpeakerXMark
+                size={23}
+                className="flex-shrink-0"
+              />
+            )}
+          </button>
+          <div className="-mb-2 mr-2 w-[135px]">
+            <Slider
+              value={volume}
+              onChange={handleVolumeChange}
+              color="info"
+              min={0}
+              max={100}
+              valueLabelDisplay="auto"
             />
-          )}
-        </button>
-        <div className="-mb-2 mr-2 w-[135px]">
-          <Slider
-            value={volume}
-            onChange={handleVolumeChange}
-            color="info"
-            min={0}
-            max={100}
-            valueLabelDisplay="auto"
-          />
+          </div>
         </div>
       </div>
     </div>
