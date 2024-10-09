@@ -46,7 +46,7 @@ function PlaylistPage({ params: { id } }: { params: { id: string } }) {
     <div className="w-full overflow-y-auto">
       {/* Banner */}
       <div
-        className={`relative flex h-80 items-end px-2 ${shuffleBGs[Math.floor(Math.random() * shuffleBGs.length)]}`}
+        className={`relative flex h-80 items-end px-2 ${shuffleBGs[Math.floor(Math.random() * (shuffleBGs.length - 1))]}`}
       >
         {/* Menu */}
         <Menu />
@@ -83,6 +83,20 @@ function PlaylistPage({ params: { id } }: { params: { id: string } }) {
 
       {/* Songs */}
       <div className="p-2">
+        <div
+          className={`gap-2px-2 mb-3 grid grid-cols-12 border-b border-slate-800 py-0.5 pb-3 text-sm font-semibold`}
+        >
+          <div className="col-span-5 flex items-center gap-2">
+            <span className="mr-3 font-body text-sm tracking-wider text-slate-400">#</span>
+            <span>Title</span>
+          </div>
+
+          <div className="col-span-2 text-center">Preview</div>
+
+          <div className="col-span-4">Album</div>
+
+          <div className="col-span-1 text-center">Duration</div>
+        </div>
         {tracks.length > 0 && (
           <div className="flex flex-col gap-2">
             {tracks.map((track, index) => (

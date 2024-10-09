@@ -5,43 +5,24 @@ import Menu from '@/components/music/Menu'
 import Track from '@/components/music/Track'
 import { shuffleBGs } from '@/constants/music'
 import { useAppSelector } from '@/libs/hooks'
-import useSpotify from '@/libs/hooks/useSpotify'
 import { getUserName } from '@/utils/string'
 import { duration } from '@/utils/time'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
 
 function LikedPage() {
   // hooks
-  const spotifyApi = useSpotify()
   const { data: session } = useSession()
   const curUser: any = session?.user
 
   // states
   const tracks: any[] = useAppSelector(state => state.music.likedTracks)
-  // const [tracks, setTracks] = useState<any[]>([])
-
-  // useEffect(() => {
-  //   const getSavedTracks = async () => {
-  //     try {
-  //       const { body } = await spotifyApi.getMySavedTracks()
-
-  //       // set tracks
-  //       setTracks(body.items.map((item: any) => item.track))
-  //     } catch (err: any) {
-  //       console.log(err)
-  //     }
-  //   }
-
-  //   getSavedTracks()
-  // }, [spotifyApi])
 
   return (
     <div className="w-full overflow-y-auto">
       {/* Banner */}
       <div
-        className={`relative flex h-80 items-end px-2 ${shuffleBGs[Math.floor(Math.random() * shuffleBGs.length)]}`}
+        className={`relative flex h-80 items-end px-2 ${shuffleBGs[Math.floor(Math.random() * (shuffleBGs.length - 1))]}`}
       >
         {/* Menu */}
         <Menu />

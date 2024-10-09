@@ -1,16 +1,11 @@
 import { useAppDispatch, useAppSelector } from '@/libs/hooks'
 import useSpotify from '@/libs/hooks/useSpotify'
-import {
-  setCurPreviewTrack,
-  setCurTrack,
-  setIsPlaying,
-  setLikedTracks,
-} from '@/libs/reducers/musicReducer'
+import { setCurPreviewTrack, setCurTrack, setIsPlaying } from '@/libs/reducers/musicReducer'
 import { duration } from '@/utils/time'
 import Image from 'next/image'
 import { useCallback, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
-import { FaCheck, FaPlusCircle } from 'react-icons/fa'
+import { FaCheck } from 'react-icons/fa'
 
 interface TrackProps {
   track: any
@@ -24,6 +19,7 @@ function Track({ track, order, className }: TrackProps) {
   const dispatch = useAppDispatch()
   const curPreviewTrack: any = useAppSelector(state => state.music.curPreviewTrack)
   const likedTracks: any[] = useAppSelector(state => state.music.likedTracks)
+  const isPlaying: boolean = useAppSelector(state => state.music.isPlaying)
 
   // ref
   const audioReviewRef = useRef<HTMLAudioElement>(null)
@@ -38,6 +34,7 @@ function Track({ track, order, className }: TrackProps) {
 
     if (curPreviewTrack?.id === track.id) {
       audioPreview.play()
+      spotifyApi.pause()
     } else {
       audioPreview.pause()
       audioPreview.currentTime = 0
@@ -57,28 +54,6 @@ function Track({ track, order, className }: TrackProps) {
       toast.error(err.message)
     }
   }, [dispatch, track])
-
-  // add to liked songs
-  const handleLikeTrack = useCallback(async () => {
-    try {
-      await spotifyApi.addToMySavedTracks([track.id])
-      dispatch(setLikedTracks([...likedTracks, track]))
-    } catch (err: any) {
-      console.log(err)
-      toast.error(err.message)
-    }
-  }, [dispatch, likedTracks, spotifyApi, track])
-
-  // remove from liked songs
-  const handleUnlikeTrack = useCallback(async () => {
-    try {
-      await spotifyApi.removeFromMySavedTracks([track.id])
-      dispatch(setLikedTracks(likedTracks.filter(likedTrack => likedTrack.id !== track.id)))
-    } catch (err: any) {
-      console.log(err)
-      toast.error(err.message)
-    }
-  }, [dispatch, likedTracks, spotifyApi, track])
 
   return (
     <div
@@ -111,7 +86,21 @@ function Track({ track, order, className }: TrackProps) {
       >
         <button
           className="trans-200 rounded-3xl border-2 border-light px-2 py-1 text-xs font-semibold hover:bg-white hover:text-dark"
-          onClick={() => dispatch(setCurPreviewTrack(curPreviewTrack?.id === track.id ? null : track))}
+          onClick={() => {
+            if (curPreviewTrack?.id === track.id) {
+              if (isPlaying) {
+                dispatch(setIsPlaying(false))
+                spotifyApi.pause()
+              } else {
+                dispatch(setIsPlaying(true))
+                spotifyApi.play()
+              }
+
+              dispatch(setCurPreviewTrack(null))
+            } else {
+              dispatch(setCurPreviewTrack(track))
+            }
+          }}
         >
           {curPreviewTrack?.id === track.id ? 'Playing...' : 'Preview'}
         </button>
@@ -131,28 +120,11 @@ function Track({ track, order, className }: TrackProps) {
         onClick={e => e.stopPropagation()}
       >
         {duration(track.duration_ms)}
-        {liked ? (
-          <button
-            title="Remove from liked songs"
-            className="group"
-            onClick={handleUnlikeTrack}
-          >
-            <FaCheck
-              className="wiggle text-green-500"
-              size={16}
-            />
-          </button>
-        ) : (
-          <button
-            title="Add to liked songs"
-            className="group"
-            onClick={handleLikeTrack}
-          >
-            <FaPlusCircle
-              className="wiggle -mb-0.5"
-              size={16}
-            />
-          </button>
+        {liked && (
+          <FaCheck
+            className="text-green-500"
+            size={16}
+          />
         )}
       </div>
     </div>

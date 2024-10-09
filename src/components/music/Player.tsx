@@ -106,6 +106,8 @@ function Player() {
 
   // Play/Pause track
   const handlePlayPause = useCallback(async () => {
+    console.log('isPlaying', isPlaying)
+
     if (!player) return
 
     if (!isPlaying) {
