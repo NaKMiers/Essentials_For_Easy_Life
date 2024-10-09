@@ -34,37 +34,17 @@ export const isToday = (date: Date): boolean => {
   return isSameDate(date, new Date())
 }
 
-export const duration = (sec: number, type: 'short' | 'long' = 'short') => {
-  const duration = moment.duration(sec, 'seconds')
+export const duration = (ms: number) => {
+  const duration = moment.duration(ms)
 
-  if (type === 'short') {
-    const totalHours = Math.floor(duration.asHours())
-    const minutes = duration.minutes()
-    const seconds = duration.seconds()
+  const totalHours = Math.floor(duration.asHours())
+  const minutes = duration.minutes()
+  const seconds = duration.seconds()
 
-    if (totalHours === 0) {
-      const duration = moment.duration(sec, 'seconds')
-      return moment.utc(duration.asMilliseconds()).format('mm:ss')
-    } else {
-      return `${totalHours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-    }
-  } else if (type === 'long') {
-    const totalHours = Math.floor(duration.asHours())
-    const minutes = duration.minutes()
-    const seconds = duration.seconds()
-
-    let formattedTime = ''
-
-    if (totalHours > 0) {
-      formattedTime += `${totalHours} giờ `
-    }
-    if (minutes > 0) {
-      formattedTime += `${minutes} phút `
-    }
-    if (seconds > 0) {
-      formattedTime += `${seconds} giây`
-    }
-    return formattedTime.trim()
+  if (totalHours === 0) {
+    return moment.utc(ms).format('mm:ss')
+  } else {
+    return `${totalHours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
   }
 }
 
