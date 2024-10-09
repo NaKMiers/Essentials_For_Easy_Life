@@ -75,7 +75,9 @@ function LikedPage() {
             {tracks.map((track, index) => (
               <Track
                 order={index + 1}
+                prevTracks={tracks.slice(index - 2, index)}
                 track={track}
+                nextTracks={tracks.slice(index + 1, index + 3)}
                 key={track.id}
               />
             ))}
