@@ -16,7 +16,10 @@ function StoreProvider({ children, session }: { children: React.ReactNode; sessi
 
   return (
     <Provider store={storeRef.current}>
-      <SessionProvider session={session} refetchOnWindowFocus={false}>
+      <SessionProvider
+        session={session}
+        refetchOnWindowFocus={false}
+      >
         {children}
       </SessionProvider>
     </Provider>

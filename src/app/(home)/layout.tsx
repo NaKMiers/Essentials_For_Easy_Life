@@ -13,7 +13,7 @@ export default async function RootLayout({
       <PageLoading />
 
       {/* Header */}
-      <Header />
+      {/* <Header /> */}
 
       {/* Main */}
       <main className="bg-neutral-800 text-light">{children}</main>

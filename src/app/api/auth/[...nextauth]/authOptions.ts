@@ -1,13 +1,39 @@
 import { connectDatabase } from '@/config/database'
+import spotifyApi, { LOGIN_URL } from '@/libs/spotify'
 import UserModel from '@/models/UserModel'
-
-// Models: User
-import '@/models/UserModel'
 
 // Providers
 import { SessionStrategy } from 'next-auth'
 import GitHubProvider from 'next-auth/providers/github'
 import GoogleProvider from 'next-auth/providers/google'
+import SpotifyProvider from 'next-auth/providers/spotify'
+
+// Models: User
+import '@/models/UserModel'
+
+async function refreshAccessToken(token: any) {
+  try {
+    spotifyApi.setAccessToken(token.accessToken)
+    spotifyApi.setRefreshToken(token.refreshToken)
+
+    const { body: refreshedToken } = await spotifyApi.refreshAccessToken()
+    console.log('REFRESHED TOKEN:', refreshedToken)
+
+    return {
+      ...token,
+      accessToken: refreshedToken.access_token,
+      accessTokenExpires: refreshedToken.expires_in * 1000 + Date.now(),
+      refreshToken: refreshedToken.refresh_token || token.refreshToken,
+    }
+  } catch (err: any) {
+    console.error(err)
+
+    return {
+      ...token,
+      error: 'RefreshAccessTokenError',
+    }
+  }
+}
 
 const authOptions = {
   secret: process.env.NEXTAUTH_SECRET!,
@@ -28,10 +54,17 @@ const authOptions = {
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
+
+    // SPOTIFY
+    SpotifyProvider({
+      clientId: process.env.SPOTIFY_CLIENT_ID!,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
+      authorization: LOGIN_URL,
+    }),
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }: any) {
-      console.log('- JWT -')
+    async jwt({ token, user, trigger, session, account }: any) {
+      console.log('- JWT -', account)
 
       // New Login
       if (user) {
@@ -40,7 +73,13 @@ const authOptions = {
         }).lean()
 
         if (userDB) {
-          token = { ...token, ...userDB }
+          token = {
+            ...token,
+            ...userDB,
+            accessToken: account.access_token,
+            refreshToken: account.refresh_token,
+            accessTokenExpires: account.expires_at * 1000,
+          }
         }
       }
 
@@ -49,11 +88,25 @@ const authOptions = {
         const userDB = await UserModel.findById(token._id).lean()
         if (userDB) {
           // exclude password
-          return { ...token, ...userDB }
+          return {
+            ...token,
+            ...userDB,
+            accessToken: account.access_token,
+            refreshToken: account.refreshToken,
+            accessTokenExpires: account.expires_at * 1000,
+          }
         }
       }
 
-      return token
+      // return previous token if the account has not expired yet
+      if (Date.now() < token.accessTokenExpires) {
+        console.log('EXISTING ACCESS TOKEN IS VALID')
+        return token
+      }
+
+      // access token has expired, refresh it
+      console.log('ACCESS TOKEN HAS EXPIRED, REFRESHING...')
+      return await refreshAccessToken(token)
     },
 
     async session({ session, token }: any) {
@@ -86,6 +139,9 @@ const authOptions = {
             lastName = profile.family_name
           } else if (account.provider === 'github') {
             firstName = profile.name
+            lastName = ''
+          } else if (account.provider === 'spotify') {
+            firstName = profile.display_name
             lastName = ''
           }
 
