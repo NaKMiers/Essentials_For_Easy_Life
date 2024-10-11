@@ -19,7 +19,7 @@ const requireAuth = async (req: NextRequest, token: JWT | null) => {
 
   // check auth
   if (!token) {
-    return NextResponse.redirect(new URL('/music/login', req.url))
+    return NextResponse.redirect(new URL('/auth/connect-to-spotify', req.url))
   }
 
   return NextResponse.next()

@@ -13,17 +13,17 @@ import '@/models/UserModel'
 
 async function refreshAccessToken(token: any) {
   try {
-    spotifyApi.setAccessToken(token.accessToken)
-    spotifyApi.setRefreshToken(token.refreshToken)
+    spotifyApi.setAccessToken(token.spotifyAccessToken)
+    spotifyApi.setRefreshToken(token.spotifyRefreshToken)
 
     const { body: refreshedToken } = await spotifyApi.refreshAccessToken()
     console.log('REFRESHED TOKEN:', refreshedToken)
 
     return {
       ...token,
-      accessToken: refreshedToken.access_token,
-      accessTokenExpires: refreshedToken.expires_in * 1000 + Date.now(),
-      refreshToken: refreshedToken.refresh_token || token.refreshToken,
+      spotifyAccessToken: refreshedToken.access_token,
+      spotifyAccessTokenExpires: refreshedToken.expires_in * 1000 + Date.now(),
+      spotifyRefreshToken: refreshedToken.refresh_token || token.refreshToken,
     }
   } catch (err: any) {
     console.error(err)
@@ -76,9 +76,9 @@ const authOptions = {
           token = {
             ...token,
             ...userDB,
-            accessToken: account.access_token,
-            refreshToken: account.refresh_token,
-            accessTokenExpires: account.expires_at * 1000,
+            spotifyAccessToken: account.access_token,
+            spotifyRefreshToken: account.refresh_token,
+            spotifyAccessTokenExpires: account.expires_at * 1000,
           }
         }
       }

@@ -21,7 +21,7 @@ const UserSchema = new Schema(
     },
     authType: {
       type: String,
-      enum: ['google', 'facebook', 'github'],
+      enum: ['google', 'github'],
     },
     role: {
       type: String,
@@ -46,6 +46,17 @@ const UserSchema = new Schema(
       type: String,
       default: '',
     },
+
+    // third-party
+    spotifyId: {
+      type: String,
+    },
+    spotifyAccessToken: {
+      type: String,
+    },
+    spotifyRefreshToken: {
+      type: String,
+    },
   },
   {
     timestamps: true,
@@ -69,4 +80,9 @@ export interface IUser {
 
   createdAt: string
   updatedAt: string
+
+  // third-party
+  spotifyId: string
+  spotifyAccessToken: string
+  spotifyRefreshToken: string
 }
