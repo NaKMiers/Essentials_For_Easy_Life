@@ -50,7 +50,7 @@ function SearchPage() {
               <TrackItem
                 track={track}
                 key={track.id}
-                className="w-[150px]"
+                className="w-[150px] max-w-[150px]"
               />
             ))}
           </Group>
@@ -65,7 +65,7 @@ function SearchPage() {
               <Playlist
                 playlist={playlist}
                 key={playlist.id}
-                className="w-[150px]"
+                className="w-[150px] max-w-[150px]"
               />
             ))}
           </Group>
@@ -80,7 +80,7 @@ function SearchPage() {
               <Album
                 album={album}
                 key={album.id}
-                className="w-[150px]"
+                className="w-[150px] max-w-[150px]"
               />
             ))}
           </Group>
@@ -95,7 +95,7 @@ function SearchPage() {
               <Artist
                 artist={artist}
                 key={artist.id}
-                className="w-[150px]"
+                className="w-[150px] max-w-[150px]"
               />
             ))}
           </Group>
@@ -110,7 +110,7 @@ function SearchPage() {
               <Show
                 show={show}
                 key={show.id}
-                className="w-[150px]"
+                className="w-[150px] max-w-[150px]"
               />
             ))}
           </Group>
@@ -125,7 +125,7 @@ function SearchPage() {
               <Episode
                 episode={episode}
                 key={episode.id}
-                className="w-[150px]"
+                className="w-[150px] max-w-[150px]"
               />
             ))}
           </Group>

@@ -8,9 +8,11 @@ interface ShowProps {
 }
 
 function Show({ show, className = '' }: ShowProps) {
+  console.log(show)
+
   return (
     <Link
-      href={show.href}
+      href={show.external_urls.spotify}
       target="_blank"
       rel="noreferrer"
       className={`flex w-full flex-shrink-0 flex-col gap-2 ${className}`}

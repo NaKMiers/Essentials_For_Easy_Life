@@ -195,6 +195,10 @@ function Player() {
       if (player) {
         player.getCurrentState().then((state: any) => {
           if (state) {
+            // track is finished
+            if (state.paused && state.position === state.duration) {
+              nextTrack()
+            }
             setTrackPosition(state.position)
           }
         })
@@ -202,7 +206,7 @@ function Player() {
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [player])
+  }, [nextTrack, player])
 
   // Handle volume change
   const handleVolumeChange = useCallback(

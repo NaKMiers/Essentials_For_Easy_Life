@@ -10,7 +10,7 @@ interface ArtistProps {
 function Artist({ artist, className = '' }: ArtistProps) {
   return (
     <Link
-      href={artist.href}
+      href={artist.external_urls.spotify}
       target="_blank"
       rel="noreferrer"
       className={`flex w-full flex-shrink-0 flex-col gap-2 ${className}`}
@@ -20,7 +20,7 @@ function Artist({ artist, className = '' }: ArtistProps) {
           className="h-full w-full object-cover"
           src={artist?.images?.[0]?.url || '/images/default-playlist.png'}
           width={200}
-          height={2000}
+          height={200}
           alt={artist.name}
         />
       </div>

@@ -10,7 +10,7 @@ interface AlbumProps {
 function Album({ album, className = '' }: AlbumProps) {
   return (
     <Link
-      href={album.href}
+      href={album.external_urls.spotify}
       target="_blank"
       rel="noreferrer"
       className={`flex w-full flex-shrink-0 flex-col gap-2 ${className}`}

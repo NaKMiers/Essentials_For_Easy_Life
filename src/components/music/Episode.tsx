@@ -10,7 +10,7 @@ interface EpisodeProps {
 function Episode({ episode, className = '' }: EpisodeProps) {
   return (
     <Link
-      href={episode.href}
+      href={episode.external_urls.spotify}
       target="_blank"
       rel="noreferrer"
       className={`flex w-full flex-shrink-0 flex-col gap-2 ${className}`}

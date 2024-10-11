@@ -206,8 +206,8 @@ function Sidebar({ className = '' }: SidebarProps) {
 
             <ul className="flex flex-col gap-1.5">
               {playlists.map(playlist => (
-                <button
-                  className="trans-200 group relative flex h-[50px] cursor-pointer items-center gap-2 rounded-lg shadow-lg hover:bg-black/15 hover:p-1"
+                <div
+                  className="trans-200 group relative flex h-[50px] cursor-pointer items-center gap-2 rounded-lg shadow-lg md:hover:bg-black/15 md:hover:p-1"
                   onClick={() => router.push(`/music/playlist/${playlist.id}`)}
                   key={playlist.id}
                 >
@@ -247,7 +247,7 @@ function Sidebar({ className = '' }: SidebarProps) {
                   <p className="trans-200 font-body text-sm tracking-wider opacity-80 group-hover:opacity-100">
                     {playlist.name}
                   </p>
-                </button>
+                </div>
               ))}
             </ul>
           </div>
