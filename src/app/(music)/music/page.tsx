@@ -82,39 +82,39 @@ function MusicPage() {
       </h1>
       <div className="mx-4 grid grid-cols-2 gap-21 py-21 md:grid-cols-3 lg:grid-cols-4">
         <Link
-          href="/music/create-playlist-from-text"
+          href="/music/ai-suggestion"
           className="relative aspect-square overflow-hidden rounded-lg bg-white shadow-lg"
         >
           <Image
             className="h-full w-full object-cover p-2"
-            src="/icons/create-playlist-from-text.png"
+            src="/icons/ai-suggestion.png"
             width={200}
             height={200}
-            alt="create-playlist-from-text"
+            alt="ai-suggestion"
           />
 
           <div className="absolute bottom-0 w-full rounded-t-lg border-t-2 border-green-200 bg-black/40 px-3 py-1">
             <p className="bg-gradient-to-b from-green-200 to-yellow-200 bg-clip-text text-center font-body font-bold tracking-widest text-transparent drop-shadow-md md:text-xl lg:text-2xl">
-              Create Playlist From Text
+              AI Suggestion
             </p>
           </div>
         </Link>
 
         <Link
-          href="/music/suggest-playlist"
+          href="/music/manual-suggestion"
           className="relative aspect-square overflow-hidden rounded-lg bg-white shadow-lg"
         >
           <Image
             className="h-full w-full object-cover p-2"
-            src="/icons/suggest-playlist.png"
+            src="/icons/manual-suggestion.png"
             width={200}
             height={200}
-            alt="suggest-playlist"
+            alt="manual-suggestion"
           />
 
           <div className="absolute bottom-0 w-full rounded-t-lg border-t-2 border-green-200 bg-black/40 px-3 py-1">
             <p className="bg-gradient-to-b from-green-200 to-yellow-200 bg-clip-text text-center font-body font-bold tracking-widest text-transparent drop-shadow-md md:text-xl lg:text-2xl">
-              Suggest Playlist
+              Manual Suggestion
             </p>
           </div>
         </Link>

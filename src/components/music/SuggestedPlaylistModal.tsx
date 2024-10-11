@@ -1,16 +1,13 @@
+import Track from '@/components/music/Track'
+import { genres } from '@/constants/music'
 import { useAppDispatch, useAppSelector } from '@/libs/hooks'
 import useSpotify from '@/libs/hooks/useSpotify'
 import { clearSelectedGenres, clearSelectedTracks, setPlaylists } from '@/libs/reducers/musicReducer'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Dispatch, memo, SetStateAction, useCallback, useState } from 'react'
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { FaCircleNotch } from 'react-icons/fa'
-import Divider from '../Divider'
-import Track from '@/components/music/Track'
-import Input from '../Input'
 import { RiDonutChartFill } from 'react-icons/ri'
-import { genres } from '@/constants/music'
+import Divider from '../Divider'
 
 interface SuggestedPlaylistModalProps {
   open: boolean
@@ -56,10 +53,18 @@ function SuggestedPlaylistModal({ open, setOpen, tracks, className = '' }: Sugge
         public: true,
       } as any)
 
-      // // add suggested tracks to new playlist
+      // add suggested tracks to new playlist
+      console.log(
+        'save tracks -',
+        tracks.filter(t => t.uri)
+      )
+      console.log(
+        'save tracks -',
+        tracks.filter(t => t.uri).map(t => t.uri)
+      )
       await spotifyApi.addTracksToPlaylist(
         newPlaylist.id,
-        tracks.map(t => t.uri)
+        tracks.filter(t => t.uri).map(t => t.uri)
       )
 
       // add new playlist to state

@@ -1,7 +1,9 @@
 'use client'
 
 import PlaylistWithTracks from '@/components/music/PlaylistWithTracks'
+import SearchBar from '@/components/music/SearchBar'
 import SuggestedPlaylistModal from '@/components/music/SuggestedPlaylistModal'
+import TrackItem from '@/components/music/TrackItem'
 import { genres } from '@/constants/music'
 import { useAppDispatch, useAppSelector } from '@/libs/hooks'
 import useSpotify from '@/libs/hooks/useSpotify'
@@ -23,6 +25,7 @@ function SuggestPlaylistPage() {
   const playlists: any[] = useAppSelector(state => state.music.playlists)
 
   // states
+  const [result, setResult] = useState<any>(null)
   const [playlistsWithTracks, setPlaylistsWithTracks] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [trackResults, setTrackResults] = useState<any[]>([])
@@ -79,6 +82,9 @@ function SuggestPlaylistPage() {
         limit: 20, // Number of recommended tracks
       })
 
+      console.log('seedTracks: ', seedTracks)
+      console.log('seedGenres:', seedGenres)
+
       console.log(body)
       setTrackResults(body.tracks)
       setOpenResults(true)
@@ -91,11 +97,55 @@ function SuggestPlaylistPage() {
     }
   }, [spotifyApi, selectedGenres, selectedTracks])
 
+  console.log(result)
+
   return (
     <>
-      <div className="p-3 md:p-21">
+      <div className="p-3">
+        <div className="flex items-center gap-3">
+          <div className="flex-1">
+            <SearchBar
+              scope={['track']}
+              limit={20}
+              setResult={setResult}
+            />
+          </div>
+
+          <div className="h-[66px] w-[182px] rounded-full border-l-2 border-white bg-neutral-800" />
+        </div>
+
+        {result?.tracks?.items?.length > 0 && (
+          <div className="mb-8 w-full">
+            <h1 className="inline-block bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-2xl font-semibold text-transparent drop-shadow-md">
+              Tracks
+            </h1>
+            <div className="grid max-h-[250px] grid-cols-4 overflow-y-auto md:max-h-[320px] md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10">
+              {result?.tracks?.items.map((track: any) => (
+                <div
+                  className={`relative cursor-pointer overflow-hidden rounded-lg p-1 ${selectedTracks.some(t => t.id === track.id) ? 'bg-green-300' : ''}`}
+                  key={track.id}
+                  onClick={() => {
+                    const isExist = selectedTracks.some((t: any) => t.id === track.id)
+                    if (!isExist && selectedTracks.length >= 3) {
+                      toast.error('Limit 3 tracks')
+                      return
+                    }
+                    dispatch(setSelectedTracks(track))
+                  }}
+                >
+                  <TrackItem
+                    track={track}
+                    className="w-full"
+                  />
+                  <div className="absolute left-0 top-0 h-full w-full" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {selectedTracks.length > 0 && (
-          <div className="flex gap-2">
+          <div className="mt-4 flex gap-2">
             <h1 className="inline-block bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-2xl font-semibold text-transparent drop-shadow-md">
               Selected Tracks
             </h1>

@@ -1,40 +1,43 @@
-import { useAppDispatch } from '@/libs/hooks'
 import useSpotify from '@/libs/hooks/useSpotify'
-import { useParams, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { TiDelete } from 'react-icons/ti'
 
 interface SearchBarProps {
   setResult: Dispatch<SetStateAction<any>>
+  scope?: any[]
+  limit?: number
   className?: string
 }
 
-function SearchBar({ setResult, className = '' }: SearchBarProps) {
+function SearchBar({
+  setResult,
+  scope = ['album', 'playlist', 'artist', 'episode', 'show', 'track'],
+  limit = 10,
+  className = '',
+}: SearchBarProps) {
   // hook
   const spotifyApi = useSpotify()
-  const dispatch = useAppDispatch()
   const searchParams = useSearchParams()
 
   // search state
   const [searchValue, setSearchValue] = useState<string>(searchParams.get('q') || '')
   const [searchLoading, setSearchLoading] = useState<boolean>(false)
-  const [initResults, setInitResults] = useState<any[] | null>([])
   const searchTimeout = useRef<any>(null)
 
   // handle search
   const handleSearch = useCallback(async () => {
     // search value not empty
     if (!searchValue) {
+      setResult(null)
       return
     }
 
-    const { body } = await spotifyApi.search(
-      searchValue,
-      ['album', 'playlist', 'artist', 'episode', 'show', 'track'] as any,
-      { limit: 10 }
-    )
+    // search
+    const { body } = await spotifyApi.search(searchValue, scope, { limit })
 
+    // set results
     setResult(body)
 
     // start loading
@@ -52,13 +55,11 @@ function SearchBar({ setResult, className = '' }: SearchBarProps) {
 
   // auto search after 0.5s when search value changes
   useEffect(() => {
-    if (searchValue) {
-      clearTimeout(searchTimeout.current)
-      searchTimeout.current = setTimeout(() => {
-        handleSearch()
-      }, 500)
-    }
-  }, [initResults, searchValue, handleSearch])
+    clearTimeout(searchTimeout.current)
+    searchTimeout.current = setTimeout(() => {
+      handleSearch()
+    }, 500)
+  }, [searchValue, handleSearch])
 
   return (
     <div

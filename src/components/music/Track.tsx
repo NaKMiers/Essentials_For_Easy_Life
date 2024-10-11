@@ -101,7 +101,7 @@ function Track({ track, order, prevTracks, nextTracks, className }: TrackProps) 
         <div className="item-start flex flex-wrap gap-2">
           <div className="aspect-square max-h-10 max-w-10 flex-shrink-0 overflow-hidden rounded-md shadow-lg">
             <Image
-              src={track.album?.images[0]?.url}
+              src={track?.album?.images?.[0]?.url}
               width={40}
               height={40}
               alt={track.name}
@@ -121,7 +121,9 @@ function Track({ track, order, prevTracks, nextTracks, className }: TrackProps) 
         onClick={e => e.stopPropagation()}
       >
         <button
-          className="trans-200 rounded-3xl border-2 border-dark px-2 py-1 text-xs font-semibold hover:bg-white hover:text-dark group-hover:border-white"
+          className={`trans-200 rounded-3xl border-2 border-dark px-2 py-1 text-xs font-semibold hover:bg-white hover:text-dark group-hover:border-white ${
+            curPreviewTrack?.id === track.id ? 'bg-white text-dark' : ''
+          }`}
           onClick={() => {
             if (curPreviewTrack?.id === track.id) {
               if (isPlaying) {

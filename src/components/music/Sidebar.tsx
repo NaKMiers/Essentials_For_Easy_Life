@@ -14,7 +14,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
-import { FaHeart, FaHome, FaPlus, FaSearch, FaTrash } from 'react-icons/fa'
+import { FaHeart, FaHome, FaPlus, FaSearch, FaTrash, FaBrain, FaHandSpock } from 'react-icons/fa'
 import { MdEdit } from 'react-icons/md'
 import ConfirmDialog from '../dialogs/ConfirmDialog'
 import Divider from '../Divider'
@@ -168,6 +168,27 @@ function Sidebar({ className = '' }: SidebarProps) {
             >
               <FaSearch size={16} />
               <span>Search</span>
+            </Link>
+
+            <Divider
+              size={2}
+              border
+              className="rounded-lg border-slate-800"
+            />
+            <Link
+              href="/music/ai-suggestion"
+              className="flex items-center gap-3"
+            >
+              <FaBrain size={16} />
+              <span>AI Suggestion</span>
+            </Link>
+
+            <Link
+              href="/music/manual-suggestion"
+              className="flex items-center gap-3"
+            >
+              <FaHandSpock size={16} />
+              <span>Manual Suggestion</span>
             </Link>
 
             {curUser && (
