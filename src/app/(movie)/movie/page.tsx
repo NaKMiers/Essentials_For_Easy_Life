@@ -1,7 +1,7 @@
 import Divider from '@/components/Divider'
 import MovieCard from '@/components/MovieCard'
 import Group from '@/components/Group'
-import MovieHeroSlide from '@/components/MovieHeroSlide'
+import MovieHeroSlide from '@/components/movies/MovieHeroSlide'
 import { getMoviesList, getTvList } from '@/requests'
 import Link from 'next/link'
 

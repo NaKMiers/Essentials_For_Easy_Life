@@ -1,7 +1,7 @@
 'use client'
 
 import PlaylistWithTracks from '@/components/music/PlaylistWithTracks'
-import SearchBar from '@/components/music/SearchBar'
+import MusicSearchBar from '@/components/music/MusicSearchBar'
 import SuggestedPlaylistModal from '@/components/music/SuggestedPlaylistModal'
 import TrackItem from '@/components/music/TrackItem'
 import { genres } from '@/constants/music'
@@ -104,7 +104,7 @@ function SuggestPlaylistPage() {
       <div className="p-3">
         <div className="flex items-center gap-3">
           <div className="flex-1">
-            <SearchBar
+            <MusicSearchBar
               scope={['track']}
               limit={20}
               setResult={setResult}

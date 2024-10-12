@@ -4,19 +4,19 @@ import { Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, useStat
 import toast from 'react-hot-toast'
 import { TiDelete } from 'react-icons/ti'
 
-interface SearchBarProps {
+interface MusicSearchBarProps {
   setResult: Dispatch<SetStateAction<any>>
   scope?: any[]
   limit?: number
   className?: string
 }
 
-function SearchBar({
+function MusicSearchBar({
   setResult,
   scope = ['album', 'playlist', 'artist', 'episode', 'show', 'track'],
   limit = 10,
   className = '',
-}: SearchBarProps) {
+}: MusicSearchBarProps) {
   // hook
   const spotifyApi = useSpotify()
   const searchParams = useSearchParams()
@@ -51,7 +51,7 @@ function SearchBar({
       // stop loading
       setSearchLoading(false)
     }
-  }, [searchValue, setResult, spotifyApi])
+  }, [searchValue, setResult, spotifyApi, limit, scope])
 
   // auto search after 0.5s when search value changes
   useEffect(() => {
@@ -92,4 +92,4 @@ function SearchBar({
   )
 }
 
-export default memo(SearchBar)
+export default memo(MusicSearchBar)

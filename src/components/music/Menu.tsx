@@ -44,6 +44,8 @@ function Menu() {
       onClick={() => setIsCollapse(!isCollapse)}
     >
       <div className="flex w-full items-center justify-between gap-2">
+        {/* <button onClick={() => signIn('spotify')}>Spotify</button> */}
+
         {curUser ? (
           <>
             <div className="aspect-square h-full max-h-[40px] w-full max-w-[40px] overflow-hidden rounded-full">

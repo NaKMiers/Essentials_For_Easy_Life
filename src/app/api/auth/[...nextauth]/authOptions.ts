@@ -64,7 +64,12 @@ const authOptions = {
   ],
   callbacks: {
     async jwt({ token, user, trigger, session, account }: any) {
-      console.log('- JWT -', account)
+      console.log('- JWT -')
+
+      console.log('TOKEN:', token)
+      console.log('USER:', user)
+      console.log('SESSION:', session)
+      console.log('ACCOUNT:', account)
 
       // New Login
       if (user) {

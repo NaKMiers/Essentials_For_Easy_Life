@@ -68,7 +68,7 @@ function MovieHeroSlideItem({ movie, className }: BannerItemProps) {
             </div>
             <div className="buttons mt-5 flex flex-wrap gap-2">
               <Link
-                href={`/movie/${movie.id}`}
+                href={`/movie/movie/${movie.id}`}
                 className="relative flex items-center rounded-[30px] border-4 border-transparent bg-red-500 px-7 py-2 text-xl font-semibold text-white shadow-[0px_0px_7px_8px_#ff00004d] transition-shadow duration-300 hover:shadow-[0px_0px_7px_15px_#ff00004d]"
               >
                 Watch now
@@ -90,14 +90,14 @@ function MovieHeroSlideItem({ movie, className }: BannerItemProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`fixed bottom-0 left-0 right-0 top-0 z-30 flex items-center justify-center bg-black bg-opacity-50 p-21 ${className}`}
+            className={`max-w-screen fixed left-0 top-0 z-30 flex h-full max-h-screen w-full items-center justify-center bg-black bg-opacity-50 p-10 ${className}`}
             onClick={() => setOpenTrailer(false)}
           >
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
-              className="aspect-video w-full rounded-medium bg-white p-21 shadow-medium"
+              className="h-full w-full rounded-medium bg-white p-21 shadow-medium"
               onClick={e => e.stopPropagation()}
             >
               <iframe

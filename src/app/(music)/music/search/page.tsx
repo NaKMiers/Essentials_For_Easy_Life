@@ -5,7 +5,7 @@ import Album from '@/components/music/Album'
 import Artist from '@/components/music/Artist'
 import Episode from '@/components/music/Episode'
 import Playlist from '@/components/music/Playlist'
-import SearchBar from '@/components/music/SearchBar'
+import MusicSearchBar from '@/components/music/MusicSearchBar'
 import Show from '@/components/music/Show'
 import TrackItem from '@/components/music/TrackItem'
 import { useEffect, useState } from 'react'
@@ -37,7 +37,7 @@ function SearchPage() {
     <div className="p-3">
       <div className="flex items-center gap-3">
         <div className="flex-1">
-          <SearchBar setResult={setResult} />
+          <MusicSearchBar setResult={setResult} />
         </div>
 
         <div className="h-[66px] w-[182px] rounded-full border-l-2 border-white bg-neutral-800" />

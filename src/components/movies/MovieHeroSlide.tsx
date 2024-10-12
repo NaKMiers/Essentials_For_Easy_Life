@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import MovieHeroSlideItem from './BannerItem'
+import MovieHeroSlideItem from './MovieBannerItem'
 
 interface SliderProps {
   movies: any[]
