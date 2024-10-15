@@ -1,6 +1,6 @@
 import { connectDatabase } from '@/config/database'
 import spotifyApi, { LOGIN_URL } from '@/libs/spotify'
-import UserModel from '@/models/UserModel'
+import UserModel, { IUser } from '@/models/UserModel'
 
 // Providers
 import { SessionStrategy } from 'next-auth'
@@ -17,14 +17,29 @@ async function refreshAccessToken(token: any) {
     spotifyApi.setRefreshToken(token.spotifyRefreshToken)
 
     const { body: refreshedToken } = await spotifyApi.refreshAccessToken()
-    console.log('REFRESHED TOKEN:', refreshedToken)
 
-    return {
-      ...token,
-      spotifyAccessToken: refreshedToken.access_token,
-      spotifyAccessTokenExpires: refreshedToken.expires_in * 1000 + Date.now(),
-      spotifyRefreshToken: refreshedToken.refresh_token || token.refreshToken,
+    const updatedUser: IUser | null = (await UserModel.findOneAndUpdate(
+      { email: token.email },
+      {
+        $set: {
+          spotifyAccessToken: refreshedToken.access_token,
+          spotifyAccessTokenExpires: refreshedToken.expires_in * 1000 + Date.now(),
+        },
+      },
+      { new: true }
+    ).lean()) as IUser | null
+
+    if (updatedUser) {
+      return {
+        ...token,
+        ...updatedUser,
+        _id: updatedUser._id.toString(),
+        createdAt: updatedUser.createdAt.toString(),
+        updatedAt: updatedUser.updatedAt.toString(),
+      }
     }
+
+    return token
   } catch (err: any) {
     console.error(err)
 
@@ -66,25 +81,36 @@ const authOptions = {
     async jwt({ token, user, trigger, session, account }: any) {
       console.log('- JWT -')
 
-      console.log('TOKEN:', token)
-      console.log('USER:', user)
-      console.log('SESSION:', session)
-      console.log('ACCOUNT:', account)
-
       // New Login
       if (user) {
-        const userDB = await UserModel.findOne({
+        let userDB: IUser | null = (await UserModel.findOne({
           email: user.email,
-        }).lean()
+        }).lean()) as IUser | null
 
-        if (userDB) {
-          token = {
-            ...token,
-            ...userDB,
-            spotifyAccessToken: account.access_token,
-            spotifyRefreshToken: account.refresh_token,
-            spotifyAccessTokenExpires: account.expires_at * 1000,
-          }
+        // user not found
+        if (!userDB) {
+          return token
+        }
+
+        // user found, connecting to spotify for the first time
+        if (account.provider === 'spotify' && !userDB.spotifyId) {
+          // update user with spotify id
+          userDB = (await UserModel.findOneAndUpdate(
+            { email: user.email },
+            {
+              $set: {
+                spotifyId: account.providerAccountId,
+                spotifyAccessToken: account.access_token,
+                spotifyRefreshToken: account.refresh_token,
+              },
+            },
+            { new: true }
+          ).lean()) as IUser
+        }
+
+        token = {
+          ...token,
+          ...userDB,
         }
       }
 
@@ -96,22 +122,15 @@ const authOptions = {
           return {
             ...token,
             ...userDB,
-            accessToken: account.access_token,
-            refreshToken: account.refreshToken,
-            accessTokenExpires: account.expires_at * 1000,
           }
         }
       }
 
-      // return previous token if the account has not expired yet
-      if (Date.now() < token.accessTokenExpires) {
-        console.log('EXISTING ACCESS TOKEN IS VALID')
-        return token
+      if (token.spotifyId) {
+        return await refreshAccessToken(token)
       }
 
-      // access token has expired, refresh it
-      console.log('ACCESS TOKEN HAS EXPIRED, REFRESHING...')
-      return await refreshAccessToken(token)
+      return token
     },
 
     async session({ session, token }: any) {
@@ -128,46 +147,46 @@ const authOptions = {
         // connect to database
         await connectDatabase()
 
-        if (account && account.provider != 'credentials') {
-          if (!user || !profile) {
-            return false
-          }
-
-          // get data for authentication
-          const email = user.email
-          const avatar = user.image
-          let firstName: string = ''
-          let lastName: string = ''
-
-          if (account.provider === 'google') {
-            firstName = profile.given_name
-            lastName = profile.family_name
-          } else if (account.provider === 'github') {
-            firstName = profile.name
-            lastName = ''
-          } else if (account.provider === 'spotify') {
-            firstName = profile.display_name
-            lastName = ''
-          }
-
-          // get user from database to check exist
-          const existingUser: any = await UserModel.findOne({ email }).lean()
-
-          // check whether user exists
-          if (existingUser) {
-            return true
-          }
-
-          // create new user with social information (auto verified email)
-          await UserModel.create({
-            email,
-            avatar,
-            firstName,
-            lastName,
-            authType: account.provider,
-            verifiedEmail: true,
-          })
+        // check if account and user and profile exist
+        if (!account || !user || !profile) {
+          return false
         }
+
+        if (account.provider === 'spotify') {
+          return true
+        }
+
+        // get data for authentication
+        const email = user.email
+        const avatar = user.image
+        let firstName: string = ''
+        let lastName: string = ''
+
+        if (account.provider === 'google') {
+          firstName = profile.given_name
+          lastName = profile.family_name
+        } else if (account.provider === 'github') {
+          firstName = profile.name
+          lastName = ''
+        }
+
+        // get user from database to check exist
+        const existingUser: any = await UserModel.findOne({ email }).lean()
+
+        // check whether user exists
+        if (existingUser) {
+          return true
+        }
+
+        // create new user with social information (auto verified email)
+        await UserModel.create({
+          email,
+          avatar,
+          firstName,
+          lastName,
+          authType: account.provider,
+          verifiedEmail: true,
+        })
 
         return true
       } catch (err: any) {

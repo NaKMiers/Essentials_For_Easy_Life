@@ -17,119 +17,11 @@ import {
 import Image from 'next/image'
 import { useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { FaTrash } from 'react-icons/fa'
+import { FaAngleLeft, FaTrash } from 'react-icons/fa'
+import { navItems } from '@/constants'
+import Link from 'next/link'
 
 function AIPage() {
-  // states
-  const [files, setFiles] = useState<File[]>([])
-  const [userFiles, setUserFiles] = useState<IFile[]>([])
-  const [selectedImages, setSelectedImages] = useState<string[]>([])
-  const [requestId, setRequestId] = useState<string>('')
-  const [swapFaceResults, setSwapFaceResults] = useState<string[]>([])
-
-  // get swap-face history
-  useEffect(() => {
-    const getSwapFaceHistory = async () => {
-      try {
-        const { history } = await getUserSwapFaceHistoryApi()
-        setSwapFaceResults(history.map((item: any) => item.data.image))
-      } catch (err: any) {
-        console.log(err)
-        toast.error(err.message)
-      }
-    }
-
-    getSwapFaceHistory()
-  }, [])
-
-  const handleUploadFiles = useCallback(async () => {
-    if (!files.length) {
-      toast.error('Please select files')
-      return
-    }
-
-    try {
-      const formData = new FormData()
-      files.forEach(file => formData.append('files', file))
-      const data = await uploadFilesApi(formData)
-
-      console.log(data)
-
-      toast.success('Files uploaded successfully')
-
-      setFiles([])
-    } catch (err: any) {
-      console.log(err)
-      toast.error(err.message)
-    }
-  }, [files])
-
-  const handleGetUploadedFiles = useCallback(async () => {
-    try {
-      const { files } = await getUserFilesApi()
-
-      setUserFiles(files)
-    } catch (err: any) {
-      console.log(err)
-      toast.error(err.message)
-    }
-  }, [])
-
-  const handleSwapFaces = useCallback(async () => {
-    if (selectedImages.length !== 2) {
-      toast.error('Please select target image and source image')
-      return
-    }
-
-    try {
-      const { requestId } = await swapFaceApi(selectedImages[0], selectedImages[1])
-
-      toast.success('Faces swapped successfully')
-
-      setRequestId(requestId)
-    } catch (err: any) {
-      console.log(err)
-      toast.error(err.message)
-    }
-  }, [selectedImages])
-
-  const handleGetResult = useCallback(async () => {
-    try {
-      const { resultImage } = await getSwapFaceResultApi(requestId)
-
-      setSwapFaceResults(prev => [resultImage, ...prev])
-    } catch (err: any) {
-      console.log(err)
-      toast.error(err.message)
-    }
-  }, [requestId])
-
-  useEffect(() => {
-    if (requestId) {
-      handleGetResult()
-    }
-  }, [handleGetResult, requestId])
-
-  const handleDeleteFile = useCallback(
-    async (ids: string[]) => {
-      try {
-        const { message } = await deleteFilesApi(ids)
-
-        toast.success(message)
-
-        setUserFiles(prev => prev.filter(file => !ids.includes(file._id)))
-
-        if (selectedImages.length) {
-          setSelectedImages(prev => prev.filter(url => !ids.includes(url)))
-        }
-      } catch (err: any) {
-        console.log(err)
-        toast.error(err.message)
-      }
-    },
-    [selectedImages]
-  )
-
   // --------------------------------------------
   const [content, setContent] = useState<string>('')
   const [detectResult, setDetectResult] = useState<any>(null)
@@ -180,7 +72,52 @@ function AIPage() {
 
   return (
     <div className="mx-auto h-full min-h-screen w-full max-w-1200">
-      <div className="grid grid-cols-3 gap-21 p-21">
+      <Link
+        href="/"
+        className="trans-200 group ml-21 mt-21 inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 font-semibold shadow-lg hover:text-primary"
+      >
+        <FaAngleLeft
+          size={16}
+          className="wiggle"
+        />
+        Home
+      </Link>
+
+      <Divider size={16} />
+
+      <h1 className="text-center font-body text-4xl font-semibold tracking-widest text-secondary">
+        Artificial Intelligence
+      </h1>
+
+      <div className="flex flex-wrap items-center text-xl font-semibold text-dark">
+        {navItems[0]?.items?.map(link => (
+          <div
+            className="w-full p-21/2 xs:w-1/2 md:w-1/4 md:p-6 lg:p-8"
+            key={link.href}
+          >
+            <Link
+              href={link.href}
+              className="group flex aspect-square w-full flex-col items-center justify-center gap-8 rounded-3xl bg-white p-8 shadow-lg"
+            >
+              <div className="trans-300 group-hover:scale-90">
+                <Image
+                  className="h-full w-full object-contain"
+                  src={link.image}
+                  width={200}
+                  height={200}
+                  alt={link.title}
+                />
+              </div>
+
+              <h2 className="trans-200 text-center font-body text-lg font-semibold tracking-wider text-secondary group-hover:text-primary md:text-2xl">
+                {link.title}
+              </h2>
+            </Link>
+          </div>
+        ))}
+      </div>
+
+      {/* <div className="grid grid-cols-3 gap-21 p-21">
         <div className="flex flex-col items-center gap-4 border-r-2 border-white">
           <input
             className="w-80 rounded-lg border-2 border-light p-2"
@@ -277,9 +214,9 @@ function AIPage() {
               </div>
             ))}
         </div>
-      </div>
+      </div> */}
 
-      <Divider
+      {/* <Divider
         size={4}
         border
       />
@@ -320,9 +257,9 @@ function AIPage() {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
 
-      <Divider
+      {/* <Divider
         size={4}
         border
       />
@@ -400,9 +337,9 @@ function AIPage() {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
 
-      <Divider
+      {/* <Divider
         size={4}
         border
       />
@@ -455,9 +392,9 @@ function AIPage() {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
 
-      <Divider size={80} />
+      <Divider size={50} />
     </div>
   )
 }

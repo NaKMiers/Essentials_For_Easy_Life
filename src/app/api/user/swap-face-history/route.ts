@@ -8,7 +8,7 @@ import '@/models/UserHistory'
 
 export const dynamic = 'force-dynamic'
 
-// [GET]: /api/user/get-swap-face-history
+// [GET]: /api/user/swap-face-history
 export async function GET(req: NextRequest) {
   console.log('- Get Swap Face History -')
 

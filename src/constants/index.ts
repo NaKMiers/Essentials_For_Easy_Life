@@ -11,6 +11,32 @@ export const navItems = [
     href: '/ai',
     image: '/images/ai.png',
     icon: FaBrain,
+    items: [
+      {
+        title: 'Swap Face',
+        href: '/ai/swap-face',
+        image: '/images/swap-face.png',
+        icon: FaLocationDot,
+      },
+      {
+        title: 'Image Generation',
+        href: '/ai/image-generation',
+        image: '/images/image-generation.png',
+        icon: FaMusic,
+      },
+      {
+        title: 'AI Detector',
+        href: '/ai/ai-detector',
+        image: '/images/ai-detector.png',
+        icon: RiMovie2Fill,
+      },
+      {
+        title: 'Text To Speech',
+        href: '/ai/text-to-speech',
+        image: '/images/text-to-speech.png',
+        icon: FaNewspaper,
+      },
+    ],
   },
   {
     title: 'Location',
