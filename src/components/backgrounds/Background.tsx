@@ -1,10 +1,11 @@
 import Image from 'next/image'
 import { memo } from 'react'
+import ParticlesContainer from '../effects/ParticlesContainer'
 
 function Background() {
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 -z-10 flex h-screen w-screen items-center justify-center">
-      <div className="absolute bottom-0 left-0 w-full">
+      <div className="absolute -bottom-[80px] left-0 w-full">
         <Image
           className="h-full w-full object-cover"
           src="/images/vector-2.png"
@@ -23,6 +24,8 @@ function Background() {
           alt="vector-1"
         />
       </div>
+
+      <ParticlesContainer />
     </div>
   )
 }

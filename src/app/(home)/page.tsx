@@ -14,7 +14,7 @@ async function Home() {
     <div className="mx-auto h-full min-h-screen w-full max-w-1200">
       <Divider size={16} />
 
-      <h1 className="text-center font-body text-4xl font-semibold tracking-widest text-secondary">
+      <h1 className="px-21 text-center font-body text-4xl font-semibold tracking-widest text-secondary">
         Essentials For Easy Life
       </h1>
 

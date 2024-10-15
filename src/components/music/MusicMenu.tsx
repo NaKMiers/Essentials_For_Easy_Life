@@ -10,6 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { navItems } from '@/constants'
 
 function MusicMenu() {
   // hooks
@@ -107,53 +108,28 @@ function MusicMenu() {
       </div>
 
       <div
-        className={`trans-200 flex h-full flex-col gap-2 ${isCollapse ? 'max-h-[calc(8px+4*36px+4*8px)] pt-2' : 'max-h-0 p-0'} overflow-hidden`}
+        className={`trans-200 flex h-full flex-col gap-2 ${isCollapse ? 'max-h-[calc(8px+10*36px+10*8px)] pt-2' : 'max-h-0 p-0'} overflow-hidden`}
       >
-        <div className="group">
-          <Link
-            href="/"
-            className="trans-200 flex w-full items-center gap-2 rounded-3xl px-3 py-2 hover:bg-white hover:text-dark"
+        {navItems.map(link => (
+          <div
+            className="group"
+            key={link.href}
           >
-            <Image
-              src="/icons/house-icon.png"
-              className="wiggle"
-              width={20}
-              height={20}
-              alt="home"
-            />
-            <span className="font-body text-sm font-semibold tracking-wide">Home</span>
-          </Link>
-        </div>
-        <div className="group">
-          <Link
-            href="/movie"
-            className="trans-200 flex w-full items-center gap-2 rounded-3xl px-3 py-2 hover:bg-white hover:text-dark"
-          >
-            <Image
-              src="/icons/movie-icon.png"
-              className="wiggle"
-              width={20}
-              height={20}
-              alt="home"
-            />
-            <span className="font-body text-sm font-semibold tracking-wide">Movie</span>
-          </Link>
-        </div>
-        <div className="group">
-          <Link
-            href="/music"
-            className="trans-200 flex w-full items-center gap-2 rounded-3xl px-3 py-2 hover:bg-white hover:text-dark"
-          >
-            <Image
-              src="/icons/music-icon.png"
-              className="wiggle"
-              width={20}
-              height={20}
-              alt="home"
-            />
-            <span className="font-body text-sm font-semibold tracking-wide">Music</span>
-          </Link>
-        </div>
+            <Link
+              href={link.href}
+              className="trans-200 flex w-full items-center gap-2 rounded-3xl px-3 py-2 hover:bg-white hover:text-dark"
+            >
+              <Image
+                src={link.image}
+                className="wiggle"
+                width={20}
+                height={20}
+                alt="home"
+              />
+              <span className="font-body text-sm font-semibold tracking-wide">{link.title}</span>
+            </Link>
+          </div>
+        ))}
         <div className="group">
           <button
             className="trans-200 flex w-full items-center gap-2 rounded-3xl px-3 py-2 hover:bg-white hover:text-dark"

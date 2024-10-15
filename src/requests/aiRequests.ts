@@ -50,7 +50,7 @@ export const generateImageApi = async ({
   styles = 201,
 }: {
   prompt: string
-  size: '768x768' | '768x1024' | '1024x768' | '1024x1024'
+  size: '256x256' | '512x512' | '1024x1024'
   styles: number
 }) => {
   const res = await fetch('/api/ai/generate-image', {
