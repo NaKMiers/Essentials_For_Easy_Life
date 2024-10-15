@@ -25,7 +25,7 @@ function Background() {
         />
       </div>
 
-      <ParticlesContainer />
+      {/* <ParticlesContainer /> */}
     </div>
   )
 }

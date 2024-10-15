@@ -2,6 +2,7 @@ import PageLoading from '@/components/PageLoading'
 import MusicMenu from '@/components/music/MusicMenu'
 import Player from '@/components/music/Player'
 import Sidebar from '@/components/music/Sidebar'
+import Script from 'next/script'
 import { ReactNode } from 'react'
 
 export default async function RootLayout({
@@ -11,6 +12,8 @@ export default async function RootLayout({
 }>) {
   return (
     <>
+      <Script src="https://sdk.scdn.co/spotify-player.js" />
+
       {/* Loading */}
       <PageLoading />
 

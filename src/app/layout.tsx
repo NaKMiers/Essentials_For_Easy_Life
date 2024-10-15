@@ -29,8 +29,6 @@ export default async function RootLayout({
   return (
     <html lang="vi">
       <body suppressHydrationWarning={true}>
-        <Script src="https://sdk.scdn.co/spotify-player.js" />
-
         <StoreProvider session={session}>
           {/* Toast */}
           <Toaster
