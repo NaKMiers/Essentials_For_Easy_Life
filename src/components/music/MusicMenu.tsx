@@ -11,7 +11,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
-function Menu() {
+function MusicMenu() {
   // hooks
   const dispatch = useAppDispatch()
   const spotifyApi = useSpotify()
@@ -38,13 +38,32 @@ function Menu() {
     }
   }, [dispatch, spotifyApi])
 
+  // connect to spotify
+  const connectSpotify = async () => {
+    try {
+      const res = await fetch('/api/spotify/connect')
+      const data = await res.json()
+
+      const accessToken = data.data.access_token
+      console.log('Spotify Token:', accessToken)
+
+      spotifyApi.setAccessToken(accessToken)
+      const { body } = await spotifyApi.getMe()
+
+      console.log('Spotify User:', body)
+    } catch (err: any) {
+      console.log(err)
+      toast.error(err.message)
+    }
+  }
+
   return (
     <div
       className="absolute right-10 top-21 z-20 min-h-[40px] min-w-[100px] cursor-pointer select-none overflow-hidden rounded-3xl bg-dark-100 p-1 text-light shadow-lg"
       onClick={() => setIsCollapse(!isCollapse)}
     >
       <div className="flex w-full items-center justify-between gap-2">
-        {/* <button onClick={() => signIn('spotify')}>Spotify</button> */}
+        {/* <button onClick={connectSpotify}>Spotify</button> */}
 
         {curUser ? (
           <>
@@ -155,4 +174,4 @@ function Menu() {
   )
 }
 
-export default Menu
+export default MusicMenu

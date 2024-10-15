@@ -9,3 +9,6 @@ export * from './userRequests'
 
 // movie
 export * from './movieRequests'
+
+// location
+export * from './locationRequests'

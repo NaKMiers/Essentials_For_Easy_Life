@@ -1,7 +1,7 @@
 'use client'
 
 import Divider from '@/components/Divider'
-import MovieCard from '@/components/MovieCard'
+import MovieCard from '@/components/movies/MovieCard'
 import MovieSearchBar from '@/components/movies/MovieSearchBar'
 import { getMoviesList, getTvList } from '@/requests'
 import { useEffect, useState } from 'react'
@@ -110,6 +110,8 @@ function MovieSearchPage() {
           </div>
         </>
       )}
+
+      <Divider size={50} />
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import PageLoading from '@/components/PageLoading'
-import Menu from '@/components/music/Menu'
+import MusicMenu from '@/components/music/MusicMenu'
 import Player from '@/components/music/Player'
 import Sidebar from '@/components/music/Sidebar'
 import { ReactNode } from 'react'
@@ -21,7 +21,7 @@ export default async function RootLayout({
           <div className="w-full p-2 pb-0 text-dark md:w-[calc(100%-250px)]">
             <div className="no-scrollbar relative h-full w-full overflow-y-auto rounded-3xl bg-neutral-200">
               {/* Menu */}
-              <Menu />
+              <MusicMenu />
 
               {children}
             </div>

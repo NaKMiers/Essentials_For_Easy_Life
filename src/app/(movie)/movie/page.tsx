@@ -1,247 +1,123 @@
 import Divider from '@/components/Divider'
-import MovieCard from '@/components/MovieCard'
 import Group from '@/components/Group'
+import MovieCard from '@/components/movies/MovieCard'
 import MovieHeroSlide from '@/components/movies/MovieHeroSlide'
+import MovieSearchBar from '@/components/movies/MovieSearchBar'
 import { getMoviesList, getTvList } from '@/requests'
 import Link from 'next/link'
+import { Fragment } from 'react'
 
 async function MoviePage() {
+  // banner
   let bannerMovies: any[] = []
-  let trendingMovies: any[] = []
-  let topRatedMovies: any[] = []
-  let upcomingMovies: any[] = []
-  let trendingTvShows: any[] = []
-  let topRatedTvShows: any[] = []
-  let upcomingTvShows: any[] = []
 
-  // get banner movies
-  try {
-    const res = await getMoviesList('popular', { page: 2 })
-    bannerMovies = res.results.slice(1, 6)
-  } catch (err: any) {
-    console.log('')
-  }
+  // lists
+  let lists: any[] = []
 
-  // get trending movies
   try {
-    const res = await getMoviesList('popular', {})
-    trendingMovies = res.results
-  } catch (err: any) {
-    console.log('')
-  }
+    const [
+      bannerMv,
+      { results: trendingMovies },
+      { results: topRatedMovies },
+      { results: upcomingMovies },
+      { results: trendingTvShows },
+      { results: topRatedTvShows },
+      { results: upcomingTvShows },
+    ] = await Promise.all([
+      getMoviesList('popular', { page: 2 }),
+      getMoviesList('popular', {}),
+      getMoviesList('top_rated', {}),
+      getMoviesList('upcoming', {}),
+      getTvList('popular', {}),
+      getTvList('top_rated', {}),
+      getTvList('on_the_air', {}),
+    ])
 
-  // get top rated movies
-  try {
-    const res = await getMoviesList('top_rated', {})
-    topRatedMovies = res.results
-  } catch (err: any) {
-    console.log('')
-  }
+    bannerMovies = bannerMv.results.slice(0, 6)
 
-  // get upcoming movies
-  try {
-    const res = await getMoviesList('upcoming', {})
-    upcomingMovies = res.results
+    lists = [
+      {
+        title: 'Trending Movies',
+        data: trendingMovies,
+        type: 'movie',
+      },
+      {
+        title: 'Upcoming Movies',
+        data: upcomingMovies,
+        type: 'movie',
+      },
+      {
+        title: 'Top Rated Movies',
+        data: topRatedMovies,
+        type: 'movie',
+      },
+      {
+        title: 'Trending TV Shows',
+        data: trendingTvShows,
+        type: 'tv',
+      },
+      {
+        title: 'Top Rated TV Shows',
+        data: topRatedTvShows,
+        type: 'tv',
+      },
+      {
+        title: 'Upcoming TV Shows',
+        data: upcomingTvShows,
+        type: 'tv',
+      },
+    ]
   } catch (err: any) {
-    console.log('')
-  }
-
-  // get trending tv shows
-  try {
-    const res = await getTvList('popular', {})
-    trendingTvShows = res.results
-  } catch (err: any) {
-    console.log('')
-  }
-
-  // get top rated tv shows
-  try {
-    const res = await getTvList('top_rated', {})
-    topRatedTvShows = res.results
-  } catch (err: any) {
-    console.log('')
-  }
-
-  // get upcoming tv shows
-  try {
-    const res = await getTvList('on_the_air', {})
-    upcomingTvShows = res.results
-  } catch (err: any) {
-    console.log('')
+    console.log(err)
   }
 
   return (
     <div className="">
       {/* MARK: Hero Slides */}
-      <MovieHeroSlide movies={bannerMovies} />
+      <MovieHeroSlide
+        movies={bannerMovies}
+        className="max-h-[calc(100vh-60px)]"
+      />
 
       <Divider size={20} />
 
-      {/* MARK: Trending Movies */}
-      <div className="flex items-center justify-between px-8">
-        <h1 className="text-2xl font-semibold md:text-3xl">Trending Movies</h1>
-
-        <Link
-          href="/movie/movie"
-          className="trans-200 rounded-3xl border-2 border-white px-3 py-1 text-center text-sm font-semibold hover:bg-white hover:text-dark md:py-2 md:text-base"
-        >
-          View More
-        </Link>
+      <div className="mx-auto flex max-w-[500px]">
+        <MovieSearchBar isRedirect />
       </div>
-
-      <Group
-        className="mx-8 mt-4"
-        classChild="w-1/2 md:w-1/5"
-      >
-        {trendingMovies.map((movie: any) => (
-          <MovieCard
-            id={`movie/${movie.id}`}
-            title={movie.title}
-            image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            key={movie.id}
-          />
-        ))}
-      </Group>
 
       <Divider size={20} />
 
-      {/* MARK: Upcoming Movies */}
-      <div className="flex items-center justify-between px-8">
-        <h1 className="text-2xl font-semibold md:text-3xl">Upcoming Movies</h1>
+      {lists.map((list: any, index: number) => (
+        <Fragment key={index}>
+          <div className="flex items-center justify-between px-8">
+            <h1 className="text-2xl font-semibold md:text-3xl">{list.title}</h1>
 
-        <Link
-          href="/movie/movie"
-          className="trans-200 rounded-3xl border-2 border-white px-3 py-1 text-center text-sm font-semibold hover:bg-white hover:text-dark md:py-2 md:text-base"
-        >
-          View More
-        </Link>
-      </div>
+            <Link
+              href={`/movie/${list.type}`}
+              className="trans-200 font-semiboldmd:py-2 rounded-3xl border-2 border-dark bg-white px-3 py-1 text-center text-sm md:text-base"
+            >
+              View More
+            </Link>
+          </div>
 
-      <Group
-        className="mx-8 mt-4"
-        classChild="w-1/2 md:w-1/5"
-      >
-        {upcomingMovies.map((movie: any) => (
-          <MovieCard
-            id={`movie/${movie.id}`}
-            title={movie.title}
-            image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            key={movie.id}
-          />
-        ))}
-      </Group>
+          <Group
+            className="mx-8 mt-4"
+            classChild="w-1/2 md:w-1/5"
+            indicatorClass={['-mt-2', '-mt-2']}
+          >
+            {list.data.map((movie: any) => (
+              <MovieCard
+                id={`${list.type}/${movie.id}`}
+                title={movie.title || movie.name}
+                image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                key={movie.id}
+              />
+            ))}
+          </Group>
 
-      <Divider size={20} />
-
-      {/* MARK: Top Rated Movies */}
-      <div className="flex items-center justify-between px-8">
-        <h1 className="text-2xl font-semibold md:text-3xl">Top Rated Movies</h1>
-
-        <Link
-          href="/movie/movie"
-          className="trans-200 rounded-3xl border-2 border-white px-3 py-1 text-center text-sm font-semibold hover:bg-white hover:text-dark md:py-2 md:text-base"
-        >
-          View More
-        </Link>
-      </div>
-
-      <Group
-        className="mx-8 mt-4"
-        classChild="w-1/2 md:w-1/5"
-      >
-        {topRatedMovies.map((movie: any) => (
-          <MovieCard
-            id={`movie/${movie.id}`}
-            title={movie.title}
-            image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            key={movie.id}
-          />
-        ))}
-      </Group>
-
-      <Divider size={20} />
-
-      {/* MARK: Trending TV Shows */}
-      <div className="flex items-center justify-between px-8">
-        <h1 className="text-2xl font-semibold md:text-3xl">Trending TV Shows</h1>
-
-        <Link
-          href="/movie/tv"
-          className="trans-200 rounded-3xl border-2 border-white px-3 py-1 text-center text-sm font-semibold hover:bg-white hover:text-dark md:py-2 md:text-base"
-        >
-          View More
-        </Link>
-      </div>
-
-      <Group
-        className="mx-8 mt-4"
-        classChild="w-1/2 md:w-1/5"
-      >
-        {trendingTvShows.map((movie: any) => (
-          <MovieCard
-            id={`tv/${movie.id}`}
-            title={movie.name}
-            image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            key={movie.id}
-          />
-        ))}
-      </Group>
-
-      <Divider size={20} />
-
-      {/* MARK: Upcoming TV Shows */}
-      <div className="flex items-center justify-between px-8">
-        <h1 className="text-2xl font-semibold md:text-3xl">Upcoming TV Shows</h1>
-
-        <Link
-          href="/movie/tv"
-          className="trans-200 rounded-3xl border-2 border-white px-3 py-1 text-center text-sm font-semibold hover:bg-white hover:text-dark md:py-2 md:text-base"
-        >
-          View More
-        </Link>
-      </div>
-
-      <Group
-        className="mx-8 mt-4"
-        classChild="w-1/2 md:w-1/5"
-      >
-        {upcomingTvShows.map((movie: any) => (
-          <MovieCard
-            id={`tv/${movie.id}`}
-            title={movie.name}
-            image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            key={movie.id}
-          />
-        ))}
-      </Group>
-
-      <Divider size={20} />
-
-      {/* MARK: Top Rated TV Shows */}
-      <div className="flex items-center justify-between px-8">
-        <h1 className="text-2xl font-semibold md:text-3xl">Top Rated TV Shows</h1>
-
-        <Link
-          href="/movie/tv"
-          className="trans-200 rounded-3xl border-2 border-white px-3 py-1 text-center text-sm font-semibold hover:bg-white hover:text-dark md:py-2 md:text-base"
-        >
-          View More
-        </Link>
-      </div>
-
-      <Group
-        className="mx-8 mt-4"
-        classChild="w-1/2 md:w-1/5"
-      >
-        {topRatedTvShows.map((movie: any) => (
-          <MovieCard
-            id={`tv/${movie.id}`}
-            title={movie.name}
-            image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            key={movie.id}
-          />
-        ))}
-      </Group>
+          <Divider size={20} />
+        </Fragment>
+      ))}
 
       <Divider size={50} />
     </div>

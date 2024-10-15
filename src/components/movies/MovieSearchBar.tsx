@@ -1,27 +1,42 @@
+'use client'
+
 import { searchAndQuery } from '@/requests'
-import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
+import { FaSearch } from 'react-icons/fa'
 import { TiDelete } from 'react-icons/ti'
 
 interface MovieSearchBarProps {
-  initResult: any
-  setResult: Dispatch<SetStateAction<any>>
+  initResult?: any
+  setResult?: Dispatch<SetStateAction<any>>
+  isRedirect?: boolean
   className?: string
 }
 
-function MovieSearchBar({ initResult, setResult, className = '' }: MovieSearchBarProps) {
+function MovieSearchBar({
+  initResult,
+  setResult,
+  isRedirect = false,
+  className = '',
+}: MovieSearchBarProps) {
   // hook
+  const router = useRouter()
   const searchParams = useSearchParams()
 
   // search state
   const [searchValue, setSearchValue] = useState<string>(searchParams.get('q') || '')
-  const [category, setCategory] = useState<'all' | 'movie' | 'tv'>('all')
+  const [category, setCategory] = useState<'all' | 'movie' | 'tv'>(
+    (searchParams.get('c') as 'all' | 'movie' | 'tv') || 'all'
+  )
   const [searchLoading, setSearchLoading] = useState<boolean>(false)
   const searchTimeout = useRef<any>(null)
 
   // handle search
   const handleSearch = useCallback(async () => {
+    if (!setResult || !initResult) return
+
     // search value not empty
     if (!searchValue) {
       setResult(initResult)
@@ -56,11 +71,16 @@ function MovieSearchBar({ initResult, setResult, className = '' }: MovieSearchBa
 
   // auto search after 0.5s when search value changes
   useEffect(() => {
+    if (isRedirect) {
+      console.log('redirect')
+      return
+    }
+
     clearTimeout(searchTimeout.current)
     searchTimeout.current = setTimeout(() => {
       handleSearch()
     }, 500)
-  }, [searchValue, handleSearch])
+  }, [handleSearch, isRedirect, searchValue])
 
   return (
     <div
@@ -85,13 +105,17 @@ function MovieSearchBar({ initResult, setResult, className = '' }: MovieSearchBa
         placeholder="What do you want to watch?"
         className={`${
           searchValue.trim() ? '' : 'pl-[20px]'
-        } trans-500 rounded-0 h-full w-full appearance-none bg-white pb-0.5 pr-[100px] font-body tracking-wider outline-none`}
+        } trans-500 rounded-0 h-full w-full appearance-none bg-white pb-0.5 pr-4 font-body tracking-wider outline-none`}
         value={searchValue}
         onChange={e => setSearchValue(e.target.value)}
+        onKeyUp={e =>
+          e.key === 'Enter' &&
+          (isRedirect ? router.push(`/movie/search?q=${searchValue}&c=${category}`) : handleSearch())
+        }
       />
 
       <select
-        className="absolute right-0 top-1/2 h-full -translate-y-1/2 border-l border-slate-300 pl-2 text-sm outline-none"
+        className="h-full border-l border-slate-300 pl-2 text-sm outline-none"
         value={category}
         onChange={e => setCategory(e.target.value as 'all' | 'movie' | 'tv')}
       >
@@ -114,6 +138,18 @@ function MovieSearchBar({ initResult, setResult, className = '' }: MovieSearchBa
           TV Shows
         </option>
       </select>
+
+      {isRedirect && (
+        <Link
+          href={`/movie/search?q=${searchValue}&c=${category}`}
+          className="trans-200 group flex h-full items-center justify-center bg-dark-100 px-4 text-light hover:bg-primary"
+        >
+          <FaSearch
+            size={16}
+            className="wiggle"
+          />
+        </Link>
+      )}
     </div>
   )
 }

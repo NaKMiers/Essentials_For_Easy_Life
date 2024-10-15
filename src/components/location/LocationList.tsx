@@ -2,7 +2,7 @@
 
 import { createRef, memo, useEffect, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import Divider from './Divider'
+import Divider from '../Divider'
 import PlaceDetails from './PlaceDetails'
 import { BsLayoutSidebarInset } from 'react-icons/bs'
 
@@ -19,7 +19,7 @@ interface ListProps {
   className?: string
 }
 
-function List({
+function LocationList({
   places,
   type,
   setType,
@@ -46,7 +46,7 @@ function List({
   return (
     <div className="relative h-full">
       <button
-        className={`md:hidden ${!open ? 'trans-300 absolute -left-2 z-50 -translate-x-full' : ''} mb-2 rounded-l-lg bg-neutral-800 p-2 text-light`}
+        className={`md:hidden ${!open ? 'absolute -left-2 z-50 -translate-x-full text-light' : 'text-dark'} trans-300 mb-2 rounded-l-lg p-2`}
         onClick={() => setOpen((prev: any) => !prev)}
       >
         <BsLayoutSidebarInset size={24} />
@@ -57,13 +57,13 @@ function List({
           <input
             type="text"
             placeholder="Search places..."
-            className="mb-2 mt-2 h-10 w-full rounded-lg border-2 border-dark px-3 py-1 text-dark shadow-lg outline-none"
+            className="mb-2 mt-2 h-10 w-full rounded-lg border-2 px-3 py-1 text-dark shadow-lg outline-none"
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
           <div className="flex justify-between">
             <select
-              className="h-10 rounded-lg border-2 border-dark px-2 py-1 text-dark shadow-lg outline-none"
+              className="h-10 rounded-lg border-2 px-2 py-1 text-dark shadow-lg outline-none"
               value={type}
               onChange={e => setType(e.target.value)}
             >
@@ -73,7 +73,7 @@ function List({
             </select>
 
             <select
-              className="h-10 rounded-lg border-2 border-dark px-2 py-1 text-dark shadow-lg outline-none"
+              className="h-10 rounded-lg border-2 px-2 py-1 text-dark shadow-lg outline-none"
               value={rating}
               onChange={e => setRating(+e.target.value)}
             >
@@ -116,4 +116,4 @@ function List({
   )
 }
 
-export default memo(List)
+export default memo(LocationList)

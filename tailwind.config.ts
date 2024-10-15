@@ -5,8 +5,8 @@ import svgToDataUri from 'mini-svg-data-uri'
 export const theme = {
   extend: {
     colors: {
-      primary: '#F7E360',
-      secondary: '#230B5B',
+      primary: '#FF6A6D',
+      secondary: '#030080',
       dark: '#111',
       light: '#fff',
       loading: '#334155',

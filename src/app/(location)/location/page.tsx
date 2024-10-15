@@ -1,12 +1,14 @@
 'use client'
 
-import List from '@/components/List'
-import Map from '@/components/Map'
+import LocationList from '@/components/location/LocationList'
+import Map from '@/components/location/Map'
+import { getLocationDataApi, LocationType } from '@/requests'
+import { debounce } from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
 
 function LocationPage() {
   // states
-  const [type, setType] = useState<string>('restaurants')
+  const [type, setType] = useState<LocationType>('restaurants')
   const [rating, setRating] = useState<string>('')
 
   const [coords, setCoords] = useState<any>({})
@@ -39,19 +41,9 @@ function LocationPage() {
     // start loading
     setIsLoading(true)
 
-    const getPlacesData = async (type: string, sw: any, ne: any) => {
+    const getPlacesData = debounce(async (type: LocationType, sw: any, ne: any) => {
       try {
-        const res = await fetch(
-          `https://travel-advisor.p.rapidapi.com/${type}/list-in-boundary?bl_latitude=${sw.lat}&tr_latitude=${ne.lat}&bl_longitude=${sw.lng}&tr_longitude=${ne.lng}`,
-          {
-            method: 'GET',
-            headers: {
-              'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY!,
-              'x-rapidapi-host': 'travel-advisor.p.rapidapi.com',
-            },
-          }
-        )
-        let data: any = await res.json()
+        let data = await getLocationDataApi(type, sw, ne)
         data = data.data || []
 
         // set places data
@@ -64,7 +56,7 @@ function LocationPage() {
         // stop loading
         setIsLoading(false)
       }
-    }
+    }, 1000)
 
     // get places data
     getPlacesData(type, bounds.sw, bounds.ne)
@@ -93,7 +85,7 @@ function LocationPage() {
       </div>
 
       <div className={`${openList ? '' : '-mr-[300px]'} trans-300 h-full w-[300px] p-2 md:mr-0`}>
-        <List
+        <LocationList
           open={openList}
           setOpen={setOpenList}
           isLoading={isLoading}

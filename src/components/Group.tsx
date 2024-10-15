@@ -6,10 +6,16 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 interface GroupCoursesProps {
   className?: string
   classChild?: string
+  indicatorClass?: string[]
   children: ReactNode
 }
 
-function Group({ className = '', classChild = '', children }: GroupCoursesProps) {
+function Group({
+  className = '',
+  classChild = '',
+  indicatorClass = ['', ''],
+  children,
+}: GroupCoursesProps) {
   // states
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
   const [isMedium, setIsMedium] = useState<boolean>(false)
@@ -59,7 +65,7 @@ function Group({ className = '', classChild = '', children }: GroupCoursesProps)
       {!isExpanded && (
         <>
           <button
-            className="trans-200 group absolute -left-21 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-primary bg-opacity-80 shadow-md hover:bg-opacity-100"
+            className={`trans-200 group absolute -left-21 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-primary bg-opacity-80 shadow-md hover:bg-opacity-100 ${indicatorClass[0]}`}
             onClick={prevSlide}
           >
             <FaChevronLeft
@@ -68,7 +74,7 @@ function Group({ className = '', classChild = '', children }: GroupCoursesProps)
             />
           </button>
           <button
-            className="trans-200 group absolute -right-21 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-primary bg-opacity-80 shadow-md hover:bg-opacity-100"
+            className={`trans-200 group absolute -right-21 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-primary bg-opacity-80 shadow-md hover:bg-opacity-100 ${indicatorClass[1]}`}
             onClick={nextSlide}
           >
             <FaChevronRight

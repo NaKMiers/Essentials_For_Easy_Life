@@ -1,3 +1,5 @@
+import Background from '@/components/backgrounds/Background'
+import Footer from '@/components/layouts/Footer'
 import Header from '@/components/layouts/Header'
 import PageLoading from '@/components/PageLoading'
 import { ReactNode } from 'react'
@@ -15,8 +17,13 @@ export default async function RootLayout({
       {/* Header */}
       <Header />
 
+      <Background />
+
       {/* Main */}
-      <main className="bg-neutral-800 text-light">{children}</main>
+      <main className="mt-[60px]">{children}</main>
+
+      {/* Footer */}
+      <Footer />
     </>
   )
 }

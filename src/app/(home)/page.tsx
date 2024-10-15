@@ -1,5 +1,7 @@
 import Divider from '@/components/Divider'
+import { navItems } from '@/constants'
 import { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -10,61 +12,40 @@ export const metadata: Metadata = {
 async function Home() {
   return (
     <div className="mx-auto h-full min-h-screen w-full max-w-1200">
+      <Divider size={16} />
+
+      <h1 className="text-center font-body text-4xl font-semibold tracking-widest text-secondary">
+        Essentials For Easy Life
+      </h1>
+
       <Divider size={10} />
 
-      <h1 className="text-center text-4xl">Essentials For Easy Life</h1>
+      <div className="flex flex-wrap text-xl font-semibold text-dark">
+        {navItems.map(link => (
+          <div
+            className="w-full p-21/2 xs:w-1/2 md:w-1/4 md:p-6 lg:p-8"
+            key={link.href}
+          >
+            <Link
+              href={link.href}
+              className="group flex aspect-square w-full flex-col items-center justify-center gap-8 rounded-3xl bg-white p-8 shadow-lg"
+            >
+              <div className="trans-300 group-hover:scale-90">
+                <Image
+                  className="h-full w-full object-contain"
+                  src={link.image}
+                  width={200}
+                  height={200}
+                  alt={link.title}
+                />
+              </div>
 
-      <Divider size={10} />
-
-      <div className="grid grid-cols-1 gap-21 text-xl font-semibold text-dark sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <Link
-          href="/ai"
-          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
-        >
-          AI IMAGE
-        </Link>
-        <Link
-          href="/news"
-          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
-        >
-          NEWS
-        </Link>
-        <Link
-          href="/location"
-          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
-        >
-          LOCATION
-        </Link>
-        <Link
-          href="/music"
-          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
-        >
-          MUSIC
-        </Link>
-        <Link
-          href="/movie"
-          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
-        >
-          MOVIE
-        </Link>
-        <Link
-          href="/recipe"
-          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
-        >
-          RECIPE
-        </Link>
-        <Link
-          href="/temp-mail"
-          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
-        >
-          TEMP MAIL
-        </Link>
-        <Link
-          href="/"
-          className="flex aspect-square w-full items-center justify-center rounded-lg border-2 border-light bg-gradient-to-b from-slate-200 via-green-200 to-sky-400 p-21 shadow-lg"
-        >
-          ...
-        </Link>
+              <h2 className="trans-200 text-center font-body text-lg font-semibold tracking-wider text-secondary group-hover:text-primary md:text-2xl">
+                {link.title}
+              </h2>
+            </Link>
+          </div>
+        ))}
       </div>
 
       <Divider size={10} />

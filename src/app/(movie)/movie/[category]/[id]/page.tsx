@@ -1,5 +1,5 @@
 import Divider from '@/components/Divider'
-import MovieCard from '@/components/MovieCard'
+import MovieCard from '@/components/movies/MovieCard'
 import Group from '@/components/Group'
 import { credits, detail, getVideos, similar } from '@/requests'
 import Image from 'next/image'
@@ -14,34 +14,20 @@ async function MovieDetailPage({
   let videos: any[] = []
   let similarMovies: any[] = []
 
-  // get movie detail
   try {
-    const res = await detail(category, id, { params: {} })
-    movie = res
-  } catch (err: any) {
-    console.log(err)
-  }
+    const [movieRes, castsRes, videosRes, similarMoviesRes] = await Promise.all([
+      detail(category, id, { params: {} }),
+      credits(category, id),
+      getVideos(category, id),
+      similar(category, id),
+    ])
 
-  // get movie casts
-  try {
-    const res = await credits(category, id)
-    casts = res.cast
-  } catch (err: any) {
-    console.log(err)
-  }
+    movie = movieRes
+    casts = castsRes.cast
+    videos = videosRes.results.slice(0, 5)
+    similarMovies = similarMoviesRes.results
 
-  // get movie videos
-  try {
-    const res = await getVideos(category, id)
-    videos = res.results.slice(0, 5)
-  } catch (err: any) {
-    console.log(err)
-  }
-
-  // get similar movies
-  try {
-    const res = await similar(category, id)
-    similarMovies = res.results
+    console.log(casts)
   } catch (err: any) {
     console.log(err)
   }
@@ -71,44 +57,51 @@ async function MovieDetailPage({
               backgroundPosition: 'center',
               backgroundSize: 'cover',
             }}
-          ></div>
+          />
         </div>
         <div className="relative w-full pl-0 md:w-[70%] md:pl-8">
-          <h1 className="mb-8 text-6xl">{movie.title || movie.name}</h1>
+          <h1 className="mb-8 text-6xl text-light">{movie.title || movie.name}</h1>
           <div className="mb-8 flex flex-wrap gap-2">
             {movie.genres &&
               movie.genres.slice(0, 5).map((genre: any, index: number) => (
                 <span
                   key={index}
-                  className="rounded-3xl border-2 border-white bg-black px-6 py-2 text-lg font-semibold"
+                  className="rounded-3xl border-2 border-white bg-black px-6 py-2 text-lg font-semibold text-light"
                 >
                   {genre.name}
                 </span>
               ))}
           </div>
-          <p className="font-body tracking-wider">{movie.overview}</p>
+          <p className="py-2 font-body tracking-wider">{movie.overview}</p>
 
+          {/* Casts */}
           <div className="mt-4">
             <h2 className="text-lg font-semibold">Casts</h2>
-            <div className="no-scrollbar mt-2 flex snap-x snap-mandatory gap-4 overflow-x-auto">
+            <Group indicatorClass={['w-5 text-light', 'w-5']}>
               {casts.map(cast => (
                 <div
-                  className="flex-shrink-0 snap-start"
+                  className="flex h-full flex-col items-center gap-2"
                   key={cast.id}
                 >
-                  <div className="max-w-[100px] overflow-hidden rounded-lg shadow-lg">
+                  <div className="h-full max-w-[100px] overflow-hidden rounded-lg shadow-lg">
                     <Image
                       className="h-full w-full object-cover"
                       width={100}
                       height={100}
-                      src={`${`https://image.tmdb.org/t/p/original/${cast.profile_path}`}`}
+                      src={
+                        cast.profile_path
+                          ? `${`https://image.tmdb.org/t/p/original/${cast.profile_path}`}`
+                          : cast.gender === 1
+                            ? '/images/default-male-profile.jpg'
+                            : '/images/default-female-profile.jpg'
+                      }
                       alt={cast.name}
                     />
                   </div>
                   <p className="mt-2 font-body text-sm tracking-wider">{cast.name}</p>
                 </div>
               ))}
-            </div>
+            </Group>
           </div>
         </div>
       </div>
@@ -142,13 +135,15 @@ async function MovieDetailPage({
           {similarMovies.map((movie: any) => (
             <MovieCard
               id={`${category}/${movie.id}`}
-              title={movie.name}
+              title={movie.title || movie.name}
               image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
               key={movie.id}
             />
           ))}
         </Group>
       </div>
+
+      <Divider size={50} />
     </div>
   )
 }

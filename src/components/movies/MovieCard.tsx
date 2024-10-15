@@ -13,9 +13,9 @@ function MovieCard({ id, image, title, className = '' }: MovieCardProps) {
   return (
     <Link
       href={`/movie/${id}`}
-      className={`group flex flex-col gap-3 overflow-hidden ${className}`}
+      className={`group flex h-full flex-col gap-3 overflow-hidden ${className}`}
     >
-      <div className="overflow-hidden rounded-lg shadow-lg">
+      <div className="flex h-full w-full overflow-hidden rounded-lg">
         <Image
           className="h-full w-full object-cover"
           src={image}
@@ -25,7 +25,10 @@ function MovieCard({ id, image, title, className = '' }: MovieCardProps) {
           layout="responsive"
         />
       </div>
-      <p className="trans-200 text-center font-body font-semibold tracking-widest group-hover:text-primary">
+      <p
+        className="trans-200 line-clamp-1 text-ellipsis text-center font-body font-semibold tracking-widest group-hover:text-primary"
+        title={title}
+      >
         {title}
       </p>
     </Link>

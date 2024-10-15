@@ -16,5 +16,5 @@
   "useTabs": false,
   "vueIndentScriptAndStyle": false,
   "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindAttributes": ["classChild"]
+  "tailwindAttributes": ["classChild", "indicatorClass"]
 }
