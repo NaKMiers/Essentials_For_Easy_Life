@@ -48,7 +48,7 @@ async function Home() {
         ))}
       </div>
 
-      <Divider size={10} />
+      <Divider size={50} />
     </div>
   )
 }
