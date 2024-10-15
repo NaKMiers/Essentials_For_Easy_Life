@@ -255,9 +255,9 @@ function Player() {
                 </p>
                 <p
                   className="line-clamp-1 text-ellipsis font-body text-sm tracking-wider text-slate-500"
-                  title={curTrack.artists.map((artist: any) => artist.name).join(', ')}
+                  title={curTrack?.artists?.map((artist: any) => artist.name).join(', ')}
                 >
-                  {curTrack.artists.map((artist: any) => artist.name).join(', ')}
+                  {curTrack?.artists?.map((artist: any) => artist.name).join(', ')}
                 </p>
               </div>
             </>
