@@ -30,7 +30,7 @@ function Footer() {
                   src="/images/logo.png"
                   width={60}
                   height={60}
-                  alt="github"
+                  alt="efel"
                   loading="lazy"
                 />
               </Link>
@@ -56,7 +56,7 @@ function Footer() {
                   className="wiggle-1"
                   width={50}
                   height={50}
-                  alt="messenger"
+                  alt={social.title}
                   loading="lazy"
                 />
               </Link>
