@@ -59,3 +59,9 @@ export const searchAndQuery = async (cate: Cate, params: any) => {
   const response = await fetch(url)
   return handleResponse(response)
 }
+
+export const likeMovieApi = async (id: string, type: Cate, data: any) => {
+  const url = `/api/movie/like/${id}/${type}`
+  const response = await fetch(url, { method: 'PATCH', body: JSON.stringify({ data }) })
+  return handleResponse(response)
+}

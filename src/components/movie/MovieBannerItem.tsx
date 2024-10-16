@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { memo, useCallback, useState } from 'react'
 import toast from 'react-hot-toast'
+import MovieLikeButton from './MovieLikeButton'
 
 interface BannerItemProps {
   movie: any
@@ -39,10 +40,7 @@ function MovieHeroSlideItem({ movie, className }: BannerItemProps) {
 
   return (
     <>
-      <div
-        className={`relative h-full w-full flex-shrink-0 snap-center ${className}`}
-        key={movie._id}
-      >
+      <div className={`relative h-full w-full flex-shrink-0 snap-center ${className}`}>
         <div
           className="h-full w-full"
           style={{
@@ -66,7 +64,7 @@ function MovieHeroSlideItem({ movie, className }: BannerItemProps) {
             <div className="desc line-clamp-4 text-ellipsis pr-[20%] font-body tracking-wider drop-shadow-md">
               {movie.overview}
             </div>
-            <div className="buttons mt-5 flex flex-wrap gap-2">
+            <div className="buttons mt-5 flex flex-wrap gap-3">
               <Link
                 href={`/movie/movie/${movie.id}`}
                 className="relative flex items-center rounded-[30px] border-4 border-transparent bg-red-500 px-7 py-2 text-xl font-semibold text-white shadow-[0px_0px_7px_8px_#ff00004d] transition-shadow duration-300 hover:shadow-[0px_0px_7px_15px_#ff00004d]"
@@ -79,6 +77,11 @@ function MovieHeroSlideItem({ movie, className }: BannerItemProps) {
               >
                 Watch trailer
               </button>
+              <MovieLikeButton
+                type="movie"
+                data={movie}
+                size={28}
+              />
             </div>
           </div>
         </div>
@@ -90,7 +93,7 @@ function MovieHeroSlideItem({ movie, className }: BannerItemProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`max-w-screen fixed left-0 top-0 z-30 flex h-full max-h-screen w-full items-center justify-center bg-black bg-opacity-50 p-10 ${className}`}
+            className={`max-w-screen fixed left-0 top-0 z-[60] flex h-full max-h-screen w-full items-center justify-center bg-black bg-opacity-50 p-10 ${className}`}
             onClick={() => setOpenTrailer(false)}
           >
             <motion.div

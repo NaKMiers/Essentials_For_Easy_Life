@@ -11,7 +11,9 @@ interface SliderProps {
   className?: string
 }
 
-function MovieHeroSlide({ time, movies, className = '' }: SliderProps) {
+function MovieHeroSlide({ movies, time, className = '' }: SliderProps) {
+  console.log(movies)
+
   // states
   const [slide, setSlide] = useState<number>(1)
   const [isChanging, setIsChanging] = useState<boolean>(false)
@@ -121,7 +123,7 @@ function MovieHeroSlide({ time, movies, className = '' }: SliderProps) {
         {movies.map(movie => (
           <MovieHeroSlideItem
             movie={movie}
-            key={movie._id}
+            key={movie.id}
           />
         ))}
       </div>
@@ -151,7 +153,7 @@ function MovieHeroSlide({ time, movies, className = '' }: SliderProps) {
           {movies.map((movie, index) => (
             <div
               className="flex-shrink-0 snap-start p-21/2"
-              key={movie._id}
+              key={movie.id}
             >
               <button
                 className={`relative aspect-video max-w-[200px] rounded-lg border-2 ${

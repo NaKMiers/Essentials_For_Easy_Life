@@ -1,5 +1,5 @@
 import Divider from '@/components/Divider'
-import MovieCard from '@/components/movies/MovieCard'
+import MovieCard from '@/components/movie/MovieCard'
 import { getMoviesList, getTvList } from '@/requests'
 import { Fragment } from 'react'
 
@@ -53,9 +53,8 @@ async function MovieCategoryPage({ params: { category } }: { params: { category:
           <div className="grid grid-cols-2 gap-21 md:grid-cols-3 lg:grid-cols-5">
             {list.data.map((item: any) => (
               <MovieCard
-                id={`${list.type}/${item.id}`}
-                title={item.title || item.name}
-                image={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                type={list.type}
+                data={item}
                 key={item.id}
               />
             ))}

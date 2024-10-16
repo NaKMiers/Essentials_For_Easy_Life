@@ -34,8 +34,6 @@ function Sidebar({ className = '' }: SidebarProps) {
   const { data: session } = useSession()
   const curUser: any = session?.user
 
-  console.log('curUser: ', curUser)
-
   // stores
   const openSidebar = useAppSelector(state => state.music.openSidebar)
   const spotifyUser: any = useAppSelector(state => state.music.spotifyUser)

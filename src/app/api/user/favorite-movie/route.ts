@@ -1,16 +1,16 @@
 import { connectDatabase } from '@/config/database'
-import UserHistoryModel from '@/models/UserHistoryModel'
+import FavoriteMovieModel from '@/models/FavoriteMovieModel'
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 
-// Models: UserHistory
-import '@/models/UserHistoryModel'
+// Models: Favorite Movie
+import '@/models/FavoriteMovieModel'
 
 export const dynamic = 'force-dynamic'
 
-// [DELETE]: /api/user/swap-face-history/delete
-export async function DELETE(req: NextRequest) {
-  console.log('- Delete Swap Face History -')
+// [GET]: /user/favorite-movie
+export async function GET(req: NextRequest) {
+  console.log('- Get User Favorite Movie -')
 
   try {
     // connect to database
@@ -25,14 +25,11 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 })
     }
 
-    // get delete swap face history ids
-    const { ids } = await req.json()
-
-    // get swap face history
-    await UserHistoryModel.deleteMany({ _id: { $in: ids } })
+    // get user's favorite movies & tv shows
+    const movies = await FavoriteMovieModel.find({ userId }).sort({ createdAt: -1 })
 
     // return response
-    return NextResponse.json({ message: 'Delete Successfully' }, { status: 200 })
+    return NextResponse.json({ movies }, { status: 200 })
   } catch (err: any) {
     return NextResponse.json({ message: err.message }, { status: 500 })
   }

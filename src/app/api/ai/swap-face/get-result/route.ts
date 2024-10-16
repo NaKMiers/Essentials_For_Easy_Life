@@ -1,5 +1,5 @@
 import { connectDatabase } from '@/config/database'
-import UserHistoryModel from '@/models/UserHistory'
+import UserHistoryModel from '@/models/UserHistoryModel'
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 

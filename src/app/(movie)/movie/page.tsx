@@ -1,8 +1,8 @@
 import Divider from '@/components/Divider'
 import Group from '@/components/Group'
-import MovieCard from '@/components/movies/MovieCard'
-import MovieHeroSlide from '@/components/movies/MovieHeroSlide'
-import MovieSearchBar from '@/components/movies/MovieSearchBar'
+import MovieCard from '@/components/movie/MovieCard'
+import MovieHeroSlide from '@/components/movie/MovieHeroSlide'
+import MovieSearchBar from '@/components/movie/MovieSearchBar'
 import { getMoviesList, getTvList } from '@/requests'
 import Link from 'next/link'
 import { Fragment } from 'react'
@@ -107,9 +107,8 @@ async function MoviePage() {
           >
             {list.data.map((movie: any) => (
               <MovieCard
-                id={`${list.type}/${movie.id}`}
-                title={movie.title || movie.name}
-                image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                type={list.type}
+                data={movie}
                 key={movie.id}
               />
             ))}

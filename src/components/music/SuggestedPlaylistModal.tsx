@@ -17,8 +17,6 @@ interface SuggestedPlaylistModalProps {
 }
 
 function SuggestedPlaylistModal({ open, setOpen, tracks, className = '' }: SuggestedPlaylistModalProps) {
-  console.log(tracks)
-
   // hooks
   const dispatch = useAppDispatch()
   const spotifyApi = useSpotify()
@@ -54,14 +52,6 @@ function SuggestedPlaylistModal({ open, setOpen, tracks, className = '' }: Sugge
       } as any)
 
       // add suggested tracks to new playlist
-      console.log(
-        'save tracks -',
-        tracks.filter(t => t.uri)
-      )
-      console.log(
-        'save tracks -',
-        tracks.filter(t => t.uri).map(t => t.uri)
-      )
       await spotifyApi.addTracksToPlaylist(
         newPlaylist.id,
         tracks.filter(t => t.uri).map(t => t.uri)
@@ -86,7 +76,7 @@ function SuggestedPlaylistModal({ open, setOpen, tracks, className = '' }: Sugge
       // stop saving
       setIsSaving(false)
     }
-  }, [])
+  }, [dispatch, playlists, setOpen, spotifyApi, spotifyUser, title, tracks])
 
   return (
     <AnimatePresence>

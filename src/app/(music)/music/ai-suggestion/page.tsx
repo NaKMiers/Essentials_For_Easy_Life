@@ -1,13 +1,11 @@
 'use client'
-import { useEffect, useState, useCallback } from 'react'
-import useSpotify from '@/libs/hooks/useSpotify'
-import { useAppDispatch, useAppSelector } from '@/libs/hooks'
-import { TiDelete } from 'react-icons/ti'
-import Divider from '@/components/Divider'
-import { FaEye } from 'react-icons/fa'
-import SuggestedPlaylistModal from '@/components/music/SuggestedPlaylistModal'
-import { RiDonutChartFill } from 'react-icons/ri'
+
 import SuggestionPlaylist from '@/components/music/SuggestionPlaylist'
+import { useAppDispatch } from '@/libs/hooks'
+import useSpotify from '@/libs/hooks/useSpotify'
+import { useCallback, useMemo, useState } from 'react'
+import { RiDonutChartFill } from 'react-icons/ri'
+import { TiDelete } from 'react-icons/ti'
 
 function TextToSuggestionPage() {
   // hooks
@@ -20,42 +18,45 @@ function TextToSuggestionPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   // values
-  const schema = {
-    type: 'object',
-    properties: {
-      playlists: {
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: {
-            seedGenres: {
-              type: 'array',
-              items: {
-                type: 'string',
+  const schema = useMemo(
+    () => ({
+      type: 'object',
+      properties: {
+        playlists: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              seedGenres: {
+                type: 'array',
+                items: {
+                  type: 'string',
+                },
+                description: 'List of Spotify genre seeds',
+                minItems: 3,
+                maxItems: 3,
               },
-              description: 'List of Spotify genre seeds',
-              minItems: 3,
-              maxItems: 3,
-            },
-            seedArtists: {
-              type: 'array',
-              items: {
-                type: 'string',
+              seedArtists: {
+                type: 'array',
+                items: {
+                  type: 'string',
+                },
+                description: 'List of Spotify artist seeds (artist IDs or names)',
+                minItems: 3,
+                maxItems: 3,
               },
-              description: 'List of Spotify artist seeds (artist IDs or names)',
-              minItems: 3,
-              maxItems: 3,
             },
+            required: ['seed_genres', 'seed_artists'],
           },
-          required: ['seed_genres', 'seed_artists'],
+          minItems: 3,
+          maxItems: 3,
         },
-        minItems: 3,
-        maxItems: 3,
       },
-    },
-    required: ['playlists'],
-    additionalProperties: false,
-  }
+      required: ['playlists'],
+      additionalProperties: false,
+    }),
+    []
+  )
 
   const handleCreateSuggestions = useCallback(async () => {
     const url =
@@ -92,16 +93,11 @@ function TextToSuggestionPage() {
     try {
       const res = await fetch(url, options)
       const data = await res.json()
-      console.log(data)
 
       const { playlists } = JSON.parse(data.choices[0].message.function_call.arguments)
 
-      console.log(playlists)
-
       const results = await Promise.all(
         playlists.map(async (playlist: any) => {
-          console.log(playlist)
-
           const { body } = await spotifyApi.getRecommendations({
             seed_artists: playlist.seedArtists,
             seed_genres: playlist.seedGenres,
@@ -119,7 +115,7 @@ function TextToSuggestionPage() {
       // stop loading
       setIsLoading(false)
     }
-  }, [])
+  }, [prompt, schema, spotifyApi])
 
   return (
     <div className="p-3">

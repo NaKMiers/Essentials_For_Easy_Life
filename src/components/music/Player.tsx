@@ -58,14 +58,8 @@ function Player() {
 
           spotifyApi
             .transferMyPlayback([device_id], { play: true })
-            .then(() => {
-              console.log('Transferred playback to localhost')
-            })
+            .then(() => {})
             .catch(err => console.error('Error transferring playback', err))
-        })
-
-        spotifyPlayer.addListener('not_ready', ({ device_id }: any) => {
-          console.log('Device ID has gone offline', device_id)
         })
 
         let lastTrack: any = null
@@ -74,8 +68,6 @@ function Player() {
         spotifyPlayer.addListener(
           'player_state_changed',
           debounce((state: any) => {
-            console.log('Player State Changed', state)
-            console.log('state.device_id', state.device_id)
             if (!state) return
 
             // update playing state
@@ -113,7 +105,6 @@ function Player() {
       if (wd.Spotify) {
         initializeSpotifyPlayer()
       } else {
-        console.log('Spotify SDK not available yet, retrying...')
         setTimeout(checkSpotify, 1000) // Retry after 1 second
       }
     }

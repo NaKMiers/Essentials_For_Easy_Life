@@ -8,8 +8,6 @@ interface ShowProps {
 }
 
 function Show({ show, className = '' }: ShowProps) {
-  console.log(show)
-
   return (
     <Link
       href={show.external_urls.spotify}

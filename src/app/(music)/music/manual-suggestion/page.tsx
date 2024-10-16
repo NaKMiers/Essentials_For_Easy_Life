@@ -48,7 +48,6 @@ function SuggestPlaylistPage() {
         )
 
         setPlaylistsWithTracks(playlistsWithTracks)
-        console.log('playlistsWithTracks:', playlistsWithTracks)
       } catch (err) {
         console.error('Error fetching playlist:', err)
       }
@@ -82,10 +81,6 @@ function SuggestPlaylistPage() {
         limit: 20, // Number of recommended tracks
       })
 
-      console.log('seedTracks: ', seedTracks)
-      console.log('seedGenres:', seedGenres)
-
-      console.log(body)
       setTrackResults(body.tracks)
       setOpenResults(true)
     } catch (err: any) {
@@ -96,8 +91,6 @@ function SuggestPlaylistPage() {
       setIsLoading(false)
     }
   }, [spotifyApi, selectedGenres, selectedTracks])
-
-  console.log(result)
 
   return (
     <>

@@ -72,7 +72,6 @@ function MovieSearchBar({
   // auto search after 0.5s when search value changes
   useEffect(() => {
     if (isRedirect) {
-      console.log('redirect')
       return
     }
 

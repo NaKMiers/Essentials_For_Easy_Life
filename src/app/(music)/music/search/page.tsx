@@ -29,7 +29,6 @@ function SearchPage() {
       if (result.playlists) setPlaylists(result.playlists.items)
       if (result.shows) setShows(result.shows.items)
       if (result.tracks) setTracks(result.tracks.items)
-      console.log('result.tracks: ', result.tracks)
     }
   }, [result])
 

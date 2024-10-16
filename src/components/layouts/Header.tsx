@@ -1,6 +1,5 @@
 'use client'
 
-import { useAppDispatch } from '@/libs/hooks'
 import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -15,7 +14,6 @@ interface HeaderProps {
 
 function Header({ className = '' }: HeaderProps) {
   // hooks
-  const dispatch = useAppDispatch()
   const { data: session } = useSession()
   const curUser: any = session?.user
   const pathname = usePathname()
@@ -52,9 +50,21 @@ function Header({ className = '' }: HeaderProps) {
             EFEL
           </Link>
         </div>
+      </div>
 
-        {/* MARK: Nav */}
-        <div className="hidden flex-shrink-0 items-center gap-4 md:flex">
+      {/* MARK: Nav */}
+      <div className="flex flex-shrink-0 items-center gap-4">
+        {pathname.startsWith('/movie') && (
+          <Link
+            href="/movie/my-favorites"
+            className="trans-200 group -mr-2 flex items-center gap-1.5 font-body text-sm hover:text-rose-500 hover:underline sm:text-base md:mr-0"
+          >
+            <span>My Favorites</span>
+          </Link>
+        )}
+
+        {/* Favorite Movies & TV Shows */}
+        <div className="hidden items-center gap-4 md:flex">
           {curUser ? (
             <>
               <div

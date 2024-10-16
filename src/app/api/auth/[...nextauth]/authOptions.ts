@@ -11,42 +11,47 @@ import SpotifyProvider from 'next-auth/providers/spotify'
 // Models: User
 import '@/models/UserModel'
 
-// async function refreshAccessToken(token: any) {
-//   try {
-//     spotifyApi.setAccessToken(token.spotifyAccessToken)
-//     spotifyApi.setRefreshToken(token.spotifyRefreshToken)
+async function refreshAccessToken(token: any) {
+  try {
+    spotifyApi.setAccessToken(token.spotifyAccessToken)
+    spotifyApi.setRefreshToken(token.spotifyRefreshToken)
 
-//     const { body: refreshedToken } = await spotifyApi.refreshAccessToken()
+    // refresh token
+    const { body: refreshedToken } = await spotifyApi.refreshAccessToken()
 
-//     const updatedUser: IUser | null = (await UserModel.findByIdAndUpdate(
-//       token._id,
-//       {
-//         $set: {
-//           spotifyAccessToken: refreshedToken.access_token,
-//           spotifyAccessTokenExpires: refreshedToken.expires_in * 1000 + Date.now(),
-//         },
-//       },
-//       { new: true }
-//     ).lean()) as IUser | null
+    // update user with new token
+    const updatedUser: IUser | null = (await UserModel.findByIdAndUpdate(
+      token._id,
+      {
+        $set: {
+          spotifyAccessToken: refreshedToken.access_token,
+          spotifyRefreshToken: refreshedToken.refresh_token,
+          spotifyAccessTokenExpiresAt: refreshedToken.expires_in * 1000 + Date.now(),
+        },
+      },
+      { new: true }
+    ).lean()) as IUser | null
 
-//     if (updatedUser) {
-//       return {
-//         ...token,
-//         spotifyAccessToken: refreshedToken.access_token,
-//         spotifyAccessTokenExpires: refreshedToken.expires_in * 1000 + Date.now(),
-//       }
-//     }
+    // return updated token
+    if (updatedUser) {
+      return {
+        ...token,
+        spotifyAccessToken: refreshedToken.access_token,
+        spotifyRefreshToken: refreshedToken.refresh_token,
+        spotifyAccessTokenExpiresAt: refreshedToken.expires_in * 1000 + Date.now(),
+      }
+    }
 
-//     return token
-//   } catch (err: any) {
-//     console.error(err)
+    return token
+  } catch (err: any) {
+    console.error(err)
 
-//     return {
-//       ...token,
-//       error: 'RefreshAccessTokenError',
-//     }
-//   }
-// }
+    return {
+      ...token,
+      error: 'RefreshAccessTokenError',
+    }
+  }
+}
 
 const authOptions = {
   secret: process.env.NEXTAUTH_SECRET!,
@@ -92,6 +97,8 @@ const authOptions = {
 
         // user found, connecting to spotify for the first time
         if (account.provider === 'spotify' && !userDB.spotifyId) {
+          console.log('- Connect Spotify -')
+
           // update user with spotify id
           await UserModel.updateOne(
             { email: user.email },
@@ -100,20 +107,34 @@ const authOptions = {
                 spotifyId: account.providerAccountId,
                 spotifyAccessToken: account.access_token,
                 spotifyRefreshToken: account.refresh_token,
+                spotifyAccessTokenExpiresAt: account.expires_at * 1000,
               },
             }
           )
-        }
 
-        token = {
-          ...token,
-          ...userDB,
-          spotifyId: userDB.spotifyId,
-          spotifyAccessToken: userDB.spotifyAccessToken,
-          spotifyRefreshToken: userDB.spotifyRefreshToken,
+          token = {
+            ...token,
+            ...userDB,
+            spotifyId: account.providerAccountId,
+            spotifyAccessToken: account.access_token,
+            spotifyRefreshToken: account.refresh_token,
+            spotifyAccessTokenExpiresAt: account.expires_at * 1000,
+          }
+        } else {
+          token = {
+            ...token,
+            ...userDB,
+          }
         }
       }
 
+      // refresh spotify token
+      if (trigger === 'update' && token.spotifyId && session.trigger === 'refresh-spotify-token') {
+        console.log('- Refresh Spotify Token -')
+        return await refreshAccessToken(token)
+      }
+
+      // update token
       if (trigger === 'update' && token._id) {
         console.log('- Update Token -')
         const userDB = await UserModel.findById(token._id).lean()
@@ -125,10 +146,6 @@ const authOptions = {
           }
         }
       }
-
-      // if (token.spotifyId) {
-      //   return await refreshAccessToken(token)
-      // }
 
       return token
     },

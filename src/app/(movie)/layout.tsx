@@ -2,6 +2,7 @@ import Background from '@/components/backgrounds/Background'
 import Footer from '@/components/layouts/Footer'
 import Header from '@/components/layouts/Header'
 import PageLoading from '@/components/PageLoading'
+import UseMovie from '@/libs/hooks/useMovie'
 import { ReactNode } from 'react'
 
 export default async function RootLayout({
@@ -18,6 +19,8 @@ export default async function RootLayout({
       <Header />
 
       <Background />
+
+      <UseMovie />
 
       {/* Main */}
       <main className="mt-[60px]">{children}</main>

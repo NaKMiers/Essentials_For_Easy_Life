@@ -17,8 +17,6 @@ function AIDetectorPage() {
     try {
       const data = await detectAIContentApi(content)
 
-      console.log(data)
-
       setDetectResult(data.data)
     } catch (err: any) {
       console.log(err)

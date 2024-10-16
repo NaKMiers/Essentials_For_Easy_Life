@@ -28,8 +28,6 @@ export async function POST(req: NextRequest) {
     )
 
     const data = await res.json()
-    console.log('data: ', data)
-
     const image = data.data[0].url
 
     // return response

@@ -18,7 +18,6 @@ function StoreProvider({ children, session }: { children: React.ReactNode; sessi
     <Provider store={storeRef.current}>
       <SessionProvider
         session={session}
-        refetchInterval={30 * 60} // 30 minutes
         refetchOnWindowFocus={false}
       >
         {children}

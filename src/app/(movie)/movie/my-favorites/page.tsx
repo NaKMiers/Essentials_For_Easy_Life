@@ -2,65 +2,48 @@
 
 import Divider from '@/components/Divider'
 import MovieCard from '@/components/movie/MovieCard'
-import MovieSearchBar from '@/components/movie/MovieSearchBar'
-import { getMoviesList, getTvList } from '@/requests'
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FaChevronDown } from 'react-icons/fa'
 
-function MovieSearchPage() {
+import { useAppDispatch, useAppSelector } from '@/libs/hooks'
+import { useSession } from 'next-auth/react'
+
+function MyFavoriteMovies() {
+  // hooks
+  const { data: session } = useSession()
+  const curUser: any = session?.user
+
+  // store
+  const favoriteMovies = useAppSelector(state => state.movie.favoriteMovies)
+
   // states
-  const [initResult, setInitResult] = useState<any>({
-    movies: [],
-    tvShows: [],
-  })
-  const [result, setResult] = useState<any>({
-    movies: [],
-    tvShows: [],
-  })
+  const [movies, setMovies] = useState<any[]>(
+    favoriteMovies.filter((item: any) => item.type === 'movie')
+  )
+  const [tvShows, setTVShows] = useState<any[]>(favoriteMovies.filter((item: any) => item.type === 'tv'))
   const [isCollapseMovies, setIsCollapseMovies] = useState<boolean>(true)
   const [isCollapseTVShows, setIsCollapseTVShows] = useState<boolean>(true)
 
-  // default results
   useEffect(() => {
-    const getPopularMovies = async () => {
-      const res = await getMoviesList('popular', {})
+    const movies = favoriteMovies.filter((item: any) => item.type === 'movie')
+    const tvShows = favoriteMovies.filter((item: any) => item.type === 'tv')
 
-      // set result
-      setInitResult((prev: any) => ({ ...prev, movies: res.results }))
-      setResult((prev: any) => ({ ...prev, movies: res.results }))
-    }
-
-    const getPopularTvShows = async () => {
-      const res = await getTvList('popular', {})
-
-      // set result
-      setInitResult((prev: any) => ({ ...prev, tvShows: res.results }))
-      setResult((prev: any) => ({ ...prev, tvShows: res.results }))
-    }
-
-    getPopularMovies()
-    getPopularTvShows()
-  }, [])
+    setMovies(movies)
+    setTVShows(tvShows)
+  }, [favoriteMovies])
 
   return (
     <div className="min-h-screen p-21">
-      <div className="mx-auto flex max-w-[500px]">
-        <MovieSearchBar
-          initResult={initResult}
-          setResult={setResult}
-        />
-      </div>
+      <Divider size={16} />
 
-      <Divider size={8} />
-
-      {result.movies.length > 0 && (
+      {movies.length > 0 && (
         <>
           <div
             className="flex cursor-pointer select-none items-center justify-between gap-2"
             onClick={() => setIsCollapseMovies(prev => !prev)}
           >
             <h1 className="inline-block bg-gradient-to-r from-rose-500 to-sky-500 bg-clip-text text-xl font-semibold text-transparent drop-shadow-md md:text-2xl lg:text-3xl">
-              Movies
+              My Favorite Movies
             </h1>
             <FaChevronDown
               size={20}
@@ -70,25 +53,25 @@ function MovieSearchPage() {
           <div
             className={`grid grid-cols-2 gap-21 overflow-hidden md:grid-cols-3 lg:grid-cols-5 ${isCollapseMovies ? 'mt-4 max-h-[3000px]' : 'mt-0 max-h-0'} trans-300`}
           >
-            {result.movies.map((item: any) => (
+            {movies.map((item: any) => (
               <MovieCard
                 type="movie"
-                data={item}
-                key={item.id}
+                data={item.data}
+                key={item._id}
               />
             ))}
           </div>
         </>
       )}
 
-      {result.tvShows.length > 0 && (
+      {tvShows.length > 0 && (
         <>
           <div
             className={`${isCollapseMovies ? 'mt-20' : 'mt-4'} trans-200 flex cursor-pointer select-none items-center justify-between gap-2`}
             onClick={() => setIsCollapseTVShows(prev => !prev)}
           >
             <h1 className="inline-block bg-gradient-to-r from-rose-500 to-sky-500 bg-clip-text text-xl font-semibold text-transparent drop-shadow-md md:text-2xl lg:text-3xl">
-              TV Shows
+              My Favorite TV Shows
             </h1>
             <FaChevronDown
               size={20}
@@ -98,10 +81,10 @@ function MovieSearchPage() {
           <div
             className={`grid grid-cols-2 gap-21 overflow-hidden md:grid-cols-3 lg:grid-cols-5 ${isCollapseTVShows ? 'mt-4 max-h-[3000px]' : 'mt-0 max-h-0'} trans-300`}
           >
-            {result.tvShows.map((item: any) => (
+            {tvShows.map((item: any) => (
               <MovieCard
                 type="tv"
-                data={item}
+                data={item.data}
                 key={item.id}
               />
             ))}
@@ -114,4 +97,4 @@ function MovieSearchPage() {
   )
 }
 
-export default MovieSearchPage
+export default MyFavoriteMovies

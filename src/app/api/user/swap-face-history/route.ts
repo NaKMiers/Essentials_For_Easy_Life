@@ -1,10 +1,10 @@
 import { connectDatabase } from '@/config/database'
-import UserHistoryModel from '@/models/UserHistory'
+import UserHistoryModel from '@/models/UserHistoryModel'
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
 
 // Models: UserHistory
-import '@/models/UserHistory'
+import '@/models/UserHistoryModel'
 
 export const dynamic = 'force-dynamic'
 

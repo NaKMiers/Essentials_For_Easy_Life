@@ -57,6 +57,9 @@ const UserSchema = new Schema(
     spotifyRefreshToken: {
       type: String,
     },
+    spotifyAccessTokenExpiresAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
@@ -85,4 +88,5 @@ export interface IUser {
   spotifyId: string
   spotifyAccessToken: string
   spotifyRefreshToken: string
+  spotifyAccessTokenExpiresAt: string
 }

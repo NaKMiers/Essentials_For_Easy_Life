@@ -1,8 +1,9 @@
 import Divider from '@/components/Divider'
-import MovieCard from '@/components/movies/MovieCard'
+import MovieCard from '@/components/movie/MovieCard'
 import Group from '@/components/Group'
 import { credits, detail, getVideos, similar } from '@/requests'
 import Image from 'next/image'
+import MovieLikeButton from '@/components/movie/MovieLikeButton'
 
 async function MovieDetailPage({
   params: { category, id },
@@ -26,8 +27,6 @@ async function MovieDetailPage({
     casts = castsRes.cast
     videos = videosRes.results.slice(0, 5)
     similarMovies = similarMoviesRes.results
-
-    console.log(casts)
   } catch (err: any) {
     console.log(err)
   }
@@ -36,7 +35,7 @@ async function MovieDetailPage({
     <div className="min-h-screen">
       {/* Background */}
       <div
-        className="relative h-[50vh] bg-no-repeat"
+        className="relative h-[50vh] bg-no-repeat shadow-xl"
         style={{
           background: `url(${`https://image.tmdb.org/t/p/original/${movie.backdrop_path ? movie.backdrop_path : movie.poster_path}`})`,
           backgroundPosition: 'center',
@@ -60,7 +59,15 @@ async function MovieDetailPage({
           />
         </div>
         <div className="relative w-full pl-0 md:w-[70%] md:pl-8">
-          <h1 className="mb-8 text-6xl text-light">{movie.title || movie.name}</h1>
+          <h1 className="mb-8 text-6xl text-light drop-shadow-md">
+            <MovieLikeButton
+              type={category}
+              size={24}
+              data={movie}
+              className="mr-3"
+            />
+            {movie.title || movie.name}
+          </h1>
           <div className="mb-8 flex flex-wrap gap-2">
             {movie.genres &&
               movie.genres.slice(0, 5).map((genre: any, index: number) => (
@@ -134,9 +141,8 @@ async function MovieDetailPage({
         >
           {similarMovies.map((movie: any) => (
             <MovieCard
-              id={`${category}/${movie.id}`}
-              title={movie.title || movie.name}
-              image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              data={movie}
+              type={category}
               key={movie.id}
             />
           ))}

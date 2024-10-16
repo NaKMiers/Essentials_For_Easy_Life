@@ -48,7 +48,6 @@ function UserImage({
     <div
       className={`relative ${className}`}
       onClick={() => {
-        console.log(image.url)
         if (selectedImages.includes(image.url)) {
           setSelectedImages(prev => prev.filter(url => url !== image.url))
         } else {
