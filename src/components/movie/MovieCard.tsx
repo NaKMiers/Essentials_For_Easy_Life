@@ -1,6 +1,5 @@
 'use client'
 
-import { useAppDispatch, useAppSelector } from '@/libs/hooks'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -15,12 +14,7 @@ interface MovieCardProps {
 
 function MovieCard({ type, data, className = '' }: MovieCardProps) {
   // hooks
-  const dispatch = useAppDispatch()
   const { data: session } = useSession()
-  const curUser: any = session?.user
-
-  // store
-  const favoriteMovies = useAppSelector(state => state.movie.favoriteMovies)
 
   return (
     <div className={`group relative flex h-full flex-col gap-3 overflow-hidden ${className}`}>
@@ -38,13 +32,11 @@ function MovieCard({ type, data, className = '' }: MovieCardProps) {
         />
       </Link>
 
-      {curUser && (
-        <MovieLikeButton
-          type={type}
-          data={data}
-          className="absolute right-2 top-2"
-        />
-      )}
+      <MovieLikeButton
+        type={type}
+        data={data}
+        className="absolute right-2 top-2"
+      />
 
       <Link
         href={`/movie/${type}/${data.id}`}

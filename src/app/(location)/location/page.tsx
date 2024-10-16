@@ -50,8 +50,8 @@ function LocationPage() {
         setPlaces(data.filter((place: any) => place.name && place.num_reviews > 0))
         setFilteredPlaces([])
         setRating('')
-      } catch (error) {
-        console.log(error)
+      } catch (err) {
+        console.log(err)
       } finally {
         // stop loading
         setIsLoading(false)

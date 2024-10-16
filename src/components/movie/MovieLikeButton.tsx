@@ -38,8 +38,6 @@ function MovieLikeButton({ type, data, size = 16, className = '' }: MovieLikeBut
     try {
       const { movie } = await likeMovieApi(data.id, type, data)
 
-      console.log('movie:', movie)
-
       if (movie) {
         dispatch(setFavoriteMovies([...favoriteMovies, movie]))
         setLiked(true)
@@ -51,25 +49,27 @@ function MovieLikeButton({ type, data, size = 16, className = '' }: MovieLikeBut
       console.log(err)
       toast.error(err.message)
     }
-  }, [dispatch, data.id, type, favoriteMovies, curUser])
+  }, [dispatch, type, data, favoriteMovies, curUser])
 
   return (
-    <button
-      className={`group text-rose-500 ${className}`}
-      onClick={handleLikeMovie}
-    >
-      {liked ? (
-        <FaHeart
-          size={size}
-          className="wiggle"
-        />
-      ) : (
-        <FaRegHeart
-          size={size}
-          className="wiggle"
-        />
-      )}
-    </button>
+    curUser && (
+      <button
+        className={`group text-rose-500 ${className}`}
+        onClick={handleLikeMovie}
+      >
+        {liked ? (
+          <FaHeart
+            size={size}
+            className="wiggle"
+          />
+        ) : (
+          <FaRegHeart
+            size={size}
+            className="wiggle"
+          />
+        )}
+      </button>
+    )
   )
 }
 
