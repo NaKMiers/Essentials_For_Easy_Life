@@ -2,42 +2,19 @@
 
 import { FaChevronDown } from 'react-icons/fa'
 
-import { useAppDispatch } from '@/libs/hooks'
-import useSpotify from '@/libs/hooks/useSpotify'
-import { setSpotifyUser } from '@/libs/reducers/musicReducer'
+import { navItems } from '@/constants'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
-import { navItems } from '@/constants'
+import { useState } from 'react'
 
 function MusicMenu() {
   // hooks
-  const dispatch = useAppDispatch()
-  const spotifyApi = useSpotify()
   const { data: session } = useSession()
   const curUser: any = session?.user
 
   // states
   const [isCollapse, setIsCollapse] = useState<boolean>(false)
-
-  // get spotify user
-  useEffect(() => {
-    const getSpotifyUser = async () => {
-      try {
-        const { body } = await spotifyApi.getMe()
-        dispatch(setSpotifyUser(body))
-      } catch (err: any) {
-        console.log(err)
-        toast.error(err.message)
-      }
-    }
-
-    if (spotifyApi.getAccessToken()) {
-      getSpotifyUser()
-    }
-  }, [dispatch, spotifyApi])
 
   return (
     <div

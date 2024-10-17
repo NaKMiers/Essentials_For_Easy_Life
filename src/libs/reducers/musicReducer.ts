@@ -4,9 +4,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export const music = createSlice({
   name: 'music',
   initialState: {
-    // user
-    spotifyUser: null,
-
     // playlist
     playlists: [],
     curPlaylist: null,
@@ -33,12 +30,6 @@ export const music = createSlice({
     openSidebar: false,
   },
   reducers: {
-    // user
-    setSpotifyUser: (state, action: PayloadAction<any>) => ({
-      ...state,
-      spotifyUser: action.payload,
-    }),
-
     // playlist
     setPlaylists: (state, action: PayloadAction<any>) => ({
       ...state,
@@ -112,9 +103,6 @@ export const music = createSlice({
 })
 
 export const {
-  // user
-  setSpotifyUser,
-
   // playlist
   setPlaylists,
   setCurPlaylist,

@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from '@/libs/hooks'
 import useSpotify from '@/libs/hooks/useSpotify'
 import { setPlaylists } from '@/libs/reducers/musicReducer'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useSession } from 'next-auth/react'
 import { Dispatch, memo, SetStateAction, useCallback, useState } from 'react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
@@ -20,10 +21,11 @@ interface PlaylistModalProps {
 function PlaylistModal({ open, setOpen, title, playlist, className = '' }: PlaylistModalProps) {
   // hooks
   const dispatch = useAppDispatch()
+  const { data: session } = useSession()
+  const curUser: any = session?.user
   const spotifyApi = useSpotify()
 
   // stores
-  const spotifyUser: any = useAppSelector(state => state.music.spotifyUser)
   const playlists: any[] = useAppSelector(state => state.music.playlists)
 
   // states
@@ -47,13 +49,13 @@ function PlaylistModal({ open, setOpen, title, playlist, className = '' }: Playl
   // add new category
   const onAddSubmit: SubmitHandler<FieldValues> = useCallback(
     async data => {
-      if (!spotifyUser) return
+      if (!curUser?.spotifyId) return
 
       // start loading
       setIsLoading(true)
 
       try {
-        const { body: newPlaylist } = await spotifyApi.createPlaylist(spotifyUser.id, {
+        const { body: newPlaylist } = await spotifyApi.createPlaylist(curUser.spotifyId, {
           name: data.name,
           description: data.description,
           public: isPublic,
@@ -76,18 +78,18 @@ function PlaylistModal({ open, setOpen, title, playlist, className = '' }: Playl
         setIsLoading(false)
       }
     },
-    [dispatch, reset, setOpen, playlists, spotifyApi, spotifyUser, isPublic]
+    [dispatch, reset, setOpen, playlists, spotifyApi, isPublic, curUser?.spotifyId]
   )
 
   const onEditSubmit: SubmitHandler<FieldValues> = useCallback(
     async data => {
-      if (!playlist || !spotifyUser) return
+      if (!playlist || !curUser?.spotifyId) return
 
       // start loading
       setIsLoading(true)
 
       try {
-        const res = await spotifyApi.changePlaylistDetails(playlist.id, {
+        await spotifyApi.changePlaylistDetails(playlist.id, {
           name: data.name,
           description: data.description,
           public: isPublic,
@@ -118,7 +120,7 @@ function PlaylistModal({ open, setOpen, title, playlist, className = '' }: Playl
         setIsLoading(false)
       }
     },
-    [dispatch, setOpen, reset, playlist, playlists, spotifyApi, spotifyUser, isPublic]
+    [dispatch, setOpen, reset, playlist, playlists, spotifyApi, isPublic, curUser?.spotifyId]
   )
 
   return (

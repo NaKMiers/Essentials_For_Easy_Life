@@ -2,8 +2,9 @@ import useSpotify from '@/libs/hooks/useSpotify'
 import Image from 'next/image'
 
 import { useAppDispatch, useAppSelector } from '@/libs/hooks'
-import { setCurPreviewTrack, setIsPlaying, setPlaylists } from '@/libs/reducers/musicReducer'
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { setPlaylists } from '@/libs/reducers/musicReducer'
+import { useSession } from 'next-auth/react'
+import { memo, useCallback, useState } from 'react'
 import toast from 'react-hot-toast'
 import { RiDonutChartFill } from 'react-icons/ri'
 import { PreviewItem } from './PlaylistWithTracks'
@@ -15,11 +16,12 @@ interface PlaylistWithTracksProps {
 
 function SuggestionPlaylist({ tracks, className = '' }: PlaylistWithTracksProps) {
   // hook
+  const { data: session } = useSession()
+  const curUser: any = session?.user
   const dispatch = useAppDispatch()
   const spotifyApi = useSpotify()
 
   // stores
-  const spotifyUser: any = useAppSelector(state => state.music.spotifyUser)
   const playlists: any[] = useAppSelector(state => state.music.playlists)
 
   // states
@@ -29,7 +31,7 @@ function SuggestionPlaylist({ tracks, className = '' }: PlaylistWithTracksProps)
 
   // save suggestion playlist
   const savePlaylist = useCallback(async () => {
-    if (!spotifyUser) {
+    if (!curUser?.spotifyId) {
       toast.error('Please connect to spotify to do this action')
       return
     }
@@ -44,7 +46,7 @@ function SuggestionPlaylist({ tracks, className = '' }: PlaylistWithTracksProps)
 
     try {
       // create new playlist
-      const { body: newPlaylist } = await spotifyApi.createPlaylist(spotifyUser.id, {
+      const { body: newPlaylist } = await spotifyApi.createPlaylist(curUser.spotifyId, {
         name: title,
         public: true,
       } as any)
@@ -67,7 +69,7 @@ function SuggestionPlaylist({ tracks, className = '' }: PlaylistWithTracksProps)
       // stop saving
       setIsSaving(false)
     }
-  }, [])
+  }, [tracks, dispatch, playlists, curUser?.spotifyId, spotifyApi, title])
 
   return (
     <div className={`flex flex-col overflow-hidden rounded-lg bg-white shadow-lg ${className}`}>

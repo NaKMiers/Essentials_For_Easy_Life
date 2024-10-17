@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/libs/hooks'
 import useSpotify from '@/libs/hooks/useSpotify'
 import { clearSelectedGenres, clearSelectedTracks, setPlaylists } from '@/libs/reducers/musicReducer'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useSession } from 'next-auth/react'
 import { Dispatch, memo, SetStateAction, useCallback, useState } from 'react'
 import toast from 'react-hot-toast'
 import { RiDonutChartFill } from 'react-icons/ri'
@@ -18,11 +19,12 @@ interface SuggestedPlaylistModalProps {
 
 function SuggestedPlaylistModal({ open, setOpen, tracks, className = '' }: SuggestedPlaylistModalProps) {
   // hooks
+  const { data: session } = useSession()
+  const curUser: any = session?.user
   const dispatch = useAppDispatch()
   const spotifyApi = useSpotify()
 
   // stores
-  const spotifyUser: any = useAppSelector(state => state.music.spotifyUser)
   const playlists: any[] = useAppSelector(state => state.music.playlists)
 
   // states
@@ -31,7 +33,7 @@ function SuggestedPlaylistModal({ open, setOpen, tracks, className = '' }: Sugge
 
   // save suggestion playlist
   const savePlaylist = useCallback(async () => {
-    if (!spotifyUser) {
+    if (!curUser?.spotifyId) {
       toast.error('Please connect to spotify to do this action')
       return
     }
@@ -46,7 +48,7 @@ function SuggestedPlaylistModal({ open, setOpen, tracks, className = '' }: Sugge
 
     try {
       // create new playlist
-      const { body: newPlaylist } = await spotifyApi.createPlaylist(spotifyUser.id, {
+      const { body: newPlaylist } = await spotifyApi.createPlaylist(curUser?.spotifyId, {
         name: title,
         public: true,
       } as any)
@@ -76,7 +78,7 @@ function SuggestedPlaylistModal({ open, setOpen, tracks, className = '' }: Sugge
       // stop saving
       setIsSaving(false)
     }
-  }, [dispatch, playlists, setOpen, spotifyApi, spotifyUser, title, tracks])
+  }, [dispatch, setOpen, tracks, playlists, spotifyApi, curUser?.spotifyId, title])
 
   return (
     <AnimatePresence>

@@ -14,13 +14,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
-import { FaHeart, FaHome, FaPlus, FaSearch, FaTrash, FaBrain, FaHandSpock } from 'react-icons/fa'
+import toast from 'react-hot-toast'
+import { BsLayoutSidebarInset, BsLayoutSidebarInsetReverse } from 'react-icons/bs'
+import { FaBrain, FaHandSpock, FaHeart, FaHome, FaPlus, FaSearch, FaTrash } from 'react-icons/fa'
 import { MdEdit } from 'react-icons/md'
 import ConfirmDialog from '../dialogs/ConfirmDialog'
 import Divider from '../Divider'
 import PlaylistModal from './PlaylistModal'
-import { BsLayoutSidebarInset, BsLayoutSidebarInsetReverse } from 'react-icons/bs'
-import toast from 'react-hot-toast'
 
 interface SidebarProps {
   className?: string
@@ -36,11 +36,9 @@ function Sidebar({ className = '' }: SidebarProps) {
 
   // stores
   const openSidebar = useAppSelector(state => state.music.openSidebar)
-  const spotifyUser: any = useAppSelector(state => state.music.spotifyUser)
   const playlists: any[] = useAppSelector(state => state.music.playlists)
 
   // states
-  // const [playlists, setPlaylists] = useState<any[]>([])
   const [openPlaylistModal, setOpenPlaylistModal] = useState<boolean>(false)
   const [openEditPlaylistModal, setOpenEditPlaylistModal] = useState<boolean>(false)
   const [editPlaylist, setEditPlaylist] = useState<any>(null)

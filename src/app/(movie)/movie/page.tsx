@@ -74,10 +74,7 @@ async function MoviePage() {
   return (
     <div className="">
       {/* MARK: Hero Slides */}
-      <MovieHeroSlide
-        movies={bannerMovies}
-        className="max-h-[calc(100vh-60px)]"
-      />
+      <MovieHeroSlide movies={bannerMovies} />
 
       <Divider size={20} />
 
