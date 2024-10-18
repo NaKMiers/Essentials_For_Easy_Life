@@ -2,6 +2,7 @@
 
 import UserImage from '@/components/ai/UserImage'
 import Divider from '@/components/Divider'
+import { setPageLoading } from '@/libs/reducers/modalReducer'
 import { IFile } from '@/models/FileModel'
 import {
   deleteSwapFaceHistoryApi,
@@ -18,20 +19,26 @@ import { FileUploader } from 'react-drag-drop-files'
 import toast from 'react-hot-toast'
 import { FaAngleLeft } from 'react-icons/fa'
 import { FaX } from 'react-icons/fa6'
+import { RiDonutChartFill } from 'react-icons/ri'
+import { useDispatch } from 'react-redux'
 
 const fileTypes = ['JPG', 'PNG', 'GIF']
 
 function SwapFacePage() {
+  // hooks
+  const dispatch = useDispatch()
+
   // states
   const [userFiles, setUserFiles] = useState<IFile[]>([])
-
   const [selectedImages, setSelectedImages] = useState<string[]>([])
   const [requestId, setRequestId] = useState<string>('')
   const [swapFaceResults, setSwapFaceResults] = useState<any[]>([])
+  const [deletingResult, setDeletingResult] = useState<number>(NaN)
 
   // get uploaded files
   useEffect(() => {
     const getUploadedFiles = async () => {
+      dispatch(setPageLoading(true))
       try {
         const { files } = await getUserFilesApi()
 
@@ -39,46 +46,64 @@ function SwapFacePage() {
       } catch (err: any) {
         console.log(err)
         toast.error(err.message)
+      } finally {
+        dispatch(setPageLoading(false))
       }
     }
 
     getUploadedFiles()
-  }, [])
+  }, [dispatch])
 
   // get swap-face history
   useEffect(() => {
     const getSwapFaceHistory = async () => {
+      // start loading
+      dispatch(setPageLoading(true))
+
       try {
         const { history } = await getUserSwapFaceHistoryApi()
         setSwapFaceResults(history)
       } catch (err: any) {
         console.log(err)
         toast.error(err.message)
+      } finally {
+        dispatch(setPageLoading(false))
       }
     }
 
-    getSwapFaceHistory()
-  }, [])
+    if (requestId === '') {
+      getSwapFaceHistory()
+    }
+  }, [dispatch, requestId])
 
   // handle add files when user select files
-  const handleAddFiles = useCallback(async (files: File[]) => {
-    if (!files) {
-      toast.error('Please select files')
-      return
-    }
-    let newFiles = Array.from(files)
+  const handleAddFiles = useCallback(
+    async (files: File[]) => {
+      if (!files) {
+        toast.error('Please select files')
+        return
+      }
+      let newFiles = Array.from(files)
 
-    try {
-      const formData = new FormData()
-      newFiles.forEach(file => formData.append('files', file))
-      const data = await uploadFilesApi(formData)
+      // start uploading files
+      dispatch(setPageLoading(true))
 
-      setUserFiles(prev => [...prev, ...data.files])
-    } catch (err: any) {
-      console.log(err)
-      toast.error(err.message)
-    }
-  }, [])
+      try {
+        const formData = new FormData()
+        newFiles.forEach(file => formData.append('files', file))
+        const data = await uploadFilesApi(formData)
+
+        setUserFiles(prev => [...prev, ...data.files])
+      } catch (err: any) {
+        console.log(err)
+        toast.error(err.message)
+      } finally {
+        // stop uploading files
+        dispatch(setPageLoading(false))
+      }
+    },
+    [dispatch]
+  )
 
   // handle swap faces
   const handleSwapFaces = useCallback(async () => {
@@ -86,6 +111,9 @@ function SwapFacePage() {
       toast.error('Please select target image and source image')
       return
     }
+
+    // start swapping faces
+    dispatch(setPageLoading(true))
 
     try {
       const { requestId } = await swapFaceApi(selectedImages[0], selectedImages[1])
@@ -96,17 +124,17 @@ function SwapFacePage() {
     } catch (err: any) {
       console.log(err)
       toast.error(err.message)
+    } finally {
+      // stop swapping faces
+      dispatch(setPageLoading(false))
     }
-  }, [selectedImages])
+  }, [dispatch, selectedImages])
 
   // get results after swap face
   useEffect(() => {
     const handleGetResult = async () => {
       try {
-        const { resultImage } = await getSwapFaceResultApi(requestId)
-
-        // show result image
-        setSwapFaceResults(prev => [resultImage, ...prev])
+        await getSwapFaceResultApi(requestId)
 
         // reset
         setRequestId('')
@@ -114,13 +142,15 @@ function SwapFacePage() {
       } catch (err: any) {
         console.log(err)
         toast.error(err.message)
+      } finally {
+        setDeletingResult(NaN)
       }
     }
 
     if (requestId) {
       handleGetResult()
     }
-  }, [requestId])
+  }, [setDeletingResult, requestId])
 
   // delete swap face history
   const deleteSwapFaceHistory = useCallback(
@@ -213,14 +243,14 @@ function SwapFacePage() {
 
             <div className="flex flex-wrap gap-3">
               {swapFaceResults.length > 0 &&
-                swapFaceResults.map(item => (
+                swapFaceResults.map((item, index) => (
                   <div
                     className="rounder-lg relative max-w-[150px] overflow-hidden shadow-lg"
-                    key={item._id}
+                    key={index}
                   >
                     <Image
                       className="h-full w-full rounded-lg object-contain"
-                      src={item.data.image}
+                      src={item?.data?.image}
                       width={150}
                       height={150}
                       alt="file"
@@ -229,14 +259,25 @@ function SwapFacePage() {
                     <button
                       onClick={e => {
                         e.stopPropagation()
+                        setDeletingResult(index)
                         deleteSwapFaceHistory([item._id])
                       }}
-                      className="group absolute right-1 top-1 rounded-lg bg-slate-300 p-2 hover:bg-dark-100"
+                      className={`group absolute right-1 top-1 rounded-lg bg-slate-300 p-2 hover:bg-dark-100 ${
+                        deletingResult === index ? 'cursor-not-allowed' : ''
+                      }`}
+                      disabled={deletingResult === index}
                     >
-                      <FaX
-                        size={16}
-                        className="trans-200 text-dark group-hover:text-light"
-                      />
+                      {deletingResult === index ? (
+                        <RiDonutChartFill
+                          size={16}
+                          className="animate-spin"
+                        />
+                      ) : (
+                        <FaX
+                          size={16}
+                          className="trans-200 text-dark group-hover:text-light"
+                        />
+                      )}
                     </button>
                   </div>
                 ))}

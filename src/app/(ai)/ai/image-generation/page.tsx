@@ -157,21 +157,25 @@ function ImageGenerationPage() {
 
       <Divider size={16} />
 
-      <p className="px-21 text-center font-body text-xl font-semibold tracking-widest">Your Images</p>
-
-      <Divider size={3} />
-
       {aiImageResult && (
-        <div className="flex w-full justify-center">
-          <div className="max-w-[500px] overflow-hidden rounded-lg shadow-lg">
-            <Image
-              src={aiImageResult}
-              width={1024}
-              height={1024}
-              alt="ai-generated-image"
-            />
+        <>
+          <p className="px-21 text-center font-body text-xl font-semibold tracking-widest">
+            Your Images
+          </p>
+
+          <Divider size={3} />
+
+          <div className="flex w-full justify-center">
+            <div className="max-w-[500px] overflow-hidden rounded-lg shadow-lg">
+              <Image
+                src={aiImageResult}
+                width={1024}
+                height={1024}
+                alt="ai-generated-image"
+              />
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       <Divider size={50} />

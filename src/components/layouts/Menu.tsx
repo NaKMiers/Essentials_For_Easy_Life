@@ -68,7 +68,7 @@ function Menu({ open, setOpen, className = '' }: MenuProps) {
 
       {/* MARK: Main */}
       <div
-        className={`trans-300 absolute right-0 top-0 z-30 h-screen w-full overflow-hidden border-light bg-gradient-to-l from-slate-300 from-10% to-white p-2 opacity-0 shadow-md sm:right-21 sm:max-h-[428px] sm:w-[300px] sm:max-w-full sm:rounded-xl sm:border-2 md:bottom-auto md:top-[60px]`}
+        className={`trans-300 absolute right-0 top-0 z-30 h-screen w-full overflow-hidden border-light bg-gradient-to-l from-slate-300 from-10% to-white p-2 text-dark opacity-0 shadow-md sm:right-21 sm:max-h-[428px] sm:w-[300px] sm:max-w-full sm:rounded-xl sm:border-2 md:bottom-auto md:top-[60px]`}
         ref={menuRef}
         onClick={() => setOpen(false)}
       >

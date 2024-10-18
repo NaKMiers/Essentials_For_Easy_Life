@@ -66,13 +66,19 @@ function PlaceDetails({ place, selected, refProp, className = '' }: PlaceDetails
         ))}
         {place.address && (
           <p className="flex items-center gap-2">
-            <FaLocationDot size={16} />
+            <FaLocationDot
+              size={16}
+              className="flex-shrink-0"
+            />
             {place.address}
           </p>
         )}
         {place.phone && (
           <p className="flex items-center gap-2">
-            <FaPhone size={16} />
+            <FaPhone
+              size={16}
+              className="flex-shrink-0"
+            />
             {place.phone}
           </p>
         )}

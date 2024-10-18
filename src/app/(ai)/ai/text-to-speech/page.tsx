@@ -99,18 +99,22 @@ function TextToSpeechPage() {
 
       <Divider size={16} />
 
-      <p className="px-21 text-center font-body text-xl font-semibold tracking-widest">Your Audio</p>
-
-      <Divider size={3} />
-
       {audioResult && (
-        <div className="flex w-full items-center justify-center">
-          <audio
-            className="w-full max-w-[500px]"
-            src={audioResult}
-            controls
-          />
-        </div>
+        <>
+          <p className="px-21 text-center font-body text-xl font-semibold tracking-widest">Your Audio</p>
+
+          <Divider size={3} />
+
+          {audioResult && (
+            <div className="flex w-full items-center justify-center">
+              <audio
+                className="w-full max-w-[500px]"
+                src={audioResult}
+                controls
+              />
+            </div>
+          )}
+        </>
       )}
 
       <Divider size={50} />

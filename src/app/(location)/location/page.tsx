@@ -95,6 +95,7 @@ function LocationPage() {
           setType={setType}
           rating={rating}
           setRating={setRating}
+          setCoords={setCoords}
         />
       </div>
     </div>

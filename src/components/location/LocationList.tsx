@@ -2,9 +2,10 @@
 
 import { createRef, memo, useEffect, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
-import Divider from '../Divider'
-import PlaceDetails from './PlaceDetails'
 import { BsLayoutSidebarInset } from 'react-icons/bs'
+import Divider from '../Divider'
+import OpenCageAutocomplete from './OpenCageAutocomplete'
+import PlaceDetails from './PlaceDetails'
 
 interface ListProps {
   places: any[]
@@ -16,6 +17,7 @@ interface ListProps {
   isLoading: boolean
   open: boolean
   setOpen: any
+  setCoords: any
   className?: string
 }
 
@@ -29,9 +31,9 @@ function LocationList({
   isLoading,
   open,
   setOpen,
+  setCoords,
 }: ListProps) {
   // states
-  const [search, setSearch] = useState<string>('')
   const [elRefs, setElRefs] = useState([])
 
   useEffect(() => {
@@ -54,13 +56,8 @@ function LocationList({
 
       {!isLoading ? (
         <div className="no-scrollbar h-full overflow-y-auto">
-          <input
-            type="text"
-            placeholder="Search places..."
-            className="mb-2 mt-2 h-10 w-full rounded-lg border-2 px-3 py-1 text-dark shadow-lg outline-none"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
+          <OpenCageAutocomplete setCoords={setCoords} />
+
           <div className="flex justify-between">
             <select
               className="h-10 rounded-lg border-2 px-2 py-1 text-dark shadow-lg outline-none"
@@ -68,7 +65,7 @@ function LocationList({
               onChange={e => setType(e.target.value)}
             >
               <option value="restaurants">Restaurants</option>
-              <option value="hotels">Hotels</option>
+              {/* <option value="hotels">Hotels</option> */}
               <option value="attractions">Attractions</option>
             </select>
 

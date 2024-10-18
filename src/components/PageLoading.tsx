@@ -24,11 +24,11 @@ function PageLoading() {
     <div
       className={`${
         isPageLoading ? 'flex' : 'hidden'
-      } fixed z-[60] w-screen h-screen top-0 left-0 right-0 bottom-0`}
+      } fixed bottom-0 left-0 right-0 top-0 z-[100] h-screen w-screen`}
     >
       <ThemeProvider theme={theme}>
-        <div className='w-full'>
-          <LinearProgress className='bg-yellow-50 h-[3px]' />
+        <div className="w-full">
+          <LinearProgress className="h-[3px] bg-yellow-50" />
         </div>
       </ThemeProvider>
     </div>

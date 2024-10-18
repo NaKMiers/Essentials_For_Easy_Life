@@ -4,7 +4,7 @@ import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { memo, useState, useEffect } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { FaBars } from 'react-icons/fa6'
 import Menu from './Menu'
 
@@ -59,7 +59,7 @@ function Header({ className = '' }: HeaderProps) {
           <Link
             href="/"
             prefetch={false}
-            className="trans-200"
+            className="trans-200 flex-shrink-0"
           >
             <Image
               className="aspect-square h-full w-full"
@@ -109,10 +109,27 @@ function Header({ className = '' }: HeaderProps) {
             ) : (
               <div className="flex items-center gap-3">
                 <button
-                  className="bg-dark trans-200 trans-200 cursor-pointer text-nowrap rounded-3xl border border-light bg-primary px-4 py-1.5 font-body font-semibold tracking-wider text-light hover:bg-secondary"
+                  className="trans-200 flex cursor-pointer items-center justify-center gap-1.5 text-nowrap rounded-3xl bg-neutral-800 p-1.5 font-body font-semibold tracking-wider text-light"
                   onClick={() => signIn('google')}
                 >
-                  Sign In
+                  <Image
+                    src="/icons/google.png"
+                    width={20}
+                    height={20}
+                    alt="google"
+                  />
+                </button>
+
+                <button
+                  className="trans-200 flex cursor-pointer items-center justify-center gap-1.5 text-nowrap rounded-3xl bg-neutral-200 p-1.5 font-body font-semibold tracking-wider text-light"
+                  onClick={() => signIn('github')}
+                >
+                  <Image
+                    src="/icons/github.png"
+                    width={20}
+                    height={20}
+                    alt="github"
+                  />
                 </button>
               </div>
             )}
@@ -131,12 +148,31 @@ function Header({ className = '' }: HeaderProps) {
                 />
               </button>
             ) : (
-              <button
-                className="bg-dark trans-200 trans-200 cursor-pointer text-nowrap rounded-3xl border border-light bg-primary px-4 py-1.5 font-body font-semibold tracking-wider text-light hover:bg-secondary"
-                onClick={() => signIn('google')}
-              >
-                Sign In
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  className="trans-200 flex cursor-pointer items-center justify-center gap-1.5 text-nowrap rounded-3xl bg-neutral-800 p-1.5 font-body font-semibold tracking-wider text-light"
+                  onClick={() => signIn('google')}
+                >
+                  <Image
+                    src="/icons/google.png"
+                    width={20}
+                    height={20}
+                    alt="google"
+                  />
+                </button>
+
+                <button
+                  className="trans-200 flex cursor-pointer items-center justify-center gap-1.5 text-nowrap rounded-3xl bg-neutral-200 p-1.5 font-body font-semibold tracking-wider text-light"
+                  onClick={() => signIn('github')}
+                >
+                  <Image
+                    src="/icons/github.png"
+                    width={20}
+                    height={20}
+                    alt="github"
+                  />
+                </button>
+              </div>
             )}
           </div>
 

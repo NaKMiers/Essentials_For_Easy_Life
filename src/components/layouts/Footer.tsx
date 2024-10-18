@@ -141,16 +141,31 @@ function Footer() {
                   Sign Out
                 </button>
               ) : (
-                <button
-                  className="trans-200 group flex items-center justify-center gap-1 font-body tracking-wide text-secondary hover:tracking-wider md:justify-start md:text-left lg:text-center"
-                  onClick={() => signIn('google')}
-                >
-                  <FaSignInAlt
-                    size={15}
-                    className="wiggle-0 flex-shrink-0"
-                  />
-                  Sign In
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    className="trans-200 flex cursor-pointer items-center justify-center gap-1.5 text-nowrap rounded-3xl bg-neutral-800 p-1.5 font-body font-semibold tracking-wider text-light"
+                    onClick={() => signIn('google')}
+                  >
+                    <Image
+                      src="/icons/google.png"
+                      width={20}
+                      height={20}
+                      alt="google"
+                    />
+                  </button>
+
+                  <button
+                    className="trans-200 flex cursor-pointer items-center justify-center gap-1.5 text-nowrap rounded-3xl bg-neutral-200 p-1.5 font-body font-semibold tracking-wider text-light"
+                    onClick={() => signIn('github')}
+                  >
+                    <Image
+                      src="/icons/github.png"
+                      width={20}
+                      height={20}
+                      alt="google"
+                    />
+                  </button>
+                </div>
               )}
             </div>
           </div>

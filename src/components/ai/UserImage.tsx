@@ -1,9 +1,10 @@
 import { IFile } from '@/models/FileModel'
 import { deleteFilesApi } from '@/requests'
 import Image from 'next/image'
-import { Dispatch, SetStateAction, useCallback } from 'react'
+import { Dispatch, SetStateAction, useCallback, useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaX } from 'react-icons/fa6'
+import { RiDonutChartFill } from 'react-icons/ri'
 
 interface UserImageProps {
   image: IFile
@@ -20,8 +21,14 @@ function UserImage({
   setUserFiles,
   className = '',
 }: UserImageProps) {
+  // states
+  const [isDeleting, setIsDeleting] = useState<boolean>(false)
+
   const handleDeleteFile = useCallback(
     async (ids: string[]) => {
+      // start deleting
+      setIsDeleting(true)
+
       try {
         // send request to server to delete files
         const { message } = await deleteFilesApi(ids)
@@ -39,9 +46,12 @@ function UserImage({
       } catch (err: any) {
         console.log(err)
         toast.error(err.message)
+      } finally {
+        // stop deleting
+        setIsDeleting(false)
       }
     },
-    [selectedImages, setSelectedImages, setUserFiles]
+    [selectedImages, setSelectedImages, setUserFiles, setIsDeleting]
   )
 
   return (
@@ -81,12 +91,20 @@ function UserImage({
           e.stopPropagation()
           handleDeleteFile([image._id])
         }}
-        className="group absolute right-2 top-2 rounded-lg bg-slate-300 p-2 hover:bg-dark-100"
+        className={`group absolute right-2 top-2 rounded-lg bg-slate-300 p-2 hover:bg-dark-100 ${isDeleting ? 'cursor-not-allowed' : ''}`}
+        disabled={isDeleting}
       >
-        <FaX
-          size={16}
-          className="trans-200 text-dark group-hover:text-light"
-        />
+        {isDeleting ? (
+          <RiDonutChartFill
+            size={16}
+            className="animate-spin"
+          />
+        ) : (
+          <FaX
+            size={16}
+            className="trans-200 text-dark group-hover:text-light"
+          />
+        )}
       </button>
     </div>
   )
