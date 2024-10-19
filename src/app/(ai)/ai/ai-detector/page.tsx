@@ -16,7 +16,7 @@ function AIDetectorPage() {
   const [aiWords, setAIWords] = useState<number>(0)
   const [textWords, setTextWords] = useState<number>(0)
   const [fakePercentage, setFakePercentage] = useState<number>(0)
-  const [isHuman, setIsHuman] = useState<boolean>(true)
+  const [isHuman, setIsHuman] = useState<number>(100)
   const [sentences, setSentences] = useState<string[]>([])
 
   // AI Content Detector
@@ -40,7 +40,7 @@ function AIDetectorPage() {
       setAIWords(aiWords)
       setTextWords(textWords)
       setFakePercentage(fakePercentage)
-      setIsHuman(isHuman === 1)
+      setIsHuman(isHuman)
       setSentences(sentences)
     } catch (err: any) {
       console.log(err)
@@ -115,12 +115,16 @@ function AIDetectorPage() {
               </div>
             </div>
 
-            <p className="mt-4 font-semibold">Sentences From AI</p>
-            <ul className="max-h-[200px] list-disc overflow-y-auto pl-4 font-body text-sm tracking-wider">
-              {sentences.map((sentence, index) => (
-                <li key={index}>{sentence}</li>
-              ))}
-            </ul>
+            {sentences && sentences.length > 0 && (
+              <>
+                <p className="mt-4 font-semibold">Sentences From AI</p>
+                <ul className="max-h-[200px] list-disc overflow-y-auto pl-4 font-body text-sm tracking-wider">
+                  {sentences.map((sentence, index) => (
+                    <li key={index}>{sentence}</li>
+                  ))}
+                </ul>
+              </>
+            )}
 
             <p className="mt-4 font-semibold">
               Fake: <span className="text-rose-500">{fakePercentage}%</span>
@@ -129,7 +133,7 @@ function AIDetectorPage() {
             <p className="mt-4 font-semibold">
               This content is from{' '}
               <span className={isHuman ? 'text-green-500' : 'text-orange-500'}>
-                {isHuman ? 'Human' : 'AI'}
+                {isHuman >= 50 ? 'Human' : 'AI'}
               </span>
             </p>
 
