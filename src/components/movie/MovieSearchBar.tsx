@@ -49,6 +49,7 @@ function MovieSearchBar({
     // search
     if (category === 'movie' || category === 'all') {
       const res = await searchAndQuery('movie', { query: searchValue })
+      console.log(res)
       movies = res.results
     }
 

@@ -8,11 +8,11 @@ interface PlaylistProps {
 }
 
 function Playlist({ playlist, className = '' }: PlaylistProps) {
+  console.log('Playlist', playlist)
+
   return (
     <Link
-      href={playlist.external_urls.spotify}
-      target="_blank"
-      rel="noreferrer"
+      href={`/music/playlist/${playlist.id}`}
       className={`flex w-full flex-shrink-0 flex-col gap-2 ${className}`}
     >
       <div className="aspect-square h-full w-full flex-shrink-0 overflow-hidden rounded-lg shadow-lg">

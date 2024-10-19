@@ -1,6 +1,5 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { memo } from 'react'
@@ -13,11 +12,22 @@ interface MovieCardProps {
 }
 
 function MovieCard({ type, data, className = '' }: MovieCardProps) {
-  // hooks
-  const { data: session } = useSession()
-
   return (
     <div className={`group relative flex h-full flex-col gap-3 overflow-hidden ${className}`}>
+      <div className="absolute left-1 top-1 flex items-center justify-center gap-1 rounded-md border-2 border-[#e7ba1a] text-[#e7ba1a]">
+        <div className="flex max-h-[18px] max-w-[40px] items-center justify-center overflow-hidden">
+          <Image
+            src="/icons/imdb.png"
+            width={200}
+            height={200}
+            alt="IMDB"
+          />
+        </div>
+        <span className="pr-1 font-body text-sm font-semibold tracking-wider drop-shadow-md">
+          {Math.round(data.vote_average * 10) / 10}
+        </span>
+      </div>
+
       <Link
         href={`/movie/${type}/${data.id}`}
         className="flex h-full w-full overflow-hidden rounded-lg"

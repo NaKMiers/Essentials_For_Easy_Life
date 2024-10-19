@@ -74,7 +74,10 @@ async function MoviePage() {
   return (
     <div className="">
       {/* MARK: Hero Slides */}
-      <MovieHeroSlide movies={bannerMovies} />
+      <MovieHeroSlide
+        movies={bannerMovies}
+        className="-mt-[60px]"
+      />
 
       <Divider size={20} />
 

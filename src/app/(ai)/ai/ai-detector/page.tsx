@@ -132,7 +132,7 @@ function AIDetectorPage() {
 
             <p className="mt-4 font-semibold">
               This content is from{' '}
-              <span className={isHuman ? 'text-green-500' : 'text-orange-500'}>
+              <span className={isHuman >= 50 ? 'text-green-500' : 'text-orange-500'}>
                 {isHuman >= 50 ? 'Human' : 'AI'}
               </span>
             </p>

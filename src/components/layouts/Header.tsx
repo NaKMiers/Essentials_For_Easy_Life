@@ -18,8 +18,6 @@ function Header({ className = '' }: HeaderProps) {
   const curUser: any = session?.user
   const pathname = usePathname()
 
-  console.log('pathname:', pathname)
-
   // states
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false)
   const [isTransparent, setIsTransparent] = useState<boolean>(pathname === '/movie')

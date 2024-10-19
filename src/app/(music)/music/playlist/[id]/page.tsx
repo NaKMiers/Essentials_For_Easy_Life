@@ -4,21 +4,20 @@ import Divider from '@/components/Divider'
 import Track from '@/components/music/Track'
 import useSpotify from '@/libs/hooks/useSpotify'
 import { duration } from '@/utils/time'
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 function PlaylistPage({ params: { id } }: { params: { id: string } }) {
   // hooks
   const spotifyApi = useSpotify()
-  const { data: session } = useSession()
-  const curUser: any = session?.user
 
   // states
   const [playlist, setPlaylist] = useState<any>(null)
 
   // states
   const [tracks, setTracks] = useState<any[]>([])
+
+  console.log(tracks)
 
   useEffect(() => {
     const getPlaylist = async () => {
@@ -86,9 +85,9 @@ function PlaylistPage({ params: { id } }: { params: { id: string } }) {
 
           <div className="col-span-2 text-center">Preview</div>
 
-          <div className="col-span-4">Album</div>
+          <div className="col-span-3">Album</div>
 
-          <div className="col-span-1 text-center">Duration</div>
+          <div className="col-span-2 text-center">Duration</div>
         </div>
         {tracks.length > 0 && (
           <div className="flex flex-col gap-2">

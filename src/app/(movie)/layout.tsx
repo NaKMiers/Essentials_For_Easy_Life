@@ -23,7 +23,7 @@ export default async function RootLayout({
       <UseMovie />
 
       {/* Main */}
-      <main className="">{children}</main>
+      <main className="mt-[60px]">{children}</main>
 
       {/* Footer */}
       <Footer />

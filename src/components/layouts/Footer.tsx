@@ -1,17 +1,198 @@
 'use client'
 
 import { navItems, socials } from '@/constants'
+import { AnimatePresence, motion } from 'framer-motion'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { memo } from 'react'
-import { FaCheck, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa'
+import { memo, useCallback, useState } from 'react'
+import toast from 'react-hot-toast'
+import { FaCheck, FaSignOutAlt } from 'react-icons/fa'
 import Divider from '../Divider'
 
 function Footer() {
   // hooks
   const { data: session } = useSession()
   const curUser: any = session?.user
+
+  // states
+  const [wyrLoading, setWYRLoading] = useState<boolean>(false)
+  const [wyrOpen, setWYROpen] = useState<boolean>(false)
+  const [wyrQuestion, setWYRQuestion] = useState<string>('')
+
+  const [dogFactLoading, setDogFactLoading] = useState<boolean>(false)
+  const [dogFactOpen, setDogFactOpen] = useState<boolean>(false)
+  const [dogFact, setDogFact] = useState<string>('')
+
+  const [catFactLoading, setCatFactLoading] = useState<boolean>(false)
+  const [catFactOpen, setCatFactOpen] = useState<boolean>(false)
+  const [catFact, setCatFact] = useState<string>('')
+
+  const [triviaQuestionLoading, setTriviaQuestionLoading] = useState<boolean>(false)
+  const [triviaQuestionOpen, setTriviaQuestionOpen] = useState<boolean>(false)
+  const [triviaQuestion, setTriviaQuestion] = useState<any>(null)
+  const [triviaAnswers, setTriviaAnswers] = useState<any[]>([])
+
+  const [quoteLoading, setQuoteLoading] = useState<boolean>(false)
+  const [quoteOpen, setQuoteOpen] = useState<boolean>(false)
+  const [quote, setQuote] = useState<any>(null)
+
+  // handle "would you rather"
+  const handleWYR = useCallback(async () => {
+    // start loading
+    setWYRLoading(true)
+
+    try {
+      const res = await fetch('https://would-you-rather.p.rapidapi.com/wyr/random', {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY!,
+          'x-rapidapi-host': 'would-you-rather.p.rapidapi.com',
+        },
+      })
+      const data = await res.json()
+      const { question } = data[0]
+
+      // set question
+      setWYRQuestion(question)
+
+      // open modal
+      setWYROpen(true)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      // stop loading
+      setWYRLoading(false)
+    }
+  }, [])
+
+  // handle "dog fact"
+  const handleDogFact = useCallback(async () => {
+    // start loading
+    setDogFactLoading(true)
+
+    try {
+      const res = await fetch('https://random-dog-facts.p.rapidapi.com', {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY!,
+          'x-rapidapi-host': 'random-dog-facts.p.rapidapi.com',
+        },
+      })
+      const { fact } = await res.json()
+
+      // set fact
+      setDogFact(fact)
+
+      // open modal
+      setDogFactOpen(true)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      // stop loading
+      setDogFactLoading(false)
+    }
+  }, [])
+
+  // handle "cat fact"
+  const handleCatFact = useCallback(async () => {
+    // start loading
+    setCatFactLoading(true)
+
+    try {
+      const res = await fetch('https://meowfacts.p.rapidapi.com/?lang=eng', {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY!,
+          'x-rapidapi-host': 'meowfacts.p.rapidapi.com',
+        },
+      })
+      const { data } = await res.json()
+
+      // set fact
+      setCatFact(data[0])
+
+      // open modal
+      setCatFactOpen(true)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      // stop loading
+      setCatFactLoading(false)
+    }
+  }, [])
+
+  // handle "trivia question"
+  const handleTriviaQuestion = useCallback(async () => {
+    // start loading
+    setTriviaQuestionLoading(true)
+
+    try {
+      const res = await fetch('https://trivia-questions-api.p.rapidapi.com/triviaApi', {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY!,
+          'x-rapidapi-host': 'trivia-questions-api.p.rapidapi.com',
+        },
+      })
+      const data = await res.json()
+      console.log(data)
+      const { triviaQuestions } = data
+      let {
+        question,
+        incorrect_answers: wrongs,
+        correct_answer: right,
+      } = triviaQuestions[Math.floor(Math.random() * triviaQuestions.length)]
+
+      right = { answer: right, isCorrect: true }
+      wrongs = wrongs.map((answer: string) => ({ answer, isCorrect: false }))
+
+      // shuffle answers
+      const answers = [right, ...wrongs].sort(() => Math.random() - 0.5)
+
+      // set answers
+      setTriviaAnswers(answers)
+
+      // set question
+      setTriviaQuestion(question)
+
+      // open modal
+      setTriviaQuestionOpen(true)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      // stop loading
+      setTriviaQuestionLoading(false)
+    }
+  }, [])
+
+  // handle "quote"
+  const handleQuote = useCallback(async () => {
+    // start loading
+    setQuoteLoading(true)
+
+    try {
+      const res = await fetch('https://the-personal-quotes.p.rapidapi.com/quotes/random', {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY!,
+          'x-rapidapi-host': 'the-personal-quotes.p.rapidapi.com',
+        },
+      })
+      const data = await res.json()
+
+      // set quote
+      setQuote(data)
+
+      // open modal
+      setQuoteOpen(true)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      // stop loading
+      setQuoteLoading(false)
+    }
+  }, [])
 
   return (
     <footer className="border-t-2 border-primary bg-white bg-gradient-to-t from-white from-85% to-slate-300 px-21 pt-3">
@@ -181,10 +362,216 @@ function Footer() {
           <p className="text-[14px] transition-all duration-300 hover:tracking-wide">
             © <span className="font-semibold text-primary">EFEL</span>. All rights reserved
           </p>
+
+          <div className="flex flex-wrap justify-center gap-2">
+            <button
+              className={`text-[14px] transition-all duration-300 hover:tracking-wide hover:text-orange-500 ${
+                quoteLoading ? 'pointer-events-none' : ''
+              }`}
+              onClick={handleQuote}
+              disabled={quoteLoading}
+            >
+              {quoteLoading ? 'Get quote...' : 'Quote?'}
+            </button>
+
+            <button
+              className={`text-[14px] transition-all duration-300 hover:tracking-wide hover:text-orange-500 ${
+                triviaQuestionLoading ? 'pointer-events-none' : ''
+              }`}
+              onClick={handleTriviaQuestion}
+              disabled={triviaQuestionLoading}
+            >
+              {triviaQuestionLoading ? 'Questioning...' : 'Trivia Question?'}
+            </button>
+
+            <button
+              className={`text-[14px] transition-all duration-300 hover:tracking-wide hover:text-orange-500 ${
+                catFactLoading ? 'pointer-events-none' : ''
+              }`}
+              onClick={handleCatFact}
+              disabled={catFactLoading}
+            >
+              {catFactLoading ? 'Getting fact...' : 'Cat facts?'}
+            </button>
+
+            <button
+              className={`text-[14px] transition-all duration-300 hover:tracking-wide hover:text-orange-500 ${
+                dogFactLoading ? 'pointer-events-none' : ''
+              }`}
+              onClick={handleDogFact}
+              disabled={dogFactLoading}
+            >
+              {dogFactLoading ? 'Getting fact...' : 'Dog facts?'}
+            </button>
+
+            <button
+              className={`text-[14px] transition-all duration-300 hover:tracking-wide hover:text-orange-500 ${
+                wyrLoading ? 'pointer-events-none' : ''
+              }`}
+              onClick={handleWYR}
+              disabled={wyrLoading}
+            >
+              {wyrLoading ? 'Questioning...' : 'Would you rather?'}
+            </button>
+          </div>
         </div>
 
         <Divider size={4} />
       </div>
+
+      {/* Would you rather */}
+      <AnimatePresence>
+        {wyrOpen && wyrQuestion.trim() && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50`}
+            onClick={() => setWYROpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              className="w-full max-w-[500px] rounded-medium bg-white p-21 shadow-medium"
+              onClick={e => e.stopPropagation()}
+            >
+              <p className="text-center text-dark">{wyrQuestion}</p>
+
+              <Divider size={4} />
+
+              <div className="flex select-none items-center justify-center gap-3 text-sm">
+                <button
+                  className={`trans-200 rounded-lg border border-rose-500 px-3 py-1.5 shadow-lg hover:bg-slate-100`}
+                  onClick={() => setWYROpen(false)}
+                >
+                  {wyrQuestion.split('Would you rather ')[1].split(' or ')[0]}
+                </button>
+                <button
+                  className={`trans-200 rounded-lg border border-blue-500 px-3 py-1.5 shadow-lg hover:bg-slate-100`}
+                  onClick={() => setWYROpen(false)}
+                >
+                  {wyrQuestion.split('Would you rather ')[1].split(' or ')[1]}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Dog facts */}
+      <AnimatePresence>
+        {dogFactOpen && dogFact.trim() && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50`}
+            onClick={() => setDogFactOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              className="w-full max-w-[500px] rounded-medium bg-white p-21 shadow-medium"
+              onClick={e => e.stopPropagation()}
+            >
+              <p className="text-center text-dark">{dogFact}</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Cat facts */}
+      <AnimatePresence>
+        {catFactOpen && catFact.trim() && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50`}
+            onClick={() => setCatFactOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              className="w-full max-w-[500px] rounded-medium bg-white p-21 shadow-medium"
+              onClick={e => e.stopPropagation()}
+            >
+              <p className="text-center text-dark">{catFact}</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Trivia questions */}
+      <AnimatePresence>
+        {triviaQuestionOpen && triviaQuestion.trim() && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50`}
+            onClick={() => setTriviaQuestionOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              className="w-full max-w-[500px] rounded-medium bg-white p-21 shadow-medium"
+              onClick={e => e.stopPropagation()}
+            >
+              <p className="text-center text-dark">{triviaQuestion}</p>
+
+              <Divider size={2} />
+
+              <div className="grid select-none grid-cols-2 gap-3 text-sm">
+                {triviaAnswers.map(({ answer, isCorrect }, index) => (
+                  <button
+                    className="trans-200 rounded-lg border px-3 py-1.5 shadow-lg hover:bg-slate-100"
+                    key={index}
+                    onClick={() => {
+                      if (isCorrect) {
+                        toast.success('Correct answer!')
+                        setTriviaQuestionOpen(false)
+                      } else {
+                        toast.error('Incorrect answer!')
+                      }
+                    }}
+                  >
+                    {answer}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Quote */}
+      <AnimatePresence>
+        {quoteOpen && quote && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50`}
+            onClick={() => setQuoteOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              className="w-full max-w-[500px] rounded-medium bg-white p-21 shadow-medium"
+              onClick={e => e.stopPropagation()}
+            >
+              <p className="text-left text-sm text-dark">&quot;{quote.quote}`&quot;</p>
+              <p className="mt-1.5 font-body text-lg font-semibold tracking-wider">{quote.author}</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </footer>
   )
 }
