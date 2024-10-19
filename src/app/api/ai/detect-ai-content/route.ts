@@ -20,8 +20,6 @@ export async function POST(req: NextRequest) {
 
     const data = await res.json()
 
-    console.log(data)
-
     // return response
     return NextResponse.json({ data, message: 'Detect Successfully' }, { status: 200 })
   } catch (err: any) {

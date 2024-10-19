@@ -34,8 +34,6 @@ function AIDetectorPage() {
 
       const { aiWords, textWords, fakePercentage, isHuman, sentences } = data
 
-      console.log(data)
-
       setResult(data)
       setAIWords(aiWords)
       setTextWords(textWords)

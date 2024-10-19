@@ -68,6 +68,7 @@ async function MovieDetailPage({
             />
             {movie.title || movie.name}
           </h1>
+
           <div className="mb-8 flex flex-wrap gap-2">
             {movie.genres &&
               movie.genres.slice(0, 5).map((genre: any, index: number) => (
@@ -79,6 +80,22 @@ async function MovieDetailPage({
                 </span>
               ))}
           </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex max-w-[50px] items-center justify-center overflow-hidden">
+              <Image
+                src="/icons/imdb.png"
+                width={250}
+                height={250}
+                alt="IMDB"
+              />
+            </div>
+
+            <span className="pr-1 font-body text-lg font-semibold tracking-wider drop-shadow-md">
+              {Math.round(movie.vote_average * 10) / 10}
+            </span>
+          </div>
+
           <p className="py-2 font-body tracking-wider">{movie.overview}</p>
 
           {/* Casts */}

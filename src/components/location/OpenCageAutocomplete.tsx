@@ -17,7 +17,6 @@ function OpenCageAutocomplete({ setCoords }: { setCoords: any }) {
       }
 
       const data = await response.json()
-      console.log(data.results)
 
       const results = data.results.map((result: any) => ({
         label: result.formatted,
@@ -50,7 +49,6 @@ function OpenCageAutocomplete({ setCoords }: { setCoords: any }) {
               key={index}
               className="trans-200 cursor-pointer rounded-lg p-2 hover:bg-gray-200"
               onClick={() => {
-                console.log('Selected coords:', suggestion.coords)
                 setCoords({
                   lat: suggestion.coords.lat,
                   lng: suggestion.coords.lng,

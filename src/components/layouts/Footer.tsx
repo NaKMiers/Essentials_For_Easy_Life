@@ -2,6 +2,7 @@
 
 import { navItems, socials } from '@/constants'
 import { AnimatePresence, motion } from 'framer-motion'
+import he from 'he'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -426,7 +427,7 @@ function Footer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50`}
+            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50 p-21`}
             onClick={() => setWYROpen(false)}
           >
             <motion.div
@@ -436,7 +437,7 @@ function Footer() {
               className="w-full max-w-[500px] rounded-medium bg-white p-21 shadow-medium"
               onClick={e => e.stopPropagation()}
             >
-              <p className="text-center text-dark">{wyrQuestion}</p>
+              <p className="text-center text-dark">{he.decode(wyrQuestion)}</p>
 
               <Divider size={4} />
 
@@ -466,7 +467,7 @@ function Footer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50`}
+            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50 p-21`}
             onClick={() => setDogFactOpen(false)}
           >
             <motion.div
@@ -476,7 +477,7 @@ function Footer() {
               className="w-full max-w-[500px] rounded-medium bg-white p-21 shadow-medium"
               onClick={e => e.stopPropagation()}
             >
-              <p className="text-center text-dark">{dogFact}</p>
+              <p className="text-center text-dark">{he.decode(dogFact)}</p>
             </motion.div>
           </motion.div>
         )}
@@ -489,7 +490,7 @@ function Footer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50`}
+            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50 p-21`}
             onClick={() => setCatFactOpen(false)}
           >
             <motion.div
@@ -499,7 +500,7 @@ function Footer() {
               className="w-full max-w-[500px] rounded-medium bg-white p-21 shadow-medium"
               onClick={e => e.stopPropagation()}
             >
-              <p className="text-center text-dark">{catFact}</p>
+              <p className="text-center text-dark">{he.decode(catFact)}</p>
             </motion.div>
           </motion.div>
         )}
@@ -512,7 +513,7 @@ function Footer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50`}
+            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50 p-21`}
             onClick={() => setTriviaQuestionOpen(false)}
           >
             <motion.div
@@ -522,7 +523,7 @@ function Footer() {
               className="w-full max-w-[500px] rounded-medium bg-white p-21 shadow-medium"
               onClick={e => e.stopPropagation()}
             >
-              <p className="text-center text-dark">{triviaQuestion}</p>
+              <p className="text-center text-dark">{he.decode(triviaQuestion)}</p>
 
               <Divider size={2} />
 
@@ -540,7 +541,7 @@ function Footer() {
                       }
                     }}
                   >
-                    {answer}
+                    {he.decode(answer)}
                   </button>
                 ))}
               </div>
@@ -556,7 +557,7 @@ function Footer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50`}
+            className={`fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50 p-21`}
             onClick={() => setQuoteOpen(false)}
           >
             <motion.div
@@ -566,7 +567,7 @@ function Footer() {
               className="w-full max-w-[500px] rounded-medium bg-white p-21 shadow-medium"
               onClick={e => e.stopPropagation()}
             >
-              <p className="text-left text-sm text-dark">&quot;{quote.quote}`&quot;</p>
+              <p className="text-left text-sm text-dark">{he.decode(quote.quote)}</p>
               <p className="mt-1.5 font-body text-lg font-semibold tracking-wider">{quote.author}</p>
             </motion.div>
           </motion.div>

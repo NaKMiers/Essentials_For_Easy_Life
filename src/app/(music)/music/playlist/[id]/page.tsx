@@ -17,8 +17,6 @@ function PlaylistPage({ params: { id } }: { params: { id: string } }) {
   // states
   const [tracks, setTracks] = useState<any[]>([])
 
-  console.log(tracks)
-
   useEffect(() => {
     const getPlaylist = async () => {
       try {

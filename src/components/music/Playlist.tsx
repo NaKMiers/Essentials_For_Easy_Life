@@ -8,8 +8,6 @@ interface PlaylistProps {
 }
 
 function Playlist({ playlist, className = '' }: PlaylistProps) {
-  console.log('Playlist', playlist)
-
   return (
     <Link
       href={`/music/playlist/${playlist.id}`}
