@@ -46,12 +46,32 @@ const requireUnAuthMusic = async (req: NextRequest, token: JWT | null) => {
   return NextResponse.next()
 }
 
+// Require Admin
+const requireAdmin = async (req: NextRequest, token: JWT | null) => {
+  console.log('- Require Admin -')
+
+  // check auth
+  if (!['admin', 'editor'].includes(token?.role as string)) {
+    return NextResponse.redirect(new URL('/', req.url))
+  }
+
+  return NextResponse.next()
+}
+
 // Middleware
 export default async function middleware(req: NextRequest) {
   console.log('- Middleware -')
 
   const token = await getToken({ req })
   const pathname = req.nextUrl.pathname
+
+  // require admin
+  // require admin
+  const adminPaths = ['/admin', '/api/admin']
+  const isRequireAdmin = adminPaths.some(path => pathname.startsWith(path))
+  if (isRequireAdmin) {
+    return requireAdmin(req, token)
+  }
 
   // require auth
   const authPaths = ['/ai/swap-face']
@@ -76,5 +96,11 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/ai/swap-face', '/music/:path*', '/auth/connect-to-spotify'],
+  matcher: [
+    '/admin/:path*',
+    '/api/admin/:path*',
+    '/ai/swap-face',
+    '/music/:path*',
+    '/auth/connect-to-spotify',
+  ],
 }

@@ -1,11 +1,12 @@
 'use client'
 
 import { navItems } from '@/constants'
-import { checkPackageType, getUserName } from '@/utils/string'
-import { signOut, signIn, useSession } from 'next-auth/react'
+import { getUserName } from '@/utils/string'
+import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { memo, useEffect, useRef } from 'react'
+import { FaUserSecret } from 'react-icons/fa'
 
 interface MenuProps {
   open: boolean
@@ -89,6 +90,20 @@ function Menu({ open, setOpen, className = '' }: MenuProps) {
               </p>
               {curUser.username && <p className="text-xs">@{curUser.username}</p>}
             </div>
+
+            {['admin'].includes(curUser?.role) && (
+              <div className="flex flex-1 justify-end">
+                <Link
+                  href="/admin/user/all"
+                  className="group"
+                >
+                  <FaUserSecret
+                    size={20}
+                    className="wiggle"
+                  />
+                </Link>
+              </div>
+            )}
           </div>
 
           {navItems.map(link => (
