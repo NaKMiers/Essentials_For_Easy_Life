@@ -26,7 +26,7 @@ simpler, smarter way to live and work.
 
 <img src='https://cdn-icons-png.flaticon.com/128/1559/1559660.png' width='32' />
 
-**Content Detection**: Check if content is AIgenerated or not.
+**Content Detection**: Check if content is AI generated or not.
 
 <img src='https://cdn-icons-png.flaticon.com/128/13063/13063287.png' width='32' />
 
@@ -102,34 +102,34 @@ simpler, smarter way to live and work.
 ## APIs Using (21)
 
 - **Authentication**
-  1. [Google Authentication](https://cloud.google.com)
-  2. [Github Authentication](https://github.com)
+  - [Google Authentication](https://cloud.google.com)
+  - [Github Authentication](https://github.com)
 - **AI**
-  1. [Swap Faces](https://rapidapi.com/firdavscoder1/api/faceswap3)
-  2. [Content Detection](https://rapidapi.com/vaibhavchandra2007/api/ai-content-detector-ai-gpt)
-  3. [Image Generation](https://rapidapi.com/llbbmm/api/drawing1)
-  4. [Text to Speech](https://rapidapi.com/morpehus22/api/ai-powered-text-to-speech1)
+  - [Swap Faces](https://rapidapi.com/firdavscoder1/api/faceswap3)
+  - [Content Detection](https://rapidapi.com/vaibhavchandra2007/api/ai-content-detector-ai-gpt)
+  - [Image Generation](https://rapidapi.com/llbbmm/api/drawing1)
+  - [Text to Speech](https://rapidapi.com/morpehus22/api/ai-powered-text-to-speech1)
 - **Maps and Geolocation**
-  1. [Travel Advisor](https://rapidapi.com/apidojo/api/travel-advisor)
-  2. [Google Maps](https://rapidapi.com/apidojo/api/google-maps-geocoding-and-search-api)
-  3. [Search Places](https://opencagedata.com)
-  4. [Weather](https://rapidapi.com/worldapi/api/open-weather13)
+  - [Travel Advisor](https://rapidapi.com/apidojo/api/travel-advisor)
+  - [Google Maps](https://rapidapi.com/apidojo/api/google-maps-geocoding-and-search-api)
+  - [Search Places](https://opencagedata.com)
+  - [Weather](https://rapidapi.com/worldapi/api/open-weather13)
 - **Movie**
-  1. [The Movie Database](https://www.themoviedb.org)
+  - [The Movie Database](https://www.themoviedb.org)
 - **Music**
-  1. [Spotify](https://developer.spotify.com)
-  2. [Spotify Downloader](https://rapidapi.com/amiteshgupta/api/spotify-downloader9)
-  3. [ChatGPT 4o](https://rapidapi.com/NextAPI/api/cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api)
+  - [Spotify](https://developer.spotify.com)
+  - [Spotify Downloader](https://rapidapi.com/amiteshgupta/api/spotify-downloader9)
+  - [ChatGPT 4o](https://rapidapi.com/NextAPI/api/cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api)
 - **News**
-  1. [NewsAPI](https://newsapi.org)
+  - [NewsAPI](https://newsapi.org)
 - **Recipe**
-  1. [Recipe Puppy](http://www.recipepuppy.com)
+  - [Recipe Puppy](http://www.recipepuppy.com)
 - **Others**
-  1. [Would You Rather](https://rapidapi.com/thunderapi-thunderapi-default/api/would-you-rather)
-  2. [Dog Fact](https://rapidapi.com/maketest-1YGgU5ZOtA/api/random-dog-facts)
-  3. [Cat Fact](https://rapidapi.com/wh-iterabb-it-wh-iterabb-it-default/api/meowfacts)
-  4. [Trivia Questions](https://rapidapi.com/tethertechnologies095/api/trivia-questions-api)
-  5. [Quotes](https://rapidapi.com/thepersonalquotes/api/the-personal-quotes)
+  - [Would You Rather](https://rapidapi.com/thunderapi-thunderapi-default/api/would-you-rather)
+  - [Dog Fact](https://rapidapi.com/maketest-1YGgU5ZOtA/api/random-dog-facts)
+  - [Cat Fact](https://rapidapi.com/wh-iterabb-it-wh-iterabb-it-default/api/meowfacts)
+  - [Trivia Questions](https://rapidapi.com/tethertechnologies095/api/trivia-questions-api)
+  - [Quotes](https://rapidapi.com/thepersonalquotes/api/the-personal-quotes)
 
 ## Installation
 
