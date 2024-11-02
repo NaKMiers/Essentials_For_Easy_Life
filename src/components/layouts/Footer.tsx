@@ -6,7 +6,7 @@ import he from 'he'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaCheck, FaSignOutAlt } from 'react-icons/fa'
 import Divider from '../Divider'
@@ -37,6 +37,65 @@ function Footer() {
   const [quoteLoading, setQuoteLoading] = useState<boolean>(false)
   const [quoteOpen, setQuoteOpen] = useState<boolean>(false)
   const [quote, setQuote] = useState<any>(null)
+
+  const [languages, setLanguages] = useState<any[]>([])
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('en')
+
+  // get languages
+  useEffect(() => {
+    const getLanguages = async () => {
+      try {
+        const res = await fetch(
+          'https://deep-translate1.p.rapidapi.com/language/translate/v2/languages',
+          {
+            method: 'GET',
+            headers: {
+              'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY,
+              'x-rapidapi-host': 'deep-translate1.p.rapidapi.com',
+            },
+          } as any
+        )
+        const { languages } = await res.json()
+        console.log(languages)
+        setLanguages(languages)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    getLanguages()
+  }, [])
+
+  // handle translate
+  const handleTranslate = useCallback(
+    async (text: string) => {
+      console.log(text)
+      console.log(selectedLanguage)
+
+      try {
+        const res = await fetch('https://deep-translate1.p.rapidapi.com/language/translate/v2', {
+          method: 'POST',
+          headers: {
+            'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY,
+            'x-rapidapi-host': 'deep-translate1.p.rapidapi.com',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            q: text,
+            source: 'en',
+            target: selectedLanguage,
+          }),
+        } as any)
+
+        const { data } = await res.json()
+
+        return data.translations.translatedText
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    [selectedLanguage]
+  )
 
   // handle "would you rather"
   const handleWYR = useCallback(async () => {
@@ -80,7 +139,11 @@ function Footer() {
           'x-rapidapi-host': 'random-dog-facts.p.rapidapi.com',
         },
       })
-      const { fact } = await res.json()
+      let { fact } = await res.json()
+
+      if (selectedLanguage !== 'en') {
+        fact = await handleTranslate(fact)
+      }
 
       // set fact
       setDogFact(fact)
@@ -93,7 +156,7 @@ function Footer() {
       // stop loading
       setDogFactLoading(false)
     }
-  }, [])
+  }, [handleTranslate, selectedLanguage])
 
   // handle "cat fact"
   const handleCatFact = useCallback(async () => {
@@ -110,6 +173,10 @@ function Footer() {
       })
       const { data } = await res.json()
 
+      if (selectedLanguage !== 'en') {
+        data[0] = await handleTranslate(data[0])
+      }
+
       // set fact
       setCatFact(data[0])
 
@@ -121,7 +188,7 @@ function Footer() {
       // stop loading
       setCatFactLoading(false)
     }
-  }, [])
+  }, [handleTranslate, selectedLanguage])
 
   // handle "trivia question"
   const handleTriviaQuestion = useCallback(async () => {
@@ -180,7 +247,11 @@ function Footer() {
           'x-rapidapi-host': 'the-personal-quotes.p.rapidapi.com',
         },
       })
-      const data = await res.json()
+      let data = await res.json()
+
+      if (selectedLanguage !== 'en') {
+        data.quote = await handleTranslate(data.quote)
+      }
 
       // set quote
       setQuote(data)
@@ -193,7 +264,7 @@ function Footer() {
       // stop loading
       setQuoteLoading(false)
     }
-  }, [])
+  }, [handleTranslate, selectedLanguage])
 
   return (
     <footer className="border-t-2 border-primary bg-white bg-gradient-to-t from-white from-85% to-slate-300 px-21 pt-3">
@@ -365,6 +436,22 @@ function Footer() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-2">
+            <select
+              value="en"
+              className="text-sm outline-none"
+              onChange={e => setSelectedLanguage(e.target.value)}
+            >
+              {languages.map(item => (
+                <option
+                  className="text-xs"
+                  value={item.language}
+                  key={item.language}
+                >
+                  {item.name}
+                </option>
+              ))}
+            </select>
+
             <button
               className={`text-[14px] transition-all duration-300 hover:tracking-wide hover:text-orange-500 ${
                 quoteLoading ? 'pointer-events-none' : ''
