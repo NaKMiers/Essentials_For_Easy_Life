@@ -28,7 +28,7 @@ function SearchPage() {
         ) : (
           <div className="mt-10 flex items-center justify-center">
             <p className="inline-block bg-gradient-to-r from-rose-500 to-sky-500 bg-clip-text text-center text-3xl font-bold text-transparent">
-              You haven't searched for anything yet
+              You can searched for anything yet
             </p>
           </div>
         )}
