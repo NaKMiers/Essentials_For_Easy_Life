@@ -7,9 +7,13 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { FaAngleLeft } from 'react-icons/fa'
 
+import Pagination from '@/components/layouts/Pagination'
+
 function RecipeCategoryPage({ params: { category } }: { params: { category: string } }) {
   const [meals, setMeals] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const itemsPerPage = 8
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -24,6 +28,11 @@ function RecipeCategoryPage({ params: { category } }: { params: { category: stri
     }
     fetchMeals()
   }, [category])
+
+  const paginatedMeals = meals.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
 
   return (
     <div className="min-h-screen p-21">
@@ -60,14 +69,22 @@ function RecipeCategoryPage({ params: { category } }: { params: { category: stri
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-21 lg:grid-cols-4">
-          {meals.map(meal => (
-            <RecipeCard
-              key={meal.idMeal}
-              meal={meal}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-2 gap-21 lg:grid-cols-4">
+            {paginatedMeals.map(meal => (
+              <RecipeCard
+                key={meal.idMeal}
+                meal={meal}
+              />
+            ))}
+          </div>
+          <Pagination
+            searchParams={{}}
+            amount={meals.length}
+            itemsPerPage={itemsPerPage}
+            className="mt-4"
+          />
+        </>
       )}
 
       <Divider size={50} />
