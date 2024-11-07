@@ -12,3 +12,6 @@ export * from './movieRequests'
 
 // location
 export * from './locationRequests'
+
+//recipe
+export * from './recipeRequests'
