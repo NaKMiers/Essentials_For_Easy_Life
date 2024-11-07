@@ -12,10 +12,7 @@ interface ArticleCardProps {
 }
 
 const ArticleCard: React.FC<ArticleCardProps> = ({ news }) => {
-  // Kiểm tra ngày hợp lệ và format ngày
-  const formattedDate = news.publishedAt
-    ? moment(news.publishedAt).utc().format('YYYY-MM-DD')
-    : 'No date available'
+  const formattedDate = moment(news.publishedAt).utc().format('YYYY/MM/DD')
 
   return (
     <div className="mx-auto flex max-w-sm flex-col items-center overflow-hidden rounded-lg bg-gray-900 shadow-lg">
@@ -28,11 +25,12 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ news }) => {
           height={240}
         />
       </div>
-      <div className="p-4">
+      <div className="flex flex-1 flex-col p-4">
         <h1 className="mb-2 text-lg font-bold text-white">{news.title}</h1>
-        <p className="mb-1 text-sm text-gray-400">Published on: {formattedDate}</p> {/* Hiển thị ngày */}
+        <p className="mb-1 text-sm text-gray-400">Published on: {formattedDate}</p>
         <p className="mb-4 text-gray-300">{news?.description?.slice(0, 100)}...</p>
-        <div className="mt-4 flex items-center space-x-2">
+
+        <div className="mt-4 flex flex-1 items-end space-x-2">
           <a
             href={news.url}
             target="_blank"
@@ -42,9 +40,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ news }) => {
             Read more
           </a>
 
-          {/* Nút chia sẻ */}
           <div className="flex space-x-2">
-            {/* Facebook */}
             <FacebookShareButton
               url={news.url}
               quote={'Essentials For Easy Life is a blog about technology, programming, and more.'}
@@ -55,7 +51,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ news }) => {
                 round
               />
             </FacebookShareButton>
-            {/* Twitter */}
             <TwitterShareButton
               url={news.url}
               title={news.title}
@@ -65,7 +60,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ news }) => {
                 round
               />
             </TwitterShareButton>
-            {/* Facebook Messenger */}
             <FacebookMessengerShareButton
               url={news.url}
               appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || ''}

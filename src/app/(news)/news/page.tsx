@@ -1,19 +1,22 @@
 'use client'
 
+import Divider from '@/components/Divider'
 import ArticleCard from '@/components/news/ArticleCard'
 import NewsAPI, { News } from '@/libs/news/NewsApi'
-import { Roboto } from 'next/font/google'
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation' // Cập nhật với next/navigation
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
 
-const roboto = Roboto({ subsets: ['latin'], weight: ['400', '700'] })
+function Home() {
+  // hooks
+  const router = useRouter()
 
-export default function Home() {
-  const [filterTime, setFilterTime] = useState<string>('') // Lưu trữ lựa chọn lọc
+  // states
+  const [filterTime, setFilterTime] = useState<'1day' | '1week' | '1month' | ''>('')
   const [headlines, setHeadlines] = useState<News[]>([])
-  const router = useRouter() // Khởi tạo router từ next/navigation
+  const [filteredHeadlines, setFilteredHeadlines] = useState<News[]>([])
 
-  // Lấy dữ liệu bài viết từ API
+  // get headlines
   useEffect(() => {
     const fetchHeadlines = async () => {
       try {
@@ -26,81 +29,75 @@ export default function Home() {
     fetchHeadlines()
   }, [])
 
-  // Hàm lọc bài viết theo thời gian
-  const filterArticlesByTime = (articles: News[]) => {
-    const now = new Date()
-    let filterDate: Date | null = null
+  // filter by time
+  const filterArticlesByTime = useCallback(
+    (articles: News[]) => {
+      const start = new Date()
+      const end = new Date()
 
-    switch (filterTime) {
-      case '1day':
-        filterDate = new Date(now)
-        filterDate.setDate(now.getDate() - 1) // Lọc 1 ngày qua
-        break
-      case '1week':
-        filterDate = new Date(now)
-        filterDate.setDate(now.getDate() - 7) // Lọc 1 tuần qua
-        break
-      case '1month':
-        filterDate = new Date(now)
-        filterDate.setMonth(now.getMonth() - 1) // Lọc 1 tháng qua
-        break
-      default:
-        return articles // Trả lại tất cả bài viết nếu không chọn bộ lọc
-    }
+      switch (filterTime) {
+        case '1day':
+          start.setDate(start.getDate() - 1)
+          break
+        case '1week':
+          start.setDate(start.getDate() - 7)
+          break
+        case '1month':
+          start.setMonth(start.getMonth() - 1)
+          break
+        default:
+          return articles
+      }
 
-    // Lọc bài viết theo ngày xuất bản
-    return articles.filter(article => {
-      const articleDate = new Date(article.publishedAt) // Chuyển đổi chuỗi ngày thành đối tượng Date
-      return articleDate >= filterDate! // Lọc bài viết có ngày xuất bản lớn hơn hoặc bằng ngày lọc
-    })
-  }
+      return articles.filter(article => {
+        const articleDate = new Date(article.publishedAt)
+        return articleDate >= start && articleDate <= end
+      })
+    },
+    [filterTime]
+  )
 
-  const displayedArticles = filterArticlesByTime(headlines) // Áp dụng bộ lọc
-
-  // Hàm điều hướng đến trang tìm kiếm
-  const goToSearchPage = () => {
-    router.push('news/searchingpage') // Điều hướng đến trang tìm kiếm
-  }
+  useEffect(() => {
+    const displayedArticles = filterArticlesByTime(headlines)
+    setFilteredHeadlines(displayedArticles)
+  }, [filterArticlesByTime, filterTime, headlines])
 
   return (
-    <main className={`${roboto.className} bg-gray-900 py-16`}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          <h1 className="inline-block bg-gradient-to-r from-rose-500 to-sky-500 bg-clip-text text-center text-3xl font-bold text-transparent">
-            EssentialsForEasyLife
-          </h1>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <Divider size={20} />
 
-          {/* Menu lọc */}
-          <select
-            onChange={e => setFilterTime(e.target.value)}
-            value={filterTime}
-            className="rounded bg-gray-700 px-4 py-2 text-white transition-colors duration-300 hover:bg-gray-600"
-          >
-            <option value="">All articles</option>
-            <option value="1day">Last 1 day</option>
-            <option value="1week">Last 1 week</option>
-            <option value="1month">Last 1 month</option>
-          </select>
+      <div className="flex items-center justify-between">
+        <select
+          onChange={e => setFilterTime(e.target.value as '1day' | '1week' | '1month')}
+          value={filterTime}
+          className="rounded bg-gray-700 px-1 py-2 text-white outline-none transition-colors duration-300 hover:bg-gray-600"
+        >
+          <option value="">All articles</option>
+          <option value="1day">Last 1 day</option>
+          <option value="1week">Last 1 week</option>
+          <option value="1month">Last 1 month</option>
+        </select>
 
-          {/* Nút tìm kiếm */}
-          <button
-            onClick={goToSearchPage} // Điều hướng khi nhấn nút tìm kiếm
-            className="rounded bg-blue-600 px-4 py-2 text-white transition-colors duration-300 hover:bg-blue-700"
-          >
-            Search
-          </button>
-        </div>
-
-        {/* Hiển thị các bài viết đã lọc */}
-        <div className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-          {displayedArticles.map(news => (
-            <ArticleCard
-              key={news.title}
-              news={news}
-            />
-          ))}
-        </div>
+        <Link
+          href="news/search"
+          className="rounded bg-blue-600 px-4 py-2 text-white transition-colors duration-300 hover:bg-blue-700"
+        >
+          Search
+        </Link>
       </div>
-    </main>
+
+      <div className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-21 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+        {filteredHeadlines.map((news: any) => (
+          <ArticleCard
+            key={news.title}
+            news={news}
+          />
+        ))}
+      </div>
+
+      <Divider size={40} />
+    </div>
   )
 }
+
+export default Home
