@@ -2,13 +2,9 @@
 
 import ArticleCard from '@/components/news/ArticleCard'
 import SearchBar from '@/components/news/SearchBar'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 function SearchPage() {
-  // hook
-  const router = useRouter()
-
   // states
   const [articles, setArticles] = useState<any[]>([])
 
