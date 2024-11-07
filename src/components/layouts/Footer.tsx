@@ -50,16 +50,18 @@ function Footer() {
           {
             method: 'GET',
             headers: {
-              'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY,
+              'x-rapidapi-key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY!,
               'x-rapidapi-host': 'deep-translate1.p.rapidapi.com',
             },
           } as any
         )
         const { languages } = await res.json()
-        console.log(languages)
-        setLanguages(languages)
+        if (Array.isArray(languages)) {
+          setLanguages(languages)
+        }
       } catch (error) {
         console.error(error)
+        setLanguages([]) // Set empty array on error
       }
     }
 
@@ -437,19 +439,23 @@ function Footer() {
 
           <div className="flex flex-wrap justify-center gap-2">
             <select
-              value="en"
+              value={selectedLanguage}
               className="text-sm outline-none"
               onChange={e => setSelectedLanguage(e.target.value)}
             >
-              {languages.map(item => (
-                <option
-                  className="text-xs"
-                  value={item.language}
-                  key={item.language}
-                >
-                  {item.name}
-                </option>
-              ))}
+              {Array.isArray(languages) && languages.length > 0 ? (
+                languages.map(item => (
+                  <option
+                    className="text-xs"
+                    value={item.language}
+                    key={item.language}
+                  >
+                    {item.name}
+                  </option>
+                ))
+              ) : (
+                <option value="en">English</option>
+              )}
             </select>
 
             <button
