@@ -99,7 +99,7 @@ simpler, smarter way to live and work.
 - **Authentication**: NextAuth
 - **Deployment**: Vercel
 
-## APIs Using (21)
+## APIs Using (22)
 
 - **Authentication**
   - [Google Authentication](https://cloud.google.com)
@@ -123,7 +123,7 @@ simpler, smarter way to live and work.
 - **News**
   - [NewsAPI](https://newsapi.org)
 - **Recipe**
-  - [Recipe Puppy](http://www.recipepuppy.com)
+  - [The Meal Database](https://www.themealdb.com)
 - **Others**
   - [Would You Rather](https://rapidapi.com/thunderapi-thunderapi-default/api/would-you-rather)
   - [Dog Fact](https://rapidapi.com/maketest-1YGgU5ZOtA/api/random-dog-facts)
