@@ -130,6 +130,7 @@ simpler, smarter way to live and work.
   - [Cat Fact](https://rapidapi.com/wh-iterabb-it-wh-iterabb-it-default/api/meowfacts)
   - [Trivia Questions](https://rapidapi.com/tethertechnologies095/api/trivia-questions-api)
   - [Quotes](https://rapidapi.com/thepersonalquotes/api/the-personal-quotes)
+  - [Deep Translate](https://rapidapi.com/gatzuma/api/deep-translate1)
 
 ## Installation
 

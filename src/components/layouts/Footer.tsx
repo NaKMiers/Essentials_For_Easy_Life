@@ -20,6 +20,7 @@ function Footer() {
   const [wyrLoading, setWYRLoading] = useState<boolean>(false)
   const [wyrOpen, setWYROpen] = useState<boolean>(false)
   const [wyrQuestion, setWYRQuestion] = useState<string>('')
+  const [wyrOptions, setWYROptions] = useState<string[]>([])
 
   const [dogFactLoading, setDogFactLoading] = useState<boolean>(false)
   const [dogFactOpen, setDogFactOpen] = useState<boolean>(false)
@@ -111,10 +112,25 @@ function Footer() {
         },
       })
       const data = await res.json()
-      const { question } = data[0]
+      let { question } = data[0]
+
+      const options = question.split('Would you rather ')[1].split(' or ') // [option 1, option 2]
+
+      if (selectedLanguage !== 'en') {
+        const [q, option1, option2] = await Promise.all([
+          handleTranslate(question),
+          handleTranslate(options[0]),
+          handleTranslate(options[1]),
+        ])
+
+        question = q
+        options[0] = option1
+        options[1] = option2
+      }
 
       // set question
       setWYRQuestion(question)
+      setWYROptions(options)
 
       // open modal
       setWYROpen(true)
@@ -124,7 +140,7 @@ function Footer() {
       // stop loading
       setWYRLoading(false)
     }
-  }, [])
+  }, [handleTranslate, selectedLanguage])
 
   // handle "dog fact"
   const handleDogFact = useCallback(async () => {
@@ -215,6 +231,18 @@ function Footer() {
       right = { answer: right, isCorrect: true }
       wrongs = wrongs.map((answer: string) => ({ answer, isCorrect: false }))
 
+      if (selectedLanguage !== 'en') {
+        const [q, r, ...w] = await Promise.all([
+          handleTranslate(question),
+          handleTranslate(right.answer),
+          ...wrongs.map(({ answer }: any) => handleTranslate(answer)),
+        ])
+
+        question = q
+        right.answer = r
+        wrongs = w.map((answer, index) => ({ answer, isCorrect: index === 0 }))
+      }
+
       // shuffle answers
       const answers = [right, ...wrongs].sort(() => Math.random() - 0.5)
 
@@ -232,7 +260,7 @@ function Footer() {
       // stop loading
       setTriviaQuestionLoading(false)
     }
-  }, [])
+  }, [handleTranslate, selectedLanguage])
 
   // handle "quote"
   const handleQuote = useCallback(async () => {
@@ -437,7 +465,7 @@ function Footer() {
 
           <div className="flex flex-wrap justify-center gap-2">
             <select
-              value="en"
+              value={selectedLanguage}
               className="text-sm outline-none"
               onChange={e => setSelectedLanguage(e.target.value)}
             >
@@ -533,13 +561,13 @@ function Footer() {
                   className={`trans-200 rounded-lg border border-rose-500 px-3 py-1.5 shadow-lg hover:bg-slate-100`}
                   onClick={() => setWYROpen(false)}
                 >
-                  {wyrQuestion.split('Would you rather ')[1].split(' or ')[0]}
+                  {wyrOptions[0]}
                 </button>
                 <button
                   className={`trans-200 rounded-lg border border-blue-500 px-3 py-1.5 shadow-lg hover:bg-slate-100`}
                   onClick={() => setWYROpen(false)}
                 >
-                  {wyrQuestion.split('Would you rather ')[1].split(' or ')[1]}
+                  {wyrOptions[1]}
                 </button>
               </div>
             </motion.div>
