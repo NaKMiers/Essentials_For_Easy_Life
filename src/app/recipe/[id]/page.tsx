@@ -1,28 +1,33 @@
-'use client'
-
 import Divider from '@/components/Divider'
 import { getMealById } from '@/requests'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { FaAngleLeft } from 'react-icons/fa'
 
-function RecipeDetailPage({ params: { id } }: { params: { id: string } }) {
-  const [meal, setMeal] = useState<any>(null)
+async function RecipeDetailPage({ params: { id } }: { params: { id: string } }) {
+  let meal: any = null
 
-  useEffect(() => {
-    const fetchMeal = async () => {
-      try {
-        const { meals } = await getMealById(id)
-        setMeal(meals[0])
-      } catch (err) {
-        console.error(err)
-      }
-    }
-    fetchMeal()
-  }, [id])
+  try {
+    const { meals } = await getMealById(id)
+    meal = meals[0]
+  } catch (err) {
+    console.error(err)
+  }
 
-  if (!meal) return null
+  if (!meal)
+    return (
+      <div className="min-h-screen py-20">
+        <h1 className="text-center text-lg text-slate-400">
+          Meal not found.{' '}
+          <Link
+            href="/recipe"
+            className="trans-200 font-body italic tracking-wider text-sky-500 underline underline-offset-1 hover:text-sky-600"
+          >
+            Please try another meal.
+          </Link>
+        </h1>
+      </div>
+    )
 
   // Get ingredients
   const ingredients = []
@@ -50,12 +55,12 @@ function RecipeDetailPage({ params: { id } }: { params: { id: string } }) {
       <Divider size={16} />
 
       <div className="mx-auto max-w-4xl">
-        <div className="overflow-hidden rounded-lg">
+        <div className="w-full max-w-[300px] overflow-hidden rounded-lg">
           <Image
             src={meal.strMealThumb}
             alt={meal.strMeal}
             width={1200}
-            height={800}
+            height={1200}
             className="w-full"
           />
         </div>
@@ -71,7 +76,7 @@ function RecipeDetailPage({ params: { id } }: { params: { id: string } }) {
           <Divider size={4} />
 
           <h2 className="text-xl font-semibold">Ingredients</h2>
-          <ul className="mt-2 list-inside list-disc">
+          <ul className="mt-2 list-inside list-disc font-body tracking-wider">
             {ingredients.map((ingredient, index) => (
               <li key={index}>{ingredient}</li>
             ))}

@@ -47,7 +47,7 @@ function RecipeAreaPage({ params: { area } }: { params: { area: string } }) {
       <Divider size={16} />
 
       {loading ? (
-        <div className="grid animate-pulse grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid animate-pulse grid-cols-2 gap-21 lg:grid-cols-4">
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
@@ -60,7 +60,7 @@ function RecipeAreaPage({ params: { area } }: { params: { area: string } }) {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-21 lg:grid-cols-4">
           {meals.map(meal => (
             <RecipeCard
               key={meal.idMeal}

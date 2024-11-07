@@ -9,20 +9,24 @@ import Divider from '@/components/Divider'
 import Link from 'next/link'
 import { FaAngleLeft } from 'react-icons/fa'
 import Image from 'next/image'
+import FallbackImage from '@/components/FallbackImage'
 
 function RecipePage() {
-  const [randomMeal, setRandomMeal] = useState<any>(null)
+  const [randomMeals, setRandomMeals] = useState<any[]>([])
   const [categories, setCategories] = useState<any[]>([])
   const [areas, setAreas] = useState<any[]>([])
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(false)
 
-  // Get random meal
+  // Get random meals
   useEffect(() => {
     const fetchRandomMeal = async () => {
       try {
-        const { meals } = await getRandomMeal()
-        setRandomMeal(meals[0])
+        const [...meals] = await Promise.all(Array.from({ length: 4 }, () => getRandomMeal()))
+
+        setRandomMeals(meals.map(({ meals }) => meals[0]))
+
+        console.log(meals)
       } catch (err) {
         console.error(err)
       }
@@ -105,7 +109,7 @@ function RecipePage() {
       {searchResults.length > 0 ? (
         <>
           <h2 className="text-2xl font-semibold">Search Results</h2>
-          <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-4 grid grid-cols-2 gap-21 lg:grid-cols-4">
             {searchResults.map(meal => (
               <RecipeCard
                 key={meal.idMeal}
@@ -116,14 +120,16 @@ function RecipePage() {
         </>
       ) : (
         <>
-          {randomMeal && (
+          {randomMeals.length > 0 && (
             <>
-              <h2 className="text-2xl font-semibold">Recipe of the Day</h2>
-              <div className="mt-4">
-                <RecipeCard
-                  meal={randomMeal}
-                  large
-                />
+              <h2 className="text-2xl font-semibold">Recipes of the Day</h2>
+              <div className="mt-4 grid w-full grid-cols-2 gap-21 lg:grid-cols-4">
+                {randomMeals.map((meal: any) => (
+                  <RecipeCard
+                    meal={meal}
+                    key={meal.idMeal}
+                  />
+                ))}
               </div>
             </>
           )}
@@ -136,16 +142,21 @@ function RecipePage() {
               <Link
                 key={area.strArea}
                 href={`/recipe/area/${area.strArea}`}
-                className="trans-200 group overflow-hidden rounded-lg bg-white p-4 shadow-lg hover:-translate-y-1"
+                className="trans-200 group flex flex-col overflow-hidden rounded-lg bg-white p-4 shadow-lg hover:-translate-y-1"
               >
-                <Image
-                  src={`/images/flags/${area.strArea.toLowerCase()}.png`}
-                  alt={area.strArea}
-                  width={200}
-                  height={200}
-                  className="trans-200 w-full rounded-lg group-hover:scale-110"
-                />
-                <h3 className="mt-2 text-center font-semibold">{area.strArea}</h3>
+                <div className="overflow-hidden rounded-lg">
+                  <FallbackImage
+                    src={`/images/flags/${area.strArea.toLowerCase()}.png`}
+                    alt={area.strArea}
+                    width={200}
+                    height={200}
+                    fallbackSrc="/images/default-image.png"
+                    className="trans-200 h-full w-full object-cover group-hover:scale-110"
+                  />
+                </div>
+                <div className="flex flex-1 items-end justify-center">
+                  <h3 className="mt-2 text-center font-semibold">{area.strArea}</h3>
+                </div>
               </Link>
             ))}
           </div>
