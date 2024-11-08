@@ -5,11 +5,12 @@ import { RiDonutChartFill } from 'react-icons/ri'
 interface RecipeSearchProps {
   onSearch: (term: string) => void
   loading?: boolean
+  setSearchResults: any
   className?: string
 }
 
-function RecipeSearch({ onSearch, loading, className = '' }: RecipeSearchProps) {
-  const [term, setTerm] = useState('')
+function RecipeSearch({ onSearch, loading, setSearchResults, className = '' }: RecipeSearchProps) {
+  const [term, setTerm] = useState<string>('')
 
   return (
     <div className={`mx-auto max-w-2xl ${className}`}>
@@ -17,7 +18,14 @@ function RecipeSearch({ onSearch, loading, className = '' }: RecipeSearchProps) 
         <input
           type="text"
           value={term}
-          onChange={e => setTerm(e.target.value)}
+          onChange={e => {
+            if (e.target.value === '') {
+              setTerm(e.target.value)
+              setSearchResults(null)
+            } else {
+              setTerm(e.target.value)
+            }
+          }}
           placeholder="Search recipes..."
           className="w-full rounded-lg border px-4 py-2 outline-none focus:border-primary"
         />

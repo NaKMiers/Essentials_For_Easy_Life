@@ -1,22 +1,21 @@
-
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { getAreas, getCategories, getRandomMeal, searchMeals } from '@/requests'
-import RecipeCard from '@/components/recipe/RecipeCard'
-import RecipeSearch from '@/components/recipe/RecipeSearch'
 import Divider from '@/components/Divider'
-import Link from 'next/link'
-import { FaAngleLeft } from 'react-icons/fa'
-import Image from 'next/image'
 import FallbackImage from '@/components/FallbackImage'
 import Pagination from '@/components/layouts/Pagination'
-  
+import RecipeCard from '@/components/recipe/RecipeCard'
+import RecipeSearch from '@/components/recipe/RecipeSearch'
+import { getAreas, getCategories, getRandomMeal, searchMeals } from '@/requests'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useCallback, useEffect, useState } from 'react'
+import { FaAngleLeft } from 'react-icons/fa'
+
 function RecipePage() {
   const [randomMeals, setRandomMeals] = useState<any[]>([])
   const [categories, setCategories] = useState<any[]>([])
   const [areas, setAreas] = useState<any[]>([])
-  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [searchResults, setSearchResults] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [term, setTerm] = useState('')
   const [searchAttempted, setSearchAttempted] = useState<boolean>(false)
@@ -85,10 +84,9 @@ function RecipePage() {
     }
   }, [])
 
-  const paginatedResults = searchResults.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  )
+  const paginatedResults = searchResults
+    ? searchResults.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+    : 1
 
   return (
     <div className="min-h-screen p-21">
@@ -114,15 +112,14 @@ function RecipePage() {
       <RecipeSearch
         onSearch={handleSearch}
         loading={loading}
+        setSearchResults={setSearchResults}
       />
 
-      <Divider size={16} />
-
-      {searchResults.length > 0 ? (
+      {searchResults && searchResults.length > 0 ? (
         <>
-          <h2 className="text-2xl font-semibold">Search Results</h2>
+          <h2 className="mt-16 text-2xl font-semibold">Search Results</h2>
           <div className="mt-4 grid grid-cols-2 gap-21 lg:grid-cols-4">
-            {paginatedResults.map(meal => (
+            {paginatedResults.map((meal: any) => (
               <RecipeCard
                 key={meal.idMeal}
                 meal={meal}
@@ -138,15 +135,15 @@ function RecipePage() {
         </>
       ) : (
         <>
-          {searchAttempted && (
-            <p className="text-center text-gray-500 mt-2 mb-4">
+          {searchResults && searchAttempted && (
+            <p className="mb-4 mt-2 text-center text-gray-500">
               No results found for &quot;{term}&quot;.
             </p>
           )}
 
           {randomMeals.length > 0 && (
             <>
-              <h2 className="text-2xl font-semibold">Recipes of the Day</h2>
+              <h2 className="mt-16 text-2xl font-semibold">Recipes of the Day</h2>
               <div className="mt-4 grid w-full grid-cols-2 gap-21 lg:grid-cols-4">
                 {randomMeals.map((meal: any) => (
                   <RecipeCard
