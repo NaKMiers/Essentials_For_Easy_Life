@@ -87,7 +87,7 @@ function Home() {
       </div>
 
       <div className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-21 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-        {filteredHeadlines.map((news: any) => (
+        {filteredHeadlines?.map((news: any) => (
           <ArticleCard
             key={news.title}
             news={news}

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 async function Home() {
   return (
-    <div className="mx-auto h-full min-h-screen w-full max-w-1200">
+    <div className="mx-auto h-full min-h-screen w-full max-w-[900px]">
       <Divider size={16} />
 
       <h1 className="px-21 text-center font-body text-4xl font-semibold tracking-widest text-secondary">
@@ -23,7 +23,7 @@ async function Home() {
       <div className="flex flex-wrap text-xl font-semibold text-dark">
         {navItems.map(link => (
           <div
-            className="w-full p-21/2 xs:w-1/2 md:w-1/4 md:p-6 lg:p-8"
+            className="w-full p-21/2 xs:w-1/2 md:w-1/3 md:p-6 lg:p-8"
             key={link.href}
           >
             <Link

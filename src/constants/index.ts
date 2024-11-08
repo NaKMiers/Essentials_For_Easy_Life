@@ -68,12 +68,12 @@ export const navItems = [
     image: '/images/recipe.png',
     icon: TiDocumentText,
   },
-  {
-    title: 'Temp Mail',
-    href: '/temp-mail',
-    image: '/images/temp-mail.png',
-    icon: IoMail,
-  },
+  // {
+  //   title: 'Temp Mail',
+  //   href: '/temp-mail',
+  //   image: '/images/temp-mail.png',
+  //   icon: IoMail,
+  // },
 ]
 
 // export social links
