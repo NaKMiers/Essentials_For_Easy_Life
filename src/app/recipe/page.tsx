@@ -1,22 +1,26 @@
-// src/app/(recipe)/recipe/page.tsx
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { getAreas, getCategories, getRandomMeal, searchMeals } from '@/requests'
+import Divider from '@/components/Divider'
+import FallbackImage from '@/components/FallbackImage'
+import Pagination from '@/components/layouts/Pagination'
 import RecipeCard from '@/components/recipe/RecipeCard'
 import RecipeSearch from '@/components/recipe/RecipeSearch'
-import Divider from '@/components/Divider'
-import Link from 'next/link'
-import { FaAngleLeft } from 'react-icons/fa'
+import { getAreas, getCategories, getRandomMeal, searchMeals } from '@/requests'
 import Image from 'next/image'
-import FallbackImage from '@/components/FallbackImage'
+import Link from 'next/link'
+import { useCallback, useEffect, useState } from 'react'
+import { FaAngleLeft } from 'react-icons/fa'
 
 function RecipePage() {
   const [randomMeals, setRandomMeals] = useState<any[]>([])
   const [categories, setCategories] = useState<any[]>([])
   const [areas, setAreas] = useState<any[]>([])
-  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [searchResults, setSearchResults] = useState<any>(null)
   const [loading, setLoading] = useState<boolean>(false)
+  const [term, setTerm] = useState('')
+  const [searchAttempted, setSearchAttempted] = useState<boolean>(false)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const itemsPerPage = 8
 
   // Get random meals
   useEffect(() => {
@@ -61,15 +65,17 @@ function RecipePage() {
   }, [])
 
   // Handle search
-  const handleSearch = useCallback(async (term: string) => {
-    if (!term.trim()) {
+  const handleSearch = useCallback(async (searchTerm: string) => {
+    setTerm(searchTerm)
+    setSearchAttempted(true)
+    if (!searchTerm.trim()) {
       setSearchResults([])
       return
     }
 
     setLoading(true)
     try {
-      const { meals } = await searchMeals(term)
+      const { meals } = await searchMeals(searchTerm)
       setSearchResults(meals || [])
     } catch (err) {
       console.error(err)
@@ -77,6 +83,10 @@ function RecipePage() {
       setLoading(false)
     }
   }, [])
+
+  const paginatedResults = searchResults
+    ? searchResults.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+    : 1
 
   return (
     <div className="min-h-screen p-21">
@@ -102,27 +112,38 @@ function RecipePage() {
       <RecipeSearch
         onSearch={handleSearch}
         loading={loading}
+        setSearchResults={setSearchResults}
       />
 
-      <Divider size={16} />
-
-      {searchResults.length > 0 ? (
+      {searchResults && searchResults.length > 0 ? (
         <>
-          <h2 className="text-2xl font-semibold">Search Results</h2>
+          <h2 className="mt-16 text-2xl font-semibold">Search Results</h2>
           <div className="mt-4 grid grid-cols-2 gap-21 lg:grid-cols-4">
-            {searchResults.map(meal => (
+            {paginatedResults.map((meal: any) => (
               <RecipeCard
                 key={meal.idMeal}
                 meal={meal}
               />
             ))}
           </div>
+          <Pagination
+            searchParams={{ term }}
+            amount={searchResults.length}
+            itemsPerPage={itemsPerPage}
+            className="mt-4"
+          />
         </>
       ) : (
         <>
+          {searchResults && searchAttempted && (
+            <p className="mb-4 mt-2 text-center text-gray-500">
+              No results found for &quot;{term}&quot;.
+            </p>
+          )}
+
           {randomMeals.length > 0 && (
             <>
-              <h2 className="text-2xl font-semibold">Recipes of the Day</h2>
+              <h2 className="mt-16 text-2xl font-semibold">Recipes of the Day</h2>
               <div className="mt-4 grid w-full grid-cols-2 gap-21 lg:grid-cols-4">
                 {randomMeals.map((meal: any) => (
                   <RecipeCard
@@ -189,5 +210,4 @@ function RecipePage() {
     </div>
   )
 }
-
 export default RecipePage
