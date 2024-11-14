@@ -64,8 +64,9 @@ function Home() {
 
   const indexOfLastArticle = currentPage * articlesPerPage
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage
-  const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle)
-  const totalPages = Math.ceil(articles.length / articlesPerPage)
+
+  const currentArticles = (articles ? articles : []).slice(indexOfFirstArticle, indexOfLastArticle)
+  const totalPages = Math.ceil((articles ? articles : []).length / articlesPerPage)
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
