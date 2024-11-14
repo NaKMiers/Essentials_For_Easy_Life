@@ -1,7 +1,7 @@
 import { News } from '@/libs/news/NewsApi'
 import moment from 'moment'
-import Image from 'next/image'
 import { FaFacebook, FaFacebookMessenger, FaTwitter } from 'react-icons/fa'
+import FallbackImage from '../FallbackImage'
 
 interface ArticleCardProps {
   news: News
@@ -14,7 +14,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ news }) => {
     <div className="group relative flex cursor-pointer flex-col items-center justify-between overflow-hidden rounded-lg bg-gray-900 shadow-lg transition-all duration-500 hover:scale-105">
       {/* Image section */}
       <div className="relative aspect-video h-48 w-full overflow-hidden rounded-t-lg">
-        <Image
+        <FallbackImage
+          fallbackSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZgwCldZep_5MJNd2LDsRdKyf7S62muv9kWw&s"
           className="h-full w-full object-cover"
           src={
             news.urlToImage ||
