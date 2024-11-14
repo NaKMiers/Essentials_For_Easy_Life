@@ -1,75 +1,93 @@
-'use client'
-
 import { News } from '@/libs/news/NewsApi'
 import Image from 'next/image'
-import { FacebookShareButton, FacebookIcon } from 'next-share'
-import { TwitterShareButton, TwitterIcon } from 'next-share'
-import { FacebookMessengerShareButton, FacebookMessengerIcon } from 'next-share'
 import moment from 'moment'
+import { useEffect, useState } from 'react'
+import { FaFacebook, FaTwitter, FaFacebookMessenger } from 'react-icons/fa'
 
 interface ArticleCardProps {
   news: News
 }
 
 const ArticleCard: React.FC<ArticleCardProps> = ({ news }) => {
+  const [isClient, setIsClient] = useState(false)
+
+  // Xác định render phía client
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const formattedDate = moment(news.publishedAt).utc().format('YYYY/MM/DD')
 
   return (
-    <div className="mx-auto flex max-w-sm flex-col items-center overflow-hidden rounded-lg bg-gray-900 shadow-lg">
-      <div className="flex h-48 w-full items-center justify-center overflow-hidden rounded-t-lg">
+    <div className="group relative flex max-w-sm cursor-pointer flex-col items-center justify-between overflow-hidden rounded-lg bg-gray-900 shadow-lg transition-all duration-500 hover:scale-105">
+      {/* Image section */}
+      <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
         <Image
           className="object-cover"
-          src={news.urlToImage || 'https://ichef.bbci.co.uk/images/ic/512x512/p0hq72jn.png.webp'}
+          src={
+            news.urlToImage ||
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZgwCldZep_5MJNd2LDsRdKyf7S62muv9kWw&s'
+          }
           alt={news.title}
           width={600}
           height={240}
         />
       </div>
+
+      {/* Content section */}
       <div className="flex flex-1 flex-col p-4">
         <h1 className="mb-2 text-lg font-bold text-white">{news.title}</h1>
-        <p className="mb-1 text-sm text-gray-400">Published on: {formattedDate}</p>
-        <p className="mb-4 text-gray-300">{news?.description?.slice(0, 100)}...</p>
+        <p className="mb-1 text-sm text-white">Published on: {formattedDate}</p>
+        <p className="mt-2 text-sm text-white">Author: {news.author || 'Unknown'}</p>
+        <p className="mb-4 text-gray-300">{news.description?.slice(0, 100)}...</p>
 
-        <div className="mt-4 flex flex-1 items-end space-x-2">
+        {/* Read More button */}
+        <a
+          href={`/news/newsdetail?author=${news.author}&description=${news.description}&title=${news.title}&urlToImage=${news.urlToImage}&publishedAt=${news.publishedAt}&url=${news.url}`}
+          className="group relative flex h-14 w-full cursor-pointer items-center justify-center overflow-hidden rounded-md border bg-sky-800 p-2 font-extrabold text-sky-50 duration-500 hover:border-sky-600"
+        >
+          {/* Background circles with hover effect */}
+          <div className="absolute z-10 h-48 w-48 rounded-full bg-sky-900 transition-all delay-150 duration-500 ease-in-out group-hover:scale-150 group-hover:delay-75"></div>
+          <div className="absolute z-10 h-40 w-40 rounded-full bg-sky-800 transition-all delay-150 duration-500 ease-in-out group-hover:scale-150 group-hover:delay-100"></div>
+          <div className="absolute z-10 h-32 w-32 rounded-full bg-sky-700 transition-all delay-150 duration-500 ease-in-out group-hover:scale-150 group-hover:delay-150"></div>
+          <div className="absolute z-10 h-24 w-24 rounded-full bg-sky-600 transition-all delay-150 duration-500 ease-in-out group-hover:scale-150 group-hover:delay-200"></div>
+          <div className="absolute z-10 h-16 w-16 rounded-full bg-sky-500 transition-all delay-150 duration-500 ease-in-out group-hover:scale-150 group-hover:delay-300"></div>
+
+          {/* Button text */}
+          <p className="z-10">Read More</p>
+        </a>
+
+        {/* Social Media Share */}
+        <div className="mt-4 flex justify-center space-x-4">
+          {/* Facebook Share */}
           <a
-            href={news.url}
+            href={`https://www.facebook.com/sharer/sharer.php?u=${news.url}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 rounded bg-blue-600 px-4 py-2 text-center text-white transition-colors duration-300 hover:bg-blue-700"
+            className="rounded-full bg-[#1877f2] p-3 text-white transition-all duration-300 hover:bg-[#1266ac]"
           >
-            Read more
+            <FaFacebook size={32} />
           </a>
 
-          <div className="flex space-x-2">
-            <FacebookShareButton
-              url={news.url}
-              quote={'Essentials For Easy Life is a blog about technology, programming, and more.'}
-              hashtag={'#EssentialsForEasyLife'}
-            >
-              <FacebookIcon
-                size={32}
-                round
-              />
-            </FacebookShareButton>
-            <TwitterShareButton
-              url={news.url}
-              title={news.title}
-            >
-              <TwitterIcon
-                size={32}
-                round
-              />
-            </TwitterShareButton>
-            <FacebookMessengerShareButton
-              url={news.url}
-              appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || ''}
-            >
-              <FacebookMessengerIcon
-                size={32}
-                round
-              />
-            </FacebookMessengerShareButton>
-          </div>
+          {/* Twitter Share */}
+          <a
+            href={`https://twitter.com/intent/tweet?url=${news.url}&text=${news.title}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-[#1da1f2] p-3 text-white transition-all duration-300 hover:bg-[#0d95c8]"
+          >
+            <FaTwitter size={32} />
+          </a>
+
+          {/* Facebook Messenger Share */}
+          <a
+            href={`https://www.messenger.com/share?app_id=${process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}&link=${news.url}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-[#0084ff] p-3 text-white transition-all duration-300 hover:bg-[#006bb3]"
+          >
+            <FaFacebookMessenger size={32} />
+          </a>
         </div>
       </div>
     </div>
