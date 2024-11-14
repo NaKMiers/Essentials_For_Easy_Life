@@ -3,9 +3,9 @@
 import Divider from '@/components/Divider'
 import ArticleCard from '@/components/news/ArticleCard'
 import NewsAPI, { News } from '@/libs/news/NewsApi'
+import moment from 'moment'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
-import moment from 'moment'
 
 function Home() {
   const [timeFilter, setTimeFilter] = useState<'1day' | '1week' | '1month' | ''>('')
@@ -120,7 +120,7 @@ function Home() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-1200 px-4 sm:px-6 lg:px-8">
       <Divider size={20} />
 
       <div className="mb-8 flex items-center justify-between">
@@ -169,7 +169,7 @@ function Home() {
                 d="M4 12a8 8 0 018-8v8H4z"
                 fill="currentColor"
                 className="opacity-75"
-              ></path>
+              />
             </svg>
             Loading...
           </button>
@@ -208,11 +208,11 @@ function Home() {
               <path
                 d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"
                 fill="#000000"
-              ></path>
+              />
               <path
                 d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
                 fill="#000000"
-              ></path>
+              />
             </svg>
           </div>
           Go Back
@@ -237,11 +237,11 @@ function Home() {
               <path
                 d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"
                 fill="#000000"
-              ></path>
+              />
               <path
                 d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
                 fill="#000000"
-              ></path>
+              />
             </svg>
           </div>
           Next

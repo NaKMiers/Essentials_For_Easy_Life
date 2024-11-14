@@ -28,7 +28,7 @@ const NewsDetail = () => {
   const formattedDate = publishedAt ? moment(publishedAt).utc().format('YYYY/MM/DD') : 'Unknown'
 
   return (
-    <div className="mx-auto max-w-3xl rounded-lg bg-white p-6 shadow-md">
+    <div className="mx-auto my-20 max-w-3xl rounded-lg bg-white p-6 shadow-md">
       <Image
         src={String(urlToImage) || 'https://ichef.bbci.co.uk/images/ic/512x512/p0hq72jn.png.webp'}
         alt="image"
