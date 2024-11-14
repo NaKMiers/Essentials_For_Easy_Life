@@ -117,7 +117,7 @@ function SearchPage() {
         <div className="mt-10 flex items-center justify-center">
           <div className="loader h-10 w-10 animate-spin rounded-full border-t-4 border-blue-500"></div>
         </div>
-      ) : articles.length > 0 ? (
+      ) : (articles ? articles : []).length > 0 ? (
         <>
           <div className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
             {currentArticles.map((news: any) => (
