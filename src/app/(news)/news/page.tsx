@@ -167,7 +167,7 @@ function Home() {
                 cy="12"
                 cx="12"
                 className="opacity-25"
-              ></circle>
+              />
               <path
                 d="M4 12a8 8 0 018-8v8H4z"
                 fill="currentColor"
