@@ -58,15 +58,10 @@ export const theme = {
     },
     screens: {
       xs: '300px',
-
       sm: '640px',
-
       md: '768px',
-
       lg: '1024px',
-
       xl: '1280px',
-
       '2xl': '1536px',
     },
     keyframes: {
@@ -78,11 +73,24 @@ export const theme = {
         '0%, 100%': { transform: 'rotate(-3deg) scale(1.2)' },
         '50%': { transform: 'rotate(3deg) scale(1.2)' },
       },
+      // Thêm hiệu ứng chuyển động chữ
+      textMove: {
+        '0%': { transform: 'translateX(-20px)' },
+        '50%': { transform: 'translateX(20px)' },
+        '100%': { transform: 'translateX(-20px)' },
+      },
+      textGlow: {
+        '0%': { textShadow: '0 0 10px rgba(255, 99, 132, 1), 0 0 20px rgba(255, 99, 132, 1)' },
+        '100%': { textShadow: '0 0 30px rgba(99, 132, 255, 1), 0 0 60px rgba(99, 132, 255, 1)' },
+      },
     },
     animation: {
       'spin-slow': 'spin 2s linear infinite',
       wiggle: 'wiggle 0.8s ease-in-out infinite',
       'scale-wiggle': 'scale-wiggle 0.8s ease-in-out infinite 0.2s',
+      // Áp dụng animation mới cho chữ
+      textMove: 'textMove 3s ease-in-out infinite',
+      textGlow: 'textGlow 1.5s ease-in-out infinite alternate',
     },
   },
 }
