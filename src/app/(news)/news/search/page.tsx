@@ -14,12 +14,12 @@ function SearchPage() {
 
   // Constants
   const articlesPerPage = 8
-  const totalPages = Math.ceil(articles.length / articlesPerPage)
+  const totalPages = Math.ceil((articles ? articles : []).length / articlesPerPage)
 
   // Calculate the articles to display based on the current page
   const indexOfLastArticle = currentPage * articlesPerPage
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage
-  const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle)
+  const currentArticles = (articles ? articles : []).slice(indexOfFirstArticle, indexOfLastArticle)
 
   // Handler to change pages
   const handlePageChange = (page: number) => {
